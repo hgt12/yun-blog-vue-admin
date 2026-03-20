@@ -1,0 +1,97 @@
+/**
+ * 项目主题变量
+ * 
+ * 结构：
+ * 1. SCSS 变量 - 布局尺寸（供 JS 导出和组件使用）
+ * 2. CSS 变量 - 侧边栏/菜单主题色
+ * 3. 主题模式 - 深蓝侧边栏、暗黑模式
+ * 4. 无障碍模式 - 色弱模式
+ */
+
+// ============================================
+// 1. SCSS 变量 - 布局尺寸
+// ============================================
+
+$sidebar-width: 210px;
+$sidebar-width-collapsed: 54px;
+$navbar-height: 50px;
+$tags-view-height: 34px;
+
+// ============================================
+// 2. CSS 变量 - 默认主题（浅色 + 白色侧边栏）
+// 与前台博客工程样式保持统一
+// ============================================
+
+:root {
+  // 页面主背景色（覆盖 Element Plus --el-bg-color-page）
+  --el-bg-color-page: #a5dff9;
+
+  // 前台博客主色调
+  --blog-primary-color: #30a9de;
+  --blog-primary-dark: #2f4154;
+  --blog-bg-color: #a5dff9;
+  --blog-board-bg: #f5fffa;
+  --blog-text-color: #3c4858;
+  --blog-sec-text-color: #718096;
+  --blog-link-color: #0366d6;
+  --blog-link-hover: #30a9de;
+  --blog-line-color: #eaecef;
+
+  // 菜单（与前台导航栏色系统一：深蓝灰）
+  --menu-background: #2f4154;
+  --menu-text: #bfcbd9;
+  --menu-active-text: #30a9de;
+  --menu-hover: #263445;
+
+  // 侧边栏 Logo（与前台 navbar 背景一致）
+  --sidebar-logo-background: #2d3748;
+  --sidebar-logo-text-color: #fff;
+}
+
+// SCSS 变量映射（供组件使用）
+$menu-background: var(--menu-background);
+$menu-text: var(--menu-text);
+$menu-active-text: var(--menu-active-text);
+$menu-hover: var(--menu-hover);
+$sidebar-logo-background: var(--sidebar-logo-background);
+$sidebar-logo-text-color: var(--sidebar-logo-text-color);
+
+// ============================================
+// 3. 主题模式
+// ============================================
+
+// 浅色主题 - 深蓝色侧边栏（与前台 navbar 完全一致）
+html.sidebar-color-blue {
+  --menu-background: #2f4154;
+  --menu-text: #bfcbd9;
+  --menu-active-text: #30a9de;
+  --menu-hover: #263445;
+  --sidebar-logo-background: #2d3748;
+  --sidebar-logo-text-color: #fff;
+}
+
+// 暗黑主题（与前台暗色模式保持一致）
+html.dark {
+  --el-bg-color-page: #008c9e;
+
+  --menu-background: #1f3144;
+  --menu-text: #c4c6c9;
+  --menu-active-text: #30a9de;
+  --menu-hover: #252d38;
+  --sidebar-logo-background: #1a2535;
+  --sidebar-logo-text-color: #c4c6c9;
+
+  // Element Plus 表格选中行背景色
+  .el-table {
+    --el-table-current-row-bg-color: var(--el-fill-color-light);
+  }
+}
+
+// ============================================
+// 4. 无障碍模式
+// ============================================
+
+// 色弱模式
+html.color-weak {
+  filter: invert(80%);
+}

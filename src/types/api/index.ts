@@ -1,0 +1,26 @@
+/**
+ * API 类型统一导出
+ */
+
+export * from "./auth";
+export * from "./common";
+
+// System 模块
+export * from "./user";
+export * from "./role";
+export * from "./menu";
+export * from "./dept";
+export * from "./dict";
+export * from "./config";
+export * from "./log";
+export * from "./statistics";
+export * from "./notice";
+export * from "./tenant";
+export * from "./tenant-plan";
+
+// Blog 模块
+export * from "./blog";
+
+// 其他模块
+export * from "./file";
+export * from "./codegen";

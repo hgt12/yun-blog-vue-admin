@@ -1,0 +1,31 @@
+/**
+ * Element Plus 变量覆盖
+ * 
+ * 此文件用于覆盖 Element Plus 的默认主题变量
+ * 与前台博客工程主色调保持统一（蓝色系 #30a9de / #0366d6）
+ */
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+  $colors: (
+    "primary": (
+      // 与前台博客 link-hover-color 保持一致
+      "base": #30a9de,
+    ),
+    "success": (
+      "base": #23c343,
+    ),
+    "warning": (
+      "base": #ff9a2e,
+    ),
+    "danger": (
+      "base": #f76560,
+    ),
+    "info": (
+      "base": #718096,
+    ),
+  ),
+
+  $bg-color: (
+    // 与前台博客 bg-color 保持一致
+    "page": #a5dff9,
+  )
+);
