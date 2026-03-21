@@ -21,7 +21,7 @@ const blogRoutes: RouteRecordRaw = {
       path: "write",
       name: "BlogWrite",
       component: () => import("@/views/blog/post/write.vue"),
-      meta: { title: "写博客", hidden: true, keepAlive: false },
+      meta: { title: "写博客", icon: "el-icon-EditPen", hidden: false, keepAlive: false },
     },
     {
       path: "category",

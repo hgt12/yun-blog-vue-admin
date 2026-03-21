@@ -161,7 +161,7 @@ export default defineMock([
               path: "write",
               component: "blog/post/write",
               name: "BlogWrite",
-              meta: { title: "写博客", icon: "el-icon-EditPen", hidden: true, keepAlive: false, alwaysShow: false, params: null },
+              meta: { title: "写博客", icon: "el-icon-EditPen", hidden: false, keepAlive: false, alwaysShow: false, params: null },
             },
             {
               path: "category",

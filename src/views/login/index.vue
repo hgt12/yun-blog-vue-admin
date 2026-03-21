@@ -2,16 +2,12 @@
 <template>
   <div class="auth-view">
     <div class="auth-view__toolbar">
-      <el-tooltip :content="t('login.themeToggle')" placement="bottom">
-        <div class="toolbar-item">
-          <ThemeSwitch />
-        </div>
-      </el-tooltip>
-      <el-tooltip :content="t('login.languageToggle')" placement="bottom">
-        <div class="toolbar-item">
-          <LangSelect size="text-20px" />
-        </div>
-      </el-tooltip>
+      <div class="toolbar-item">
+        <ThemeSwitch />
+      </div>
+      <div class="toolbar-item">
+        <LangSelect size="text-20px" />
+      </div>
     </div>
 <!--登录上部显示区-->
     <div class="auth-view__wrapper">

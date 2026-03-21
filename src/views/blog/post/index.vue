@@ -27,7 +27,7 @@
     <el-card shadow="hover" class="table-section">
       <div class="table-section__toolbar">
         <div class="table-section__toolbar--actions">
-          <el-button type="success" icon="plus" @click="handleWrite()">写文章</el-button>
+          <el-button type="success" icon="plus" @click="handleWrite()">写博客</el-button>
           <el-button type="danger" :disabled="selectIds.length === 0" icon="delete" @click="handleDelete()">删除</el-button>
         </div>
       </div>
@@ -105,7 +105,13 @@ function handleSelectionChange(selection: BlogPostItem[]) {
 }
 
 function handleWrite(id?: string) {
-  router.push({ path: "/blog/write", query: id ? { id } : undefined });
+  if (id) {
+    // 编辑文章，带上 id 参数
+    router.push({ path: "/blog/write", query: { id } });
+  } else {
+    // 新建文章，直接跳转到写博客页面
+    router.push({ path: "/blog/write" });
+  }
 }
 
 function handleDelete(id?: string) {

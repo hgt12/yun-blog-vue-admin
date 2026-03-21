@@ -36,10 +36,13 @@ export interface BlogPostForm {
   title?: string;
   summary?: string;
   coverUrl?: string;
+  thumbnail?: string;
   content?: string;
   categoryId?: string;
   tagIds?: string[];
   status?: number;
+  isTop?: boolean;
+  isComment?: boolean;
 }
 
 // ==================== 分类 ====================
