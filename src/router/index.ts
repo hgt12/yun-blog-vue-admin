@@ -3,47 +3,6 @@ import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-rou
 
 export const Layout = () => import("@/layouts/index.vue");
 
-// 博客管理路由（静态注册，无需后端菜单接口）
-const blogRoutes: RouteRecordRaw = {
-  path: "/blog",
-  component: Layout,
-  redirect: "/blog/post",
-  name: "/blog",
-  meta: { title: "博客管理", icon: "document", hidden: false },
-  children: [
-    {
-      path: "post",
-      name: "BlogPost",
-      component: () => import("@/views/blog/post/index.vue"),
-      meta: { title: "博客列表", icon: "el-icon-Reading", keepAlive: true },
-    },
-    {
-      path: "write",
-      name: "BlogWrite",
-      component: () => import("@/views/blog/post/write.vue"),
-      meta: { title: "写博客", icon: "el-icon-EditPen", hidden: false, keepAlive: false },
-    },
-    {
-      path: "category",
-      name: "BlogCategory",
-      component: () => import("@/views/blog/category/index.vue"),
-      meta: { title: "分类管理", icon: "el-icon-Collection", keepAlive: true },
-    },
-    {
-      path: "tag",
-      name: "BlogTag",
-      component: () => import("@/views/blog/tag/index.vue"),
-      meta: { title: "标签管理", icon: "el-icon-PriceTag", keepAlive: true },
-    },
-    {
-      path: "link",
-      name: "BlogLink",
-      component: () => import("@/views/blog/link/index.vue"),
-      meta: { title: "友链管理", icon: "el-icon-Link", keepAlive: true },
-    },
-  ],
-};
-
 // 静态路由
 export const constantRoutes: RouteRecordRaw[] = [
   {
@@ -105,15 +64,8 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/profile/notice/index.vue"),
         meta: { title: "我的通知", icon: "user", hidden: true },
       },
-      {
-        path: "/detail/:id(\\d+)",
-        name: "DemoDetail",
-        component: () => import("@/views/demo/detail.vue"),
-        meta: { title: "详情页缓存", icon: "user", hidden: true, keepAlive: true },
-      },
     ],
   },
-  blogRoutes,
 ];
 
 /**

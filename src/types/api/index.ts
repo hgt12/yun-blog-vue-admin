@@ -23,4 +23,3 @@ export * from "./blog";
 
 // 其他模块
 export * from "./file";
-export * from "./codegen";
