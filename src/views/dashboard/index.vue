@@ -1,4 +1,5 @@
-﻿<template>
+﻿<!--主页仪表盘-->
+<template>
   <div class="relative p-6">
     <el-card shadow="never" class="mt-2">
       <div class="flex flex-wrap">
