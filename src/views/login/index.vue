@@ -9,7 +9,7 @@
         <LangSelect size="text-20px" />
       </div>
     </div>
-<!--登录上部显示区-->
+    <!--登录上部显示区-->
     <div class="auth-view__wrapper">
       <section class="auth-panel">
         <div class="auth-panel__brand">
@@ -39,14 +39,12 @@
 import { appConfig } from "@/settings";
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
 
-type LayoutMap = "login" | "register" | "resetPwd" | "codeLogin";
+type LayoutMap = "login" | "resetPwd" | "codeLogin";
 
-const { t } = useI18n();
 const component = ref<LayoutMap>("login");
 
 const formComponents = {
   login: defineAsyncComponent(() => import("./components/Login.vue")),
-  register: defineAsyncComponent(() => import("./components/Register.vue")),
   resetPwd: defineAsyncComponent(() => import("./components/ResetPwd.vue")),
   codeLogin: defineAsyncComponent(() => import("./components/CodeLogin.vue")),
 };
@@ -344,8 +342,8 @@ const formComponents = {
   font-weight: 650;
   line-height: 1.4;
   color: var(--el-text-color-primary);
-  white-space: nowrap;
   text-align: center;
+  white-space: nowrap;
 }
 
 .auth-panel__version-row {

@@ -48,7 +48,7 @@ export interface CaptchaInfo {
 export interface SendCodeRequest {
   /** 邮箱或手机号 */
   account: string;
-  /** 业务类型：REGISTER | FORGOT_PASSWORD | LOGIN */
+  /** 业务类型：FORGOT_PASSWORD | LOGIN */
   type: string;
 }
 
@@ -80,22 +80,4 @@ export interface ResetPasswordRequest {
   code: string;
   /** 新密码 */
   newPassword: string;
-}
-
-/**
- * 注册请求参数
- */
-export interface RegisterRequest {
-  /** 用户名 */
-  username: string;
-  /** 手机号（与email二选一） */
-  phone?: string;
-  /** 邮箱（与phone二选一） */
-  email?: string;
-  /** 密码 */
-  password: string;
-  /** 图形验证码缓存key */
-  captchaId: string;
-  /** 图形验证码 */
-  captchaCode: string;
 }

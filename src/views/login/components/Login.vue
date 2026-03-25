@@ -33,7 +33,12 @@
               <el-icon><Lock /></el-icon>
             </template>
             <template #suffix>
-              <el-link type="primary" underline="never" class="forget-pwd-link" @click="toOtherForm('resetPwd')">
+              <el-link
+                type="primary"
+                underline="never"
+                class="forget-pwd-link"
+                @click="toOtherForm('resetPwd')"
+              >
                 {{ t("login.forgetPassword") }}
               </el-link>
             </template>
@@ -90,32 +95,25 @@
       </el-form-item>
     </el-form>
 
-    <div flex-center gap-10px>
-      <el-text size="default">{{ t("login.noAccount") }}</el-text>
-      <el-link type="primary" underline="never" @click="toOtherForm('register')">
-        {{ t("login.reg") }}
-      </el-link>
-    </div>
-
     <!-- 第三方登录 -->
-    <div class="third-party-login">
-      <div class="divider-container">
-        <div class="divider-line"></div>
-        <span class="divider-text">{{ t("login.otherLoginMethods") }}</span>
-        <div class="divider-line"></div>
-      </div>
-      <div class="social-login">
-        <div class="social-login__item">
-          <div class="i-svg:wechat" />
-        </div>
-        <div class="social-login__item">
-          <div class="i-svg:qq" />
-        </div>
-        <div class="social-login__item">
-          <div class="i-svg:github" />
-        </div>
-      </div>
-    </div>
+    <!--    <div class="third-party-login">-->
+    <!--      <div class="divider-container">-->
+    <!--        <div class="divider-line"></div>-->
+    <!--        <span class="divider-text">{{ t("login.otherLoginMethods") }}</span>-->
+    <!--        <div class="divider-line"></div>-->
+    <!--      </div>-->
+    <!--      <div class="social-login">-->
+    <!--        <div class="social-login__item">-->
+    <!--          <div class="i-svg:wechat" />-->
+    <!--        </div>-->
+    <!--        <div class="social-login__item">-->
+    <!--          <div class="i-svg:qq" />-->
+    <!--        </div>-->
+    <!--        <div class="social-login__item">-->
+    <!--          <div class="i-svg:github" />-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
   </div>
 </template>
 <script setup lang="ts">
@@ -231,7 +229,7 @@ function checkCapsLock(event: KeyboardEvent) {
 }
 
 const emit = defineEmits(["update:modelValue"]);
-function toOtherForm(type: "register" | "resetPwd" | "codeLogin") {
+function toOtherForm(type: "resetPwd" | "codeLogin") {
   emit("update:modelValue", type);
 }
 </script>

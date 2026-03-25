@@ -2,7 +2,13 @@
 <template>
   <div class="auth-panel-form">
     <h3 class="auth-panel-form__title" text-center>验证码登录</h3>
-    <el-form ref="formRef" :model="form" :rules="rules" size="large" :validate-on-rule-change="false">
+    <el-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      size="large"
+      :validate-on-rule-change="false"
+    >
       <!-- 手机号/邮箱 -->
       <el-form-item prop="account">
         <el-input v-model.trim="form.account" placeholder="手机号/邮箱" autocomplete="username">
@@ -31,19 +37,17 @@
             :loading="isSending"
             :disabled="countdown > 0"
             plain
-            style="white-space: nowrap; min-width: 100px"
+            style=" min-width: 100px;white-space: nowrap"
             @click="handleSendCode"
           >
-            {{ countdown > 0 ? `${countdown}s后重发` : '获取验证码' }}
+            {{ countdown > 0 ? `${countdown}s后重发` : "获取验证码" }}
           </el-button>
         </div>
       </el-form-item>
 
       <div class="flex-x-between w-full">
         <el-checkbox v-model="form.rememberMe">{{ t("login.rememberMe") }}</el-checkbox>
-        <el-link type="primary" underline="never" @click="toOtherForm('login')">
-          密码登录
-        </el-link>
+        <el-link type="primary" underline="never" @click="toOtherForm('login')">密码登录</el-link>
       </div>
 
       <!-- 登录按钮 -->
@@ -53,13 +57,6 @@
         </el-button>
       </el-form-item>
     </el-form>
-
-    <div flex-center gap-10px>
-      <el-text size="default">{{ t("login.noAccount") }}</el-text>
-      <el-link type="primary" underline="never" @click="toOtherForm('register')">
-        {{ t("login.reg") }}
-      </el-link>
-    </div>
   </div>
 </template>
 
@@ -67,12 +64,10 @@
 import type { FormInstance } from "element-plus";
 import AuthAPI from "@/api/auth";
 import { AuthStorage } from "@/utils/auth";
-import { useUserStore } from "@/store";
 import router from "@/router";
 import { useRoute } from "vue-router";
 
 const { t } = useI18n();
-const userStore = useUserStore();
 const route = useRoute();
 
 const formRef = ref<FormInstance>();
@@ -172,7 +167,7 @@ async function handleSubmit() {
 }
 
 const emit = defineEmits(["update:modelValue"]);
-function toOtherForm(type: "login" | "register") {
+function toOtherForm(type: "login") {
   emit("update:modelValue", type);
 }
 

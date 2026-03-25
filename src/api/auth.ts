@@ -3,7 +3,6 @@ import type {
   LoginRequest,
   LoginResponse,
   CaptchaInfo,
-  RegisterRequest,
   SendCodeRequest,
   ResetPasswordRequest,
   PhoneCodeLoginRequest,
@@ -55,16 +54,7 @@ const AuthAPI = {
     });
   },
 
-  /** 注册接口 */
-  register(data: RegisterRequest) {
-    return request({
-      url: `${AUTH_BASE_URL}/register`,
-      method: "post",
-      data,
-    });
-  },
-
-  /** 发送验证码（注册/忘记密码） */
+  /** 发送验证码（忘记密码） */
   sendCode(data: SendCodeRequest) {
     return request({
       url: `${AUTH_BASE_URL}/send-code`,
