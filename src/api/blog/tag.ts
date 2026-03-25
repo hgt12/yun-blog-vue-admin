@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 import type { BlogTagQueryParams, BlogTagItem, BlogTagForm, OptionItem } from "@/types/api";
 
-const BASE_URL = "/blog/tags";
+const BASE_URL = "/tags";
 
 const BlogTagAPI = {
   getPage(queryParams: BlogTagQueryParams) {

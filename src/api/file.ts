@@ -23,7 +23,7 @@ const FileAPI = {
     const formData = new FormData();
     formData.append("file", file);
     return request<any, FileInfo>({
-      url: "/api/v1/files",
+      url: "/files",
       method: "post",
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
@@ -33,7 +33,7 @@ const FileAPI = {
   /** 删除文件 */
   delete(filePath?: string) {
     return request({
-      url: "/api/v1/files",
+      url: "/files",
       method: "delete",
       params: { filePath },
     });

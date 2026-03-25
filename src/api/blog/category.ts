@@ -6,7 +6,7 @@ import type {
   OptionItem,
 } from "@/types/api";
 
-const BASE_URL = "/blog/categories";
+const BASE_URL = "/categories";
 
 const BlogCategoryAPI = {
   getPage(queryParams: BlogCategoryQueryParams) {

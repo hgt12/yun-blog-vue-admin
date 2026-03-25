@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 import type { BlogPostQueryParams, BlogPostItem, BlogPostForm } from "@/types/api";
 
-const BASE_URL = "/blog/posts";
+const BASE_URL = "/posts";
 
 const BlogPostAPI = {
   getPage(queryParams: BlogPostQueryParams) {
