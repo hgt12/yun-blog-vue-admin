@@ -39,14 +39,13 @@
 import { appConfig } from "@/settings";
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
 
-type LayoutMap = "login" | "resetPwd" | "codeLogin";
+type LayoutMap = "login" | "resetPwd";
 
 const component = ref<LayoutMap>("login");
 
 const formComponents = {
   login: defineAsyncComponent(() => import("./components/Login.vue")),
   resetPwd: defineAsyncComponent(() => import("./components/ResetPwd.vue")),
-  codeLogin: defineAsyncComponent(() => import("./components/CodeLogin.vue")),
 };
 </script>
 

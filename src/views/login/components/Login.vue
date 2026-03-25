@@ -32,16 +32,6 @@
             <template #prefix>
               <el-icon><Lock /></el-icon>
             </template>
-            <template #suffix>
-              <el-link
-                type="primary"
-                underline="never"
-                class="forget-pwd-link"
-                @click="toOtherForm('resetPwd')"
-              >
-                {{ t("login.forgetPassword") }}
-              </el-link>
-            </template>
           </el-input>
         </el-form-item>
       </el-tooltip>
@@ -82,8 +72,13 @@
 
       <div class="flex-x-between w-full">
         <el-checkbox v-model="loginFormData.rememberMe">{{ t("login.rememberMe") }}</el-checkbox>
-        <el-link type="primary" underline="never" @click="toOtherForm('codeLogin')">
-          验证码登录
+        <el-link
+          type="primary"
+          underline="never"
+          class="forget-pwd-link"
+          @click="toOtherForm('resetPwd')"
+        >
+          {{ t("login.forgetPassword") }}
         </el-link>
       </div>
 
@@ -229,7 +224,7 @@ function checkCapsLock(event: KeyboardEvent) {
 }
 
 const emit = defineEmits(["update:modelValue"]);
-function toOtherForm(type: "resetPwd" | "codeLogin") {
+function toOtherForm(type: "resetPwd") {
   emit("update:modelValue", type);
 }
 </script>

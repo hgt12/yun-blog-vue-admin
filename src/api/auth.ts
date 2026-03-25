@@ -5,8 +5,6 @@ import type {
   CaptchaInfo,
   SendCodeRequest,
   ResetPasswordRequest,
-  PhoneCodeLoginRequest,
-  EmailCodeLoginRequest,
 } from "@/types/api/auth";
 
 const AUTH_BASE_URL = "/auth";
@@ -67,24 +65,6 @@ const AuthAPI = {
   resetPassword(data: ResetPasswordRequest) {
     return request({
       url: `${AUTH_BASE_URL}/reset-password`,
-      method: "post",
-      data,
-    });
-  },
-
-  /** 手机验证码登录 */
-  loginByPhone(data: PhoneCodeLoginRequest) {
-    return request<any, LoginResponse>({
-      url: `${AUTH_BASE_URL}/login/phone`,
-      method: "post",
-      data,
-    });
-  },
-
-  /** 邮箱验证码登录 */
-  loginByEmail(data: EmailCodeLoginRequest) {
-    return request<any, LoginResponse>({
-      url: `${AUTH_BASE_URL}/login/email`,
       method: "post",
       data,
     });

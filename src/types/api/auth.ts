@@ -53,24 +53,6 @@ export interface SendCodeRequest {
 }
 
 /**
- * 验证码登录请求（手机号）
- */
-export interface PhoneCodeLoginRequest {
-  phone: string;
-  code: string;
-  rememberMe?: boolean;
-}
-
-/**
- * 验证码登录请求（邮箱）
- */
-export interface EmailCodeLoginRequest {
-  email: string;
-  code: string;
-  rememberMe?: boolean;
-}
-
-/**
  * 重置密码请求
  */
 export interface ResetPasswordRequest {
