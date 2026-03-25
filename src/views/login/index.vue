@@ -1,6 +1,6 @@
 <!--登录页面容器（壳）-->
 <template>
-  <div class="auth-view">
+  <div class="auth-view" :style="authViewStyle">
     <div class="auth-view__toolbar">
       <div class="toolbar-item">
         <ThemeSwitch />
@@ -38,15 +38,57 @@
 <script setup lang="ts">
 import { appConfig } from "@/settings";
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
+import { useSettingsStore } from "@/store";
+import { ThemeMode } from "@/enums";
 
 type LayoutMap = "login" | "resetPwd";
+type BackgroundPeriod = "morning" | "afternoon" | "night";
 
+const settingsStore = useSettingsStore();
 const component = ref<LayoutMap>("login");
 
 const formComponents = {
   login: defineAsyncComponent(() => import("./components/Login.vue")),
   resetPwd: defineAsyncComponent(() => import("./components/ResetPwd.vue")),
 };
+
+const backgroundPeriod = ref<BackgroundPeriod>("morning");
+
+function getBackgroundPeriodByHour(hour: number): BackgroundPeriod {
+  if (hour >= 8 && hour < 15) {
+    return "morning";
+  }
+  if (hour >= 15 && hour < 18) {
+    return "afternoon";
+  }
+  return "night";
+}
+
+function updateBackgroundPeriodByCurrentTime() {
+  const currentHour = new Date().getHours();
+  backgroundPeriod.value = getBackgroundPeriodByHour(currentHour);
+}
+
+onMounted(() => {
+  updateBackgroundPeriodByCurrentTime();
+});
+
+const backgroundImageMap: Record<BackgroundPeriod, string> = {
+  morning: "/background_image_morning.jpg",
+  afternoon: "/background_image_afternoon.jpg",
+  night: "/background_image_night.jpg",
+};
+
+const currentBackgroundImage = computed(() => {
+  if (settingsStore.theme === ThemeMode.DARK) {
+    return backgroundImageMap.night;
+  }
+  return backgroundImageMap[backgroundPeriod.value];
+});
+
+const authViewStyle = computed(() => ({
+  backgroundImage: `url(${currentBackgroundImage.value})`,
+}));
 </script>
 
 <style lang="scss" scoped>
@@ -61,6 +103,10 @@ const formComponents = {
   padding: clamp(1rem, 3vw, 2rem);
   overflow: hidden;
   background-color: #a5dff9;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transition: background-image 0.4s ease;
 }
 
 .dark .auth-view {
@@ -257,25 +303,24 @@ const formComponents = {
   min-height: 560px;
   padding: clamp(1.5rem, 3vw, 2rem);
   margin-inline: auto;
-  background: rgba(245, 255, 250, 0.95);
-  border: 1px solid rgba(48, 169, 222, 0.15);
+  background: rgba(245, 255, 250, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 24px;
   box-shadow:
-    0 12px 15px rgba(0, 0, 0, 0.24),
-    0 4px 16px rgba(48, 169, 222, 0.1),
-    0 0 0 1px rgba(245, 255, 250, 0.6) inset;
-  backdrop-filter: blur(20px);
+    0 10px 30px rgba(48, 169, 222, 0.2),
+    0 0 0 1px rgba(245, 255, 250, 0.55) inset;
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(130%);
   animation: panelLift 0.7s ease;
 }
 
 /* 应用内暗黑主题（例如 html/body 上挂 .dark 类）下的登录表单样式 */
 .dark .auth-panel {
-  background: rgba(37, 45, 56, 0.92);
-  border-color: rgba(48, 169, 222, 0.25);
+  background: rgba(37, 45, 56, 0.55);
+  border-color: rgba(255, 255, 255, 0.22);
   box-shadow:
-    0 12px 15px rgba(0, 0, 0, 0.4),
-    0 4px 16px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(48, 169, 222, 0.12) inset;
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(48, 169, 222, 0.24) inset;
 }
 
 .auth-panel__brand {
