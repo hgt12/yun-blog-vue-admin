@@ -1,11 +1,20 @@
 import request from "@/utils/request";
-import type { BlogCategoryQueryParams, BlogCategoryItem, BlogCategoryForm, OptionItem } from "@/types/api";
+import type {
+  BlogCategoryQueryParams,
+  BlogCategoryItem,
+  BlogCategoryForm,
+  OptionItem,
+} from "@/types/api";
 
-const BASE_URL = "/api/v1/blog/categories";
+const BASE_URL = "/blog/categories";
 
 const BlogCategoryAPI = {
   getPage(queryParams: BlogCategoryQueryParams) {
-    return request<any, PageResult<BlogCategoryItem>>({ url: BASE_URL, method: "get", params: queryParams });
+    return request<any, PageResult<BlogCategoryItem>>({
+      url: BASE_URL,
+      method: "get",
+      params: queryParams,
+    });
   },
   getOptions() {
     return request<any, OptionItem[]>({ url: `${BASE_URL}/options`, method: "get" });

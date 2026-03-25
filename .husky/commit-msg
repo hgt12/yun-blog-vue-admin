@@ -1,1 +1,2 @@
-npx --no-install commitlint --edit $1
+# 关于 git 提交规范（注释掉则解除限制）
+# npx --no-install commitlint --edit $1

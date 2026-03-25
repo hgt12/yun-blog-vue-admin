@@ -1,11 +1,15 @@
 import request from "@/utils/request";
 import type { BlogPostQueryParams, BlogPostItem, BlogPostForm } from "@/types/api";
 
-const BASE_URL = "/api/v1/blog/posts";
+const BASE_URL = "/blog/posts";
 
 const BlogPostAPI = {
   getPage(queryParams: BlogPostQueryParams) {
-    return request<any, PageResult<BlogPostItem>>({ url: BASE_URL, method: "get", params: queryParams });
+    return request<any, PageResult<BlogPostItem>>({
+      url: BASE_URL,
+      method: "get",
+      params: queryParams,
+    });
   },
   getFormData(id: string) {
     return request<any, BlogPostForm>({ url: `${BASE_URL}/${id}/form`, method: "get" });

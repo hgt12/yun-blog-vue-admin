@@ -5,7 +5,7 @@ const FileAPI = {
   /** 上传文件 （传入 FormData，上传进度回调） */
   upload(formData: FormData, onProgress?: (percent: number) => void) {
     return request<any, FileInfo>({
-      url: "/api/v1/files",
+      url: "/files",
       method: "post",
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },

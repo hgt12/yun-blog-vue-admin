@@ -1,11 +1,15 @@
 import request from "@/utils/request";
 import type { BlogTagQueryParams, BlogTagItem, BlogTagForm, OptionItem } from "@/types/api";
 
-const BASE_URL = "/api/v1/blog/tags";
+const BASE_URL = "/blog/tags";
 
 const BlogTagAPI = {
   getPage(queryParams: BlogTagQueryParams) {
-    return request<any, PageResult<BlogTagItem>>({ url: BASE_URL, method: "get", params: queryParams });
+    return request<any, PageResult<BlogTagItem>>({
+      url: BASE_URL,
+      method: "get",
+      params: queryParams,
+    });
   },
   getOptions() {
     return request<any, OptionItem[]>({ url: `${BASE_URL}/options`, method: "get" });

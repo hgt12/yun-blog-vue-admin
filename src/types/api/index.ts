@@ -15,8 +15,6 @@ export * from "./config";
 export * from "./log";
 export * from "./statistics";
 export * from "./notice";
-export * from "./tenant";
-export * from "./tenant-plan";
 
 // Blog 模块
 export * from "./blog";

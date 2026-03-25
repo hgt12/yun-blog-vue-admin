@@ -10,36 +10,20 @@ import type {
   EmailCodeLoginRequest,
 } from "@/types/api/auth";
 
-const AUTH_BASE_URL = "/api/v1/auth";
+const AUTH_BASE_URL = "/auth";
 
 const AuthAPI = {
   /** 登录接口*/
   login(data: LoginRequest) {
-    const payload: Record<string, any> = {
-      username: data.username,
-      password: data.password,
-      captchaId: data.captchaId,
-      captchaCode: data.captchaCode,
-    };
-
-    // tenantId is optional — include only when provided (multi-tenant feature)
-    if (typeof data.tenantId !== "undefined") {
-      payload.tenantId = data.tenantId;
-    }
-
     return request<any, LoginResponse>({
       url: `${AUTH_BASE_URL}/login`,
       method: "post",
-      data: payload,
-    });
-  },
-
-  /** 切换租户(平台用户) - 返回新的 token */
-  switchTenant(tenantId: number) {
-    return request<any, LoginResponse>({
-      url: `${AUTH_BASE_URL}/switch-tenant`,
-      method: "post",
-      params: { tenantId },
+      data: {
+        username: data.username,
+        password: data.password,
+        captchaId: data.captchaId,
+        captchaCode: data.captchaCode,
+      },
     });
   },
 
