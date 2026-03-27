@@ -23,13 +23,13 @@ export interface LoginRequest {
  */
 export interface LoginResponse {
   /** 访问令牌 */
-  accessToken: string;
+  token: string;
   /** 刷新令牌 */
   refreshToken: string;
   /** 令牌类型 */
-  tokenType: string;
+  tokenType?: string;
   /** 过期时间(单位:秒) */
-  expiresIn: number;
+  expiresIn?: number;
 }
 
 /**

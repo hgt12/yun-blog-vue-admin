@@ -20,9 +20,9 @@ export const useUserStore = defineStore("user", () => {
    * 登录
    */
   async function login(loginRequest: LoginRequest): Promise<void> {
-    const { accessToken, refreshToken } = await AuthAPI.login(loginRequest);
+    const { token, refreshToken } = await AuthAPI.login(loginRequest);
     rememberMe.value = loginRequest.rememberMe ?? false;
-    AuthStorage.setTokens(accessToken, refreshToken, rememberMe.value);
+    AuthStorage.setTokens(token, refreshToken, rememberMe.value);
   }
 
   let refreshPromise: Promise<void> | null = null;
@@ -100,9 +100,9 @@ export const useUserStore = defineStore("user", () => {
       throw new Error("没有有效的刷新令牌");
     }
 
-    const { accessToken, refreshToken: newRefreshToken } =
+    const { token, refreshToken: newRefreshToken } =
       await AuthAPI.refreshToken(currentRefreshToken);
-    AuthStorage.setTokens(accessToken, newRefreshToken, AuthStorage.getRememberMe());
+    AuthStorage.setTokens(token, newRefreshToken, AuthStorage.getRememberMe());
   }
 
   return {

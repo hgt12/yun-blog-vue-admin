@@ -27,11 +27,11 @@ const AuthAPI = {
   /** 刷新 token 接口*/
   refreshToken(refreshToken: string) {
     return request<any, LoginResponse>({
-      url: `${AUTH_BASE_URL}/refresh-token`,
+      url: `${AUTH_BASE_URL}/refreshToken`,
       method: "post",
       params: { refreshToken },
       headers: {
-        Authorization: "no-auth",
+        token: "no-auth",
       },
     });
   },
@@ -40,7 +40,7 @@ const AuthAPI = {
   logout() {
     return request({
       url: `${AUTH_BASE_URL}/logout`,
-      method: "delete",
+      method: "post",
     });
   },
 
@@ -55,7 +55,7 @@ const AuthAPI = {
   /** 发送验证码（忘记密码） */
   sendCode(data: SendCodeRequest) {
     return request({
-      url: `${AUTH_BASE_URL}/send-code`,
+      url: `${AUTH_BASE_URL}/sendCode`,
       method: "post",
       data,
     });
@@ -64,7 +64,7 @@ const AuthAPI = {
   /** 重置密码 */
   resetPassword(data: ResetPasswordRequest) {
     return request({
-      url: `${AUTH_BASE_URL}/reset-password`,
+      url: `${AUTH_BASE_URL}/resetPassword`,
       method: "post",
       data,
     });

@@ -177,7 +177,7 @@ export function useStomp(options: UseStompOptions = {}) {
     stompClient.value = new Client({
       brokerURL: config.brokerURL.value,
       connectHeaders: {
-        Authorization: `Bearer ${accessToken}`,
+        token: accessToken,
       },
       debug: config.debug ? (msg) => console.log("[STOMP]", msg) : () => {},
       reconnectDelay: 0, // 禁用内置重连，使用自定义重连逻辑

@@ -12,7 +12,7 @@ export const enum ApiCodeEnum {
   /**
    * 成功
    */
-  SUCCESS = "00000",
+  SUCCESS = 200,
 
   /**
    * 访问令牌无效或过期
@@ -28,9 +28,4 @@ export const enum ApiCodeEnum {
    * 权限不足
    */
   PERMISSION_DENIED = "A0301",
-
-  /**
-   * 需要选择租户
-   */
-  CHOOSE_TENANT = "A0250",
 }

@@ -10,7 +10,7 @@ const retriedConfigs = new WeakSet<InternalAxiosRequestConfig>();
 
 // HTTP 请求实例
 const http = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: import.meta.env.VITE_APP_BASE_API || import.meta.env.VITE_APP_API_URL,
   timeout: 50000,
   headers: { "Content-Type": "application/json;charset=utf-8" },
   paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
@@ -21,10 +21,10 @@ http.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = AuthStorage.getAccessToken();
 
-    if (config.headers.Authorization === "no-auth") {
-      delete config.headers.Authorization;
+    if (config.headers.token === "no-auth") {
+      delete config.headers.token;
     } else if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.token = token;
     }
 
     return config;
@@ -78,7 +78,7 @@ http.interceptors.response.use(
 
         const token = AuthStorage.getAccessToken();
         if (token) {
-          config.headers.set("Authorization", `Bearer ${token}`);
+          config.headers.set("token", token);
         }
 
         return http(config);
