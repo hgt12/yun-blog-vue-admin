@@ -38,13 +38,10 @@
 <script setup lang="ts">
 import { appConfig } from "@/settings";
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
-import { useSettingsStore } from "@/store";
-import { ThemeMode } from "@/enums";
+import { useWeatherBackground } from "@/composables/useWeatherBackground";
 
 type LayoutMap = "login" | "resetPwd";
-type BackgroundPeriod = "morning" | "afternoon" | "night";
 
-const settingsStore = useSettingsStore();
 const component = ref<LayoutMap>("login");
 
 const formComponents = {
@@ -52,39 +49,8 @@ const formComponents = {
   resetPwd: defineAsyncComponent(() => import("./components/ResetPwd.vue")),
 };
 
-const backgroundPeriod = ref<BackgroundPeriod>("morning");
-
-function getBackgroundPeriodByHour(hour: number): BackgroundPeriod {
-  if (hour >= 8 && hour < 15) {
-    return "morning";
-  }
-  if (hour >= 15 && hour < 18) {
-    return "afternoon";
-  }
-  return "night";
-}
-
-function updateBackgroundPeriodByCurrentTime() {
-  const currentHour = new Date().getHours();
-  backgroundPeriod.value = getBackgroundPeriodByHour(currentHour);
-}
-
-onMounted(() => {
-  updateBackgroundPeriodByCurrentTime();
-});
-
-const backgroundImageMap: Record<BackgroundPeriod, string> = {
-  morning: "/background_image_morning.jpg",
-  afternoon: "/background_image_afternoon.jpg",
-  night: "/background_image_night.jpg",
-};
-
-const currentBackgroundImage = computed(() => {
-  if (settingsStore.theme === ThemeMode.DARK) {
-    return backgroundImageMap.night;
-  }
-  return backgroundImageMap[backgroundPeriod.value];
-});
+// 使用天气背景管理
+const { currentBackgroundImage } = useWeatherBackground();
 
 const authViewStyle = computed(() => ({
   backgroundImage: `url(${currentBackgroundImage.value})`,
