@@ -44,7 +44,8 @@ http.interceptors.response.use(
 
     const { code, data, msg } = response.data;
 
-    if (code === ApiCodeEnum.SUCCESS) {
+    // 处理 code 可能是字符串或数字的情况
+    if (code === ApiCodeEnum.SUCCESS || code === String(ApiCodeEnum.SUCCESS) || code === "00000") {
       return data;
     }
 

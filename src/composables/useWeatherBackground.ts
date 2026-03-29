@@ -1,5 +1,5 @@
-import { ref, computed, onMounted } from "vue";
-import { getWeatherInfo, WeatherType } from "@/api/weather";
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { getWeatherNow, WeatherType } from "@/api/weather";
 import { useSettingsStore } from "@/store";
 import { ThemeMode } from "@/enums";
 
@@ -10,18 +10,18 @@ type TimePeriod = "morning" | "afternoon" | "evening";
  */
 export function useWeatherBackground() {
   const settingsStore = useSettingsStore();
-  const weather = ref<WeatherType>(WeatherType.SUNNY);
+  const weather = ref<WeatherType | null>(null);
   const timePeriod = ref<TimePeriod>("morning");
-  const isLoading = ref(false);
+  const isLoading = ref(true);
 
   /**
    * 根据小时获取时间段
    */
   function getTimePeriodByHour(hour: number): TimePeriod {
-    if (hour >= 6 && hour < 12) {
+    if (hour >= 6 && hour < 15) {
       return "morning";
     }
-    if (hour >= 12 && hour < 18) {
+    if (hour >= 15 && hour < 18) {
       return "afternoon";
     }
     return "evening";
@@ -36,15 +36,15 @@ export function useWeatherBackground() {
   }
 
   /**
-   * 获取天气信息
+   * 获取天气类型
    */
   async function fetchWeather() {
     try {
-      isLoading.value = true;
-      const data = await getWeatherInfo();
-      weather.value = data.weather;
+      const data = await getWeatherNow();
+      weather.value = data.weatherType;
     } catch (error) {
-      console.warn("获取天气信息失败，使用默认晴天背景", error);
+      // 静默失败，使用默认晴天背景，不影响用户体验
+      console.warn("获取天气类型失败，使用默认晴天背景", error);
       weather.value = WeatherType.SUNNY;
     } finally {
       isLoading.value = false;
@@ -75,15 +75,23 @@ export function useWeatherBackground() {
       afternoon: "/background_image_snowing_afternoon.png",
       evening: "/background_image_snowing_evening.png",
     },
+    [WeatherType.FOG]: {
+      morning: "/background_image_fog_morning.png",
+      afternoon: "/background_image_fog_afternoon.png",
+      evening: "/background_image_fog_evening.png",
+    },
   };
 
   /**
    * 当前背景图片
-   * 规则：
-   * 1. 如果是暗黑主题，使用当前天气的evening背景
-   * 2. 否则根据天气和时间段选择背景
+   * 天气数据未加载完成时返回空字符串
+   * 如果是暗黑主题，使用当前天气的evening背景
+   * 否则根据天气和时间段选择背景
    */
   const currentBackgroundImage = computed(() => {
+    if (!weather.value) {
+      return "";
+    }
     if (settingsStore.theme === ThemeMode.DARK) {
       return backgroundImageMap[weather.value].evening;
     }
@@ -115,6 +123,5 @@ export function useWeatherBackground() {
     timePeriod,
     isLoading,
     currentBackgroundImage,
-    fetchWeather,
   };
 }
