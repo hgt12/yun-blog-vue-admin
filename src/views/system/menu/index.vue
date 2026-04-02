@@ -73,12 +73,6 @@
         <el-table-column label="路由路径" align="left" width="150" prop="routePath" />
         <el-table-column label="组件路径" align="left" width="250" prop="component" />
         <el-table-column label="权限标识" align="center" width="200" prop="perm" />
-        <el-table-column v-if="showMenuScope" label="范围" align="center" width="100">
-          <template #default="scope">
-            <el-tag v-if="scope.row.scope === MenuScopeEnum.PLATFORM" type="danger">平台</el-tag>
-            <el-tag v-else type="success">业务</el-tag>
-          </template>
-        </el-table-column>
 
         <el-table-column label="状态" align="center" width="80">
           <template #default="scope">
@@ -268,17 +262,6 @@
           </div>
         </el-form-item>
 
-        <el-form-item
-          v-if="formData.type !== MenuTypeEnum.BUTTON && showMenuScope"
-          prop="scope"
-          label="菜单范围"
-        >
-          <el-radio-group v-model="formData.scope">
-            <el-radio :value="MenuScopeEnum.PLATFORM">平台菜单</el-radio>
-            <el-radio :value="MenuScopeEnum.TENANT">业务菜单</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
         <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" prop="visible" label="显示状态">
           <el-radio-group v-model="formData.visible">
             <el-radio :value="1">显示</el-radio>
@@ -363,8 +346,7 @@ import { DeviceEnum } from "@/enums/settings";
 import MenuAPI from "@/api/system/menu";
 import type { MenuQueryParams, MenuForm, MenuItem } from "@/types/api";
 import type { FormInstance, FormRules } from "element-plus";
-import { MenuScopeEnum, MenuTypeEnum } from "@/enums/business";
-import { isTenantEnabled } from "@/utils/tenant";
+import { MenuTypeEnum } from "@/enums/business";
 
 defineOptions({
   name: "SysMenu",
@@ -396,7 +378,6 @@ const initialMenuFormData = ref<MenuForm>({
   id: undefined,
   parentId: "0",
   visible: 1,
-  scope: MenuScopeEnum.TENANT,
   sort: 1,
   type: MenuTypeEnum.MENU,
   alwaysShow: 0,
@@ -405,9 +386,6 @@ const initialMenuFormData = ref<MenuForm>({
 });
 const formData = ref({ ...initialMenuFormData.value });
 const selectedMenuId = ref<string | undefined>();
-
-// 多租户关闭时，隐藏菜单范围
-const showMenuScope = computed(() => isTenantEnabled());
 
 // 抽屉宽度
 const drawerSize = computed(() => (appStore.device === DeviceEnum.DESKTOP ? "600px" : "90%"));
@@ -593,7 +571,6 @@ function closeDialog(): void {
     id: undefined,
     parentId: "0",
     visible: 1,
-    scope: MenuScopeEnum.TENANT,
     sort: 1,
     type: MenuTypeEnum.MENU,
     alwaysShow: 0,

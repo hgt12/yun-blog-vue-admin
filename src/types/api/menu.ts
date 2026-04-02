@@ -98,6 +98,36 @@ export interface RouteItem {
   redirect?: string;
 }
 
+/** 菜单路由对象（后端返回的菜单数据结构） */
+export interface MenuRouteItem {
+  /** 菜单ID */
+  id: number;
+  /** 父菜单ID */
+  parentId: number;
+  /** 菜单名称 */
+  name: string;
+  /** 菜单类型（C-目录 M-菜单 B-按钮） */
+  type: string;
+  /** 路由路径 */
+  path: string;
+  /** 路由名称 */
+  routeName: string;
+  /** 组件路径 */
+  component: string;
+  /** 图标 */
+  icon?: string;
+  /** 重定向路径 */
+  redirect?: string;
+  /** 子菜单列表 */
+  children: MenuRouteItem[];
+}
+
+/** 获取路由接口响应 */
+export interface GetRoutesResponse {
+  /** 菜单列表 */
+  menus: MenuRouteItem[];
+}
+
 /** 路由属性 */
 export interface Meta {
   /** 【目录】只有一个子路由是否始终显示 */

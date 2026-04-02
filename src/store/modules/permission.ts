@@ -32,8 +32,9 @@ export const usePermissionStore = defineStore("permission", () => {
   /** 生成动态路由 */
   async function generateRoutes(): Promise<RouteRecordRaw[]> {
     try {
-      const data = await MenuAPI.getRoutes(); // 获取当前登录人的菜单路由
-      const dynamicRoutes = transformRoutes(data);
+      const response = await MenuAPI.getRoutes(); // 获取当前登录人的菜单路由
+      const menuRoutes = transformMenuToRoutes(response.menus);
+      const dynamicRoutes = transformRoutes(menuRoutes);
 
       routes.value = [...constantRoutes, ...dynamicRoutes];
       isRouteGenerated.value = true;
@@ -133,6 +134,30 @@ export const usePermissionStore = defineStore("permission", () => {
     reloadPermissionSnapshotOnce,
   };
 });
+
+/**
+ * 转换后端菜单数据为RouteItem格式
+ */
+const transformMenuToRoutes = (menus: any[]): RouteItem[] => {
+  return menus.map((menu) => {
+    const route: RouteItem = {
+      path: menu.path,
+      name: menu.routeName,
+      component: menu.component,
+      redirect: menu.redirect,
+      meta: {
+        title: menu.name,
+        icon: menu.icon,
+        hidden: false,
+        keepAlive: menu.type === "M", // 菜单类型默认开启缓存
+        alwaysShow: false,
+      },
+      children:
+        menu.children && menu.children.length > 0 ? transformMenuToRoutes(menu.children) : [],
+    };
+    return route;
+  });
+};
 
 /**
  * 转换后端路由数据为Vue Router配置

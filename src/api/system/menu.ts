@@ -1,12 +1,19 @@
 import request from "@/utils/request";
-import type { MenuQueryParams, MenuItem, MenuForm, RouteItem, OptionItem } from "@/types/api";
+import type {
+  MenuQueryParams,
+  MenuItem,
+  MenuForm,
+  RouteItem,
+  OptionItem,
+  GetRoutesResponse,
+} from "@/types/api";
 
 const MENU_BASE_URL = "/menus";
 
 const MenuAPI = {
   /** 获取当前用户的路由列表 */
   getRoutes() {
-    return request<any, RouteItem[]>({ url: `${MENU_BASE_URL}/routes`, method: "get" });
+    return request<any, GetRoutesResponse>({ url: `${MENU_BASE_URL}/getRoutes`, method: "get" });
   },
   /** 获取菜单树形列表 */
   getList(queryParams: MenuQueryParams) {
