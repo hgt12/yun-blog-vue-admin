@@ -50,7 +50,14 @@ export const useUserStore = defineStore("user", () => {
     if (!data) {
       throw new Error("Verification failed, please Login again.");
     }
-    Object.assign(userInfo.value, data);
+    const response = data as any;
+    Object.assign(userInfo.value, {
+      userId: response.user.id,
+      nickname: response.user.nickname,
+      avatar: response.user.avatar,
+      roles: response.roles,
+      perms: response.perms,
+    });
     return data;
   }
 
