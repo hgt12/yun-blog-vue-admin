@@ -7,7 +7,7 @@
         :background="background"
         :layout="layout"
         :page-sizes="pageSizes"
-        :total="total"
+        :total="totalNumber"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -18,7 +18,7 @@
 <script setup lang="ts">
 const props = defineProps({
   total: {
-    type: Number as PropType<number>,
+    type: [Number, String] as PropType<number | string>,
     default: 0,
   },
   pageSizes: {
@@ -47,6 +47,12 @@ const props = defineProps({
 
 const emit = defineEmits(["pagination"]);
 
+// 将 total 转换为数字类型供 ElPagination 使用（兼容字符串和数字）
+const totalNumber = computed(() => {
+  const val = props.total;
+  return typeof val === "string" ? parseInt(val, 10) || 0 : val || 0;
+});
+
 const currentPage = defineModel("page", {
   type: Number,
   required: true,
@@ -61,9 +67,10 @@ const pageSize = defineModel("limit", {
 
 watch(
   () => props.total,
-  (newVal: number) => {
-    const lastPage = Math.ceil(newVal / pageSize.value);
-    if (newVal > 0 && currentPage.value > lastPage) {
+  (newVal: number | string) => {
+    const total = typeof newVal === "string" ? parseInt(newVal, 10) || 0 : newVal || 0;
+    const lastPage = Math.ceil(total / pageSize.value);
+    if (total > 0 && currentPage.value > lastPage) {
       currentPage.value = lastPage;
       emit("pagination", { page: currentPage.value, limit: pageSize.value });
     }
