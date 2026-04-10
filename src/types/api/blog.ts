@@ -79,7 +79,7 @@ export interface BlogTagQueryParams extends BaseQueryParams {
 export interface BlogTagItem {
   id?: string;
   name?: string;
-  postCount?: number;
+  articleCount?: number;
   createTime?: string;
 }
 

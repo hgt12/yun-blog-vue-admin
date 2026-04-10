@@ -29,7 +29,7 @@ export interface BaseQueryParams {
 /** 分页数据结构（仅分页接口） */
 export interface PageResult<T> {
   /** 数据列表 */
-  list: T[];
+  rows: T[];
   /** 总记录数 */
   total: number;
 }
