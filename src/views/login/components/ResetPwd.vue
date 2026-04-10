@@ -1,9 +1,18 @@
-﻿<template>
+<template>
   <div class="auth-panel-form">
     <h3 class="auth-panel-form__title" text-center>{{ t("login.resetPassword") }}</h3>
     <!-- 步骤1：输入邮箱 -->
-    <el-form v-if="step === 1" ref="step1Ref" :model="form" :rules="step1Rules" size="large" :validate-on-rule-change="false">
-      <el-text type="info" size="small" class="step-tip">请输入您的注册邮箱，我们将发送验证码到您的邮箱。</el-text>
+    <el-form
+      v-if="step === 1"
+      ref="step1Ref"
+      :model="form"
+      :rules="step1Rules"
+      size="large"
+      :validate-on-rule-change="false"
+    >
+      <el-text type="info" size="small" class="step-tip">
+        请输入您的邮箱，我们将发送验证码到您的邮箱。
+      </el-text>
       <el-form-item prop="email">
         <el-input v-model.trim="form.email" placeholder="邮箱" autocomplete="email">
           <template #prefix>
@@ -19,8 +28,17 @@
     </el-form>
 
     <!-- 步骤2：输入验证码 -->
-    <el-form v-else-if="step === 2" ref="step2Ref" :model="form" :rules="step2Rules" size="large" :validate-on-rule-change="false">
-      <el-text type="info" size="small" class="step-tip">验证码已发送至 {{ form.email }}，请查收。</el-text>
+    <el-form
+      v-else-if="step === 2"
+      ref="step2Ref"
+      :model="form"
+      :rules="step2Rules"
+      size="large"
+      :validate-on-rule-change="false"
+    >
+      <el-text type="info" size="small" class="step-tip">
+        验证码已发送至 {{ form.email }}，请查收。
+      </el-text>
       <el-form-item prop="code">
         <div flex items-center gap-10px>
           <el-input
@@ -28,7 +46,7 @@
             placeholder="6位验证码"
             maxlength="6"
             clearable
-            class="flex-1"
+            style="flex: 1; min-width: 0"
           >
             <template #prefix>
               <div class="i-svg:captcha" />
@@ -37,10 +55,10 @@
           <el-button
             :disabled="countdown > 0"
             plain
-            style="white-space: nowrap; min-width: 100px"
+            style=" flex-shrink: 0; width: 120px;white-space: nowrap"
             @click="handleSendCode"
           >
-            {{ countdown > 0 ? `${countdown}s后重发` : '重新发送' }}
+            {{ countdown > 0 ? `${countdown}s后重发` : "重新发送" }}
           </el-button>
         </div>
       </el-form-item>
@@ -52,7 +70,14 @@
     </el-form>
 
     <!-- 步骤3：重置密码 -->
-    <el-form v-else-if="step === 3" ref="step3Ref" :model="form" :rules="step3Rules" size="large" :validate-on-rule-change="false">
+    <el-form
+      v-else-if="step === 3"
+      ref="step3Ref"
+      :model="form"
+      :rules="step3Rules"
+      size="large"
+      :validate-on-rule-change="false"
+    >
       <el-text type="info" size="small" class="step-tip">请设置您的新密码。</el-text>
       <el-tooltip :visible="isCapsLock" :content="t('login.capsLock')" placement="right">
         <el-form-item prop="newPassword">
