@@ -58,4 +58,45 @@ export default defineMock([
       msg: "string",
     },
   },
+
+  {
+    url: "auth/sendCode",
+    method: ["POST"],
+    body: {
+      code: "00000",
+      data: null,
+      msg: "验证码已发送",
+    },
+  },
+
+  {
+    url: "auth/verifyCode",
+    method: ["POST"],
+    body({ body }: { body: { code: string } }) {
+      // 模拟验证码验证，这里简单判断验证码是否为 "123456"
+      if (body.code === "123456") {
+        return {
+          code: "00000",
+          data: null,
+          msg: "验证码正确",
+        };
+      } else {
+        return {
+          code: "A0001",
+          data: null,
+          msg: "验证码错误或已过期",
+        };
+      }
+    },
+  },
+
+  {
+    url: "auth/resetPassword",
+    method: ["POST"],
+    body: {
+      code: "00000",
+      data: null,
+      msg: "密码重置成功",
+    },
+  },
 ]);

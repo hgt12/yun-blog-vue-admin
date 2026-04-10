@@ -46,9 +46,21 @@ export interface CaptchaInfo {
  * 发送验证码请求
  */
 export interface SendCodeRequest {
-  /** 邮箱或手机号 */
+  /** 邮箱 */
   account: string;
-  /** 业务类型：FORGOT_PASSWORD | LOGIN */
+  /** 业务类型：FORGOT_PASSWORD */
+  type: string;
+}
+
+/**
+ * 验证验证码请求
+ */
+export interface VerifyCodeRequest {
+  /** 邮箱 */
+  email: string;
+  /** 验证码 */
+  code: string;
+  /** 业务类型：FORGOT_PASSWORD */
   type: string;
 }
 

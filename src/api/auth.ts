@@ -4,6 +4,7 @@ import type {
   LoginResponse,
   CaptchaInfo,
   SendCodeRequest,
+  VerifyCodeRequest,
   ResetPasswordRequest,
 } from "@/types/api/auth";
 
@@ -56,6 +57,15 @@ const AuthAPI = {
   sendCode(data: SendCodeRequest) {
     return request({
       url: `${AUTH_BASE_URL}/sendCode`,
+      method: "post",
+      data,
+    });
+  },
+
+  /** 验证验证码 */
+  verifyCode(data: VerifyCodeRequest) {
+    return request({
+      url: `${AUTH_BASE_URL}/verifyCode`,
       method: "post",
       data,
     });

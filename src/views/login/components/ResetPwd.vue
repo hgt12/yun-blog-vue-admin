@@ -55,7 +55,7 @@
           <el-button
             :disabled="countdown > 0"
             plain
-            style=" flex-shrink: 0; width: 120px;white-space: nowrap"
+            style="flex-shrink: 0; width: 120px; white-space: nowrap"
             @click="handleSendCode"
           >
             {{ countdown > 0 ? `${countdown}s后重发` : "重新发送" }}
@@ -129,6 +129,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { ElMessage } from "element-plus";
 import type { FormInstance } from "element-plus";
 import { Lock, Message } from "@element-plus/icons-vue";
 import AuthAPI from "@/api/auth";
@@ -196,6 +197,7 @@ async function handleSendCode() {
   loading.value = true;
   try {
     await AuthAPI.sendCode({ account: form.email, type: "FORGOT_PASSWORD" });
+    ElMessage.success("验证码发送成功，请耐心等待");
     step.value = 2;
     startCountdown();
   } catch (err: any) {
@@ -207,8 +209,20 @@ async function handleSendCode() {
 
 async function handleVerifyCode() {
   await step2Ref.value?.validate();
-  // 验证码正确性由后端在重置密码时统一校验，这里直接进入下一步
-  step.value = 3;
+  loading.value = true;
+  try {
+    await AuthAPI.verifyCode({
+      email: form.email,
+      code: form.code,
+      type: "FORGOT_PASSWORD",
+    });
+    ElMessage.success("验证码验证成功，请修改密码");
+    step.value = 3;
+  } catch (err: any) {
+    ElMessage.error(err?.message || "验证码错误，请重新输入");
+  } finally {
+    loading.value = false;
+  }
 }
 
 async function handleResetPassword() {
