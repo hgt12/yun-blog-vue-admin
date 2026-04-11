@@ -30,31 +30,30 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="文章分类" prop="categoryId">
-              <el-select v-model="formData.categoryId" placeholder="请选择分类" style="width: 100%">
-                <el-option
-                  v-for="item in categoryOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+              <el-select-v2
+                v-model="formData.categoryId"
+                :options="categoryOptions"
+                placeholder="请选择分类"
+                filterable
+                clearable
+                style="width: 100%"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="文章标签" prop="tagIds">
-              <el-select
+              <el-select-v2
                 v-model="formData.tagIds"
-                multiple
+                :options="tagOptions"
                 placeholder="请选择标签"
+                filterable
+                clearable
+                multiple
+                collapse-tags
+                collapse-tags-tooltip
+                :max-collapse-tags="3"
                 style="width: 100%"
-              >
-                <el-option
-                  v-for="item in tagOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+              />
             </el-form-item>
           </el-col>
         </el-row>

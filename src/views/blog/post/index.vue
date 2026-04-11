@@ -12,19 +12,14 @@
           />
         </el-form-item>
         <el-form-item label="分类" prop="categoryId">
-          <el-select
+          <el-select-v2
             v-model="queryParams.categoryId"
+            :options="categoryOptions"
             placeholder="全部"
+            filterable
             clearable
             style="width: 130px"
-          >
-            <el-option
-              v-for="item in categoryOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+          />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">

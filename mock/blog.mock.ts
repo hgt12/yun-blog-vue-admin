@@ -3,7 +3,7 @@ import { defineMock } from "./base";
 export default defineMock([
   // ==================== 文章 ====================
   {
-    url: "blog/posts",
+    url: "/blog/posts",
     method: ["GET"],
     body: {
       code: "00000",
@@ -60,7 +60,7 @@ export default defineMock([
     },
   },
   {
-    url: "posts/:id/form",
+    url: "/posts/:id/form",
     method: ["GET"],
     body: {
       code: "00000",
@@ -77,24 +77,24 @@ export default defineMock([
     },
   },
   {
-    url: "posts",
+    url: "/posts",
     method: ["POST"],
     body: { code: "00000", data: null, msg: "新增成功" },
   },
   {
-    url: "posts/:id",
+    url: "/posts/:id",
     method: ["PUT"],
     body: { code: "00000", data: null, msg: "修改成功" },
   },
   {
-    url: "posts/:id",
+    url: "/posts/:id",
     method: ["DELETE"],
     body: { code: "00000", data: null, msg: "删除成功" },
   },
 
   // ==================== 分类 ====================
   {
-    url: "categories",
+    url: "/categories",
     method: ["GET"],
     body: {
       code: "00000",
@@ -111,7 +111,7 @@ export default defineMock([
     },
   },
   {
-    url: "categories/options",
+    url: "/categories/options",
     method: ["GET"],
     body: {
       code: "00000",
@@ -125,29 +125,29 @@ export default defineMock([
     },
   },
   {
-    url: "categories/:id/form",
+    url: "/categories/:id/form",
     method: ["GET"],
     body: { code: "00000", data: { id: "1", name: "前端开发", sort: 1 }, msg: "一切ok" },
   },
   {
-    url: "categories",
+    url: "/categories",
     method: ["POST"],
     body: { code: "00000", data: null, msg: "新增成功" },
   },
   {
-    url: "categories/:id",
+    url: "/categories/:id",
     method: ["PUT"],
     body: { code: "00000", data: null, msg: "修改成功" },
   },
   {
-    url: "categories/:id",
+    url: "/categories/:id",
     method: ["DELETE"],
     body: { code: "00000", data: null, msg: "删除成功" },
   },
 
   // ==================== 标签 ====================
   {
-    url: "tags",
+    url: "/tags",
     method: ["GET"],
     body: {
       code: "00000",
@@ -166,7 +166,7 @@ export default defineMock([
     },
   },
   {
-    url: "tags/options",
+    url: "/tags/options",
     method: ["GET"],
     body: {
       code: "00000",
@@ -182,29 +182,29 @@ export default defineMock([
     },
   },
   {
-    url: "tags/:id/form",
+    url: "/tags/:id/form",
     method: ["GET"],
     body: { code: "00000", data: { id: "1", name: "Vue3" }, msg: "一切ok" },
   },
   {
-    url: "tags",
+    url: "/tags",
     method: ["POST"],
     body: { code: "00000", data: null, msg: "新增成功" },
   },
   {
-    url: "tags/:id",
+    url: "/tags/:id",
     method: ["PUT"],
     body: { code: "00000", data: null, msg: "修改成功" },
   },
   {
-    url: "tags/:id",
+    url: "/tags/:id",
     method: ["DELETE"],
     body: { code: "00000", data: null, msg: "删除成功" },
   },
 
   // ==================== 友链 ====================
   {
-    url: "links",
+    url: "/links",
     method: ["GET"],
     body: {
       code: "00000",
@@ -257,7 +257,7 @@ export default defineMock([
     },
   },
   {
-    url: "links/:id/form",
+    url: "/links/:id/form",
     method: ["GET"],
     body: {
       code: "00000",
@@ -274,17 +274,17 @@ export default defineMock([
     },
   },
   {
-    url: "links",
+    url: "/links",
     method: ["POST"],
     body: { code: "00000", data: null, msg: "新增成功" },
   },
   {
-    url: "links/:id",
+    url: "/links/:id",
     method: ["PUT"],
     body: { code: "00000", data: null, msg: "修改成功" },
   },
   {
-    url: "links/:id",
+    url: "/links/:id",
     method: ["DELETE"],
     body: { code: "00000", data: null, msg: "删除成功" },
   },
