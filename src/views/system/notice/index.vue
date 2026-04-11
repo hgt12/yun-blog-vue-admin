@@ -353,7 +353,7 @@ function fetchData(): void {
   loading.value = true;
   NoticeAPI.getPage(queryParams)
     .then((data) => {
-      pageData.value = data.list;
+      pageData.value = data.rows;
       total.value = data.total ?? 0;
     })
     .finally(() => {

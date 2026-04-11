@@ -4,7 +4,12 @@
     <div class="filter-section">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="关键字" prop="keywords">
-          <el-input v-model="queryParams.keywords" placeholder="分类名称" clearable @keyup.enter="handleQuery" />
+          <el-input
+            v-model="queryParams.keywords"
+            placeholder="分类名称"
+            clearable
+            @keyup.enter="handleQuery"
+          />
         </el-form-item>
         <el-form-item class="search-buttons">
           <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
@@ -17,11 +22,25 @@
       <div class="table-section__toolbar">
         <div class="table-section__toolbar--actions">
           <el-button type="success" icon="plus" @click="handleCreateClick">新增</el-button>
-          <el-button type="danger" :disabled="selectIds.length === 0" icon="delete" @click="handleDelete()">删除</el-button>
+          <el-button
+            type="danger"
+            :disabled="selectIds.length === 0"
+            icon="delete"
+            @click="handleDelete()"
+          >
+            删除
+          </el-button>
         </div>
       </div>
 
-      <el-table v-loading="loading" :data="categoryList" border highlight-current-row class="table-section__content" @selection-change="handleSelectionChange">
+      <el-table
+        v-loading="loading"
+        :data="categoryList"
+        border
+        highlight-current-row
+        class="table-section__content"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column label="分类名称" prop="name" min-width="150" />
         <el-table-column label="文章数量" prop="postCount" width="120" align="center" />
@@ -29,13 +48,29 @@
         <el-table-column label="创建时间" prop="createTime" width="170" align="center" />
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template #default="{ row }">
-            <el-button type="primary" size="small" link icon="edit" @click="handleEditClick(row.id)">编辑</el-button>
-            <el-button type="danger" size="small" link icon="delete" @click="handleDelete(row.id)">删除</el-button>
+            <el-button
+              type="primary"
+              size="small"
+              link
+              icon="edit"
+              @click="handleEditClick(row.id)"
+            >
+              编辑
+            </el-button>
+            <el-button type="danger" size="small" link icon="delete" @click="handleDelete(row.id)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <pagination v-if="total > 0" v-model:total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="fetchList" />
+      <pagination
+        v-if="total > 0"
+        v-model:total="total"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
+        @pagination="fetchList"
+      />
     </el-card>
 
     <!-- 表单弹窗 -->
@@ -45,7 +80,12 @@
           <el-input v-model="formData.name" placeholder="请输入分类名称" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input-number v-model="formData.sort" :min="0" controls-position="right" style="width: 120px" />
+          <el-input-number
+            v-model="formData.sort"
+            :min="0"
+            controls-position="right"
+            style="width: 120px"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -83,16 +123,24 @@ async function fetchList() {
   loading.value = true;
   try {
     const data = await BlogCategoryAPI.getPage(queryParams);
-    categoryList.value = data.list;
+    categoryList.value = data.rows;
     total.value = data.total ?? 0;
   } finally {
     loading.value = false;
   }
 }
 
-function handleQuery() { queryParams.pageNum = 1; fetchList(); }
-function handleResetQuery() { queryFormRef.value?.resetFields(); handleQuery(); }
-function handleSelectionChange(selection: BlogCategoryItem[]) { selectIds.value = selection.map((i) => i.id!).filter(Boolean); }
+function handleQuery() {
+  queryParams.pageNum = 1;
+  fetchList();
+}
+function handleResetQuery() {
+  queryFormRef.value?.resetFields();
+  handleQuery();
+}
+function handleSelectionChange(selection: BlogCategoryItem[]) {
+  selectIds.value = selection.map((i) => i.id!).filter(Boolean);
+}
 
 function handleCreateClick() {
   dialogTitle.value = "新增分类";
@@ -135,13 +183,22 @@ function closeDialog() {
 
 function handleDelete(id?: string) {
   const ids = id ?? selectIds.value.join(",");
-  if (!ids) { ElMessage.warning("请勾选删除项"); return; }
-  ElMessageBox.confirm("确认删除已选中的数据项?", "警告", { confirmButtonText: "确定", cancelButtonText: "取消", type: "warning" }).then(() => {
+  if (!ids) {
+    ElMessage.warning("请勾选删除项");
+    return;
+  }
+  ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
     loading.value = true;
-    BlogCategoryAPI.deleteByIds(ids).then(() => {
-      ElMessage.success("删除成功");
-      handleResetQuery();
-    }).finally(() => (loading.value = false));
+    BlogCategoryAPI.deleteByIds(ids)
+      .then(() => {
+        ElMessage.success("删除成功");
+        handleResetQuery();
+      })
+      .finally(() => (loading.value = false));
   });
 }
 

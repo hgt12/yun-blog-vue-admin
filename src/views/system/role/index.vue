@@ -307,7 +307,7 @@ async function fetchList(): Promise<void> {
   loading.value = true;
   try {
     const data = await RoleAPI.getPage(queryParams);
-    roleList.value = data.list;
+    roleList.value = data.rows;
     total.value = data.total ?? 0;
   } finally {
     loading.value = false;

@@ -96,7 +96,7 @@ const DictAPI = {
       params: queryParams,
     }).then((data) => ({
       ...data,
-      list: (data.list ?? []).map((item) => ({
+      rows: (data.rows ?? []).map((item) => ({
         ...item,
         tagType: decodeDictTagType((item as any).tagType),
       })),

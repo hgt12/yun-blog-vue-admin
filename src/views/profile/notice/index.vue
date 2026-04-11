@@ -134,7 +134,7 @@ async function handleQuery() {
   loading.value = true;
   try {
     const data = await NoticeAPI.getMyNoticePage(queryParams);
-    pageData.value = data.list;
+    pageData.value = data.rows;
     total.value = data.total ?? 0;
   } finally {
     loading.value = false;

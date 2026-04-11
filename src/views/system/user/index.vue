@@ -14,12 +14,7 @@
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
-          <el-select
-            v-model="queryParams.status"
-            placeholder="全部"
-            clearable
-            style="width: 100px"
-          >
+          <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
             <el-option label="正常" :value="1" />
             <el-option label="禁用" :value="0" />
           </el-select>
@@ -308,7 +303,7 @@ async function fetchList(): Promise<void> {
   loading.value = true;
   try {
     const data = await UserAPI.getPage(queryParams);
-    userList.value = data.list;
+    userList.value = data.rows;
     total.value = data.total ?? 0;
   } finally {
     loading.value = false;
