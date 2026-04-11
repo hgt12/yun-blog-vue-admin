@@ -28,8 +28,8 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option label="已发布" :value="1" />
-            <el-option label="草稿" :value="0" />
+            <el-option label="已发布" :value="0" />
+            <el-option label="草稿" :value="1" />
           </el-select>
         </el-form-item>
         <el-form-item class="search-buttons">
@@ -65,22 +65,17 @@
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column label="文章标题" prop="title" min-width="200" show-overflow-tooltip />
         <el-table-column label="分类" prop="categoryName" width="120" align="center" />
-        <el-table-column label="标签" prop="tagNames" min-width="150" show-overflow-tooltip>
+        <el-table-column label="标签" prop="tags" min-width="150" show-overflow-tooltip>
           <template #default="{ row }">
-            <el-tag
-              v-for="tag in (row.tagNames || '').split(',').filter(Boolean)"
-              :key="tag"
-              size="small"
-              class="mr-1"
-            >
-              {{ tag }}
+            <el-tag v-for="tag in row.tags || []" :key="tag.id" size="small" class="mr-1">
+              {{ tag.name }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'info'">
-              {{ row.status === 1 ? "已发布" : "草稿" }}
+            <el-tag :type="row.status == 0 ? 'success' : 'info'">
+              {{ row.status == 0 ? "已发布" : "草稿" }}
             </el-tag>
           </template>
         </el-table-column>

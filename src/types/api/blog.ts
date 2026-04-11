@@ -23,6 +23,7 @@ export interface BlogPostItem {
   categoryId?: string;
   categoryName?: string;
   tagNames?: string;
+  tags?: Array<{ id: string; name: string; createTime?: string }>;
   author?: string;
   status?: number;
   viewCount?: number;
