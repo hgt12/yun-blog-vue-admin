@@ -34,7 +34,6 @@
 <script setup lang="ts">
 import { UploadRawFile, UploadRequestOptions } from "element-plus";
 import FileAPI from "@/api/file";
-import type { FileInfo } from "@/types/api";
 
 const props = defineProps({
   /**
@@ -167,9 +166,9 @@ function handleDelete() {
  *
  * @param fileInfo 上传成功后的文件信息
  */
-const onSuccess = (fileInfo: FileInfo) => {
+const onSuccess = (fileInfo: string) => {
   ElMessage.success("上传成功");
-  modelValue.value = fileInfo.url;
+  modelValue.value = fileInfo.toString();
 };
 
 /**

@@ -100,7 +100,9 @@
               v-model="formData.thumbnail"
               :style="{ width: '200px', height: '150px' }"
             />
-            <div class="el-upload__tip">建议尺寸：800x600，支持jpg、png格式，大小不超过2MB</div>
+            <div class="el-upload__tip">
+              建议尺寸：800x600，支持png、jpg、gif、jpeg格式，大小不超过2MB
+            </div>
           </div>
         </el-form-item>
 
