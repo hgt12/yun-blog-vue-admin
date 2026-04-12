@@ -164,11 +164,19 @@ function handleDelete() {
 /**
  * 上传成功回调
  *
- * @param fileInfo 上传成功后的文件信息
+ * @param response 上传成功后的响应数据，可能是字符串URL或对象
  */
-const onSuccess = (fileInfo: string) => {
+const onSuccess = (response: any) => {
   ElMessage.success("上传成功");
-  modelValue.value = fileInfo.toString();
+  // 后端返回的 data 字段直接是图片URL字符串
+  if (typeof response === "string") {
+    modelValue.value = response;
+  } else if (response && response.url) {
+    // 兼容对象格式 {url: '...', name: '...'}
+    modelValue.value = response.url;
+  } else {
+    modelValue.value = response;
+  }
 };
 
 /**

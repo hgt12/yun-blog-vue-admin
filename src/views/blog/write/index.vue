@@ -434,8 +434,8 @@ function handleCancel() {
 async function handleMdUploadImg(files: File[], callback: (urls: string[]) => void) {
   try {
     const uploadPromises = files.map((file) => FileAPI.uploadFile(file));
-    const results = await Promise.all(uploadPromises);
-    const urls = results.map((result) => result.url);
+    const urls = await Promise.all(uploadPromises);
+    // 后端返回的直接是图片URL字符串数组
     callback(urls);
     ElMessage.success("上传成功");
   } catch (error) {

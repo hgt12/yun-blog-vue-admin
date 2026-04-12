@@ -9,7 +9,7 @@
 -->
 
 <template>
-  <div style=" position: relative;z-index: 999; border: 1px solid var(--el-border-color)">
+  <div style="position: relative; z-index: 999; border: 1px solid var(--el-border-color)">
     <!-- 工具栏 -->
     <Toolbar
       v-if="editorRef"
@@ -78,8 +78,9 @@ const editorConfig: Partial<IEditorConfig> = {
   MENU_CONF: {
     uploadImage: {
       async customUpload(file: File, insertFn: InsertFnType) {
-        const data = await FileAPI.uploadFile(file);
-        insertFn(data.url, data.name, data.url);
+        const url = await FileAPI.uploadFile(file);
+        // 后端返回的直接是图片URL字符串
+        insertFn(url, file.name, url);
         ElMessage.success("上传成功");
       },
     } as any,
