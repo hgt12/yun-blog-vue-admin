@@ -11,7 +11,7 @@ export interface BlogPostQueryParams extends BaseQueryParams {
   keywords?: string;
   categoryId?: string;
   tagId?: string;
-  status?: number;
+  status?: string;
 }
 
 /** 博客文章列表项 */
@@ -19,13 +19,13 @@ export interface BlogPostItem {
   id?: string;
   title?: string;
   summary?: string;
-  coverUrl?: string;
+  thumbnail?: string;
   categoryId?: string;
   categoryName?: string;
   tagNames?: string;
   tags?: Array<{ id: string; name: string; createTime?: string }>;
   author?: string;
-  status?: number;
+  status?: string;
   viewCount?: number;
   createTime?: string;
   updateTime?: string;
@@ -34,15 +34,14 @@ export interface BlogPostItem {
 /** 博客文章表单 */
 export interface BlogPostForm {
   id?: string;
-  title?: string;
+  title: string;
   summary?: string;
   thumbnail?: string;
-  content?: string;
-  categoryId?: string;
+  content: string;
+  categoryId: string;
   categoryName?: string;
-  tags?: Array<{ id: string; name: string; createTime?: string }>;
-  tagIds?: string[];
-  status?: string;
+  tags?: string[];
+  status: string;
   isTop?: string;
   isComment?: string;
 }
@@ -66,7 +65,7 @@ export interface BlogCategoryItem {
 /** 分类表单 */
 export interface BlogCategoryForm {
   id?: string;
-  name?: string;
+  name: string;
   sort?: number;
 }
 
@@ -88,7 +87,7 @@ export interface BlogTagItem {
 /** 标签表单 */
 export interface BlogTagForm {
   id?: string;
-  name?: string;
+  name: string;
 }
 
 // ==================== 友链 ====================
@@ -96,7 +95,7 @@ export interface BlogTagForm {
 /** 友链查询参数 */
 export interface BlogLinkQueryParams extends BaseQueryParams {
   keywords?: string;
-  status?: number;
+  status?: string;
 }
 
 /** 友链列表项 */
@@ -106,7 +105,7 @@ export interface BlogLinkItem {
   url?: string;
   logoUrl?: string;
   description?: string;
-  status?: number;
+  status?: string;
   sort?: number;
   createTime?: string;
 }
@@ -114,10 +113,10 @@ export interface BlogLinkItem {
 /** 友链表单 */
 export interface BlogLinkForm {
   id?: string;
-  name?: string;
-  url?: string;
+  name: string;
+  url: string;
   logoUrl?: string;
   description?: string;
-  status?: number;
+  status: string;
   sort?: number;
 }

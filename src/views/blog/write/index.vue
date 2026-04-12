@@ -7,10 +7,10 @@
           <span class="text-lg font-medium">{{ isEdit ? "编辑文章" : "写博客" }}</span>
           <div>
             <el-button @click="handleCancel">取消</el-button>
-            <el-button type="primary" :loading="submitting" @click="handleSubmit(0)">
+            <el-button type="primary" :loading="submitting" @click="handleSubmit(1)">
               保存草稿
             </el-button>
-            <el-button type="success" :loading="submitting" @click="handleSubmit(1)">
+            <el-button type="success" :loading="submitting" @click="handleSubmit(0)">
               发布文章
             </el-button>
           </div>
@@ -41,9 +41,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="文章标签" prop="tagIds">
+            <el-form-item label="文章标签" prop="tags">
               <el-select-v2
-                v-model="formData.tagIds"
+                v-model="formData.tags"
                 :options="tagOptions"
                 placeholder="请选择标签"
                 filterable
@@ -72,12 +72,24 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="是否置顶" prop="isTop">
-              <el-switch v-model="formData.isTop" active-text="是" inactive-text="否" />
+              <el-switch
+                v-model="formData.isTop"
+                active-value="1"
+                inactive-value="0"
+                active-text="是"
+                inactive-text="否"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="允许评论" prop="isComment">
-              <el-switch v-model="formData.isComment" active-text="是" inactive-text="否" />
+              <el-switch
+                v-model="formData.isComment"
+                active-value="1"
+                inactive-value="0"
+                active-text="是"
+                inactive-text="否"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -291,10 +303,12 @@ const formData = reactive<BlogPostForm>({
   title: "",
   summary: "",
   content: "",
-  tagIds: [],
+  categoryId: "",
+  tags: [],
   thumbnail: "",
-  isTop: false,
-  isComment: true,
+  status: "1", // 默认草稿状态
+  isTop: "0",
+  isComment: "1",
 });
 
 // 编辑器和预览的宽度控制
@@ -390,22 +404,26 @@ async function handleSubmit(status: number) {
   if (!valid) return;
   submitting.value = true;
   try {
-    const payload = { ...formData, status };
+    // 将status转换为字符串，并确保数据格式正确
+    const payload = {
+      ...formData,
+      status: String(status), // 0-已发布，1-草稿
+    };
     if (isEdit.value) {
       await BlogPostAPI.update(postId.value!, payload);
       ElMessage.success("修改成功");
     } else {
       await BlogPostAPI.create(payload);
-      ElMessage.success(status === 1 ? "发布成功" : "已保存草稿");
+      ElMessage.success(status === 1 ? "已保存草稿" : "发布成功");
     }
-    router.push("/blog/post");
+    router.push("/blog/list");
   } finally {
     submitting.value = false;
   }
 }
 
 function handleCancel() {
-  router.push("/blog/post");
+  router.push("/blog/list");
 }
 
 onMounted(async () => {

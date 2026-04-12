@@ -37,7 +37,7 @@ export interface PageResult<T> {
 /** 下拉选项 */
 export interface OptionItem {
   /** 选项值 */
-  value: string | number;
+  value: string;
   /** 选项标签 */
   label: string;
   /** 子选项 */
