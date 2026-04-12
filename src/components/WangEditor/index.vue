@@ -9,7 +9,7 @@
 -->
 
 <template>
-  <div style="z-index: 999; border: 1px solid var(--el-border-color); position: relative;">
+  <div style=" position: relative;z-index: 999; border: 1px solid var(--el-border-color)">
     <!-- 工具栏 -->
     <Toolbar
       v-if="editorRef"
@@ -80,6 +80,7 @@ const editorConfig: Partial<IEditorConfig> = {
       async customUpload(file: File, insertFn: InsertFnType) {
         const data = await FileAPI.uploadFile(file);
         insertFn(data.url, data.name, data.url);
+        ElMessage.success("上传成功");
       },
     } as any,
   },
@@ -88,14 +89,14 @@ const editorConfig: Partial<IEditorConfig> = {
 // 记录 editor 实例
 const handleCreated = (editor: any) => {
   editorRef.value = editor;
-  
+
   // 在工具栏中添加自定义按钮
   nextTick(() => {
-    const toolbar = document.querySelector('.w-e-toolbar');
+    const toolbar = document.querySelector(".w-e-toolbar");
     if (toolbar) {
       // 创建分隔线
-      const divider = document.createElement('div');
-      divider.className = 'w-e-bar-divider';
+      const divider = document.createElement("div");
+      divider.className = "w-e-bar-divider";
       divider.style.cssText = `
         display: inline-block;
         width: 1px;
@@ -104,10 +105,10 @@ const handleCreated = (editor: any) => {
         margin: 0 5px;
         vertical-align: middle;
       `;
-      
+
       // 创建自定义按钮容器
-      const customBtn = document.createElement('div');
-      customBtn.className = 'w-e-bar-item';
+      const customBtn = document.createElement("div");
+      customBtn.className = "w-e-bar-item";
       customBtn.style.cssText = `
         display: inline-flex;
         align-items: center;
@@ -116,11 +117,11 @@ const handleCreated = (editor: any) => {
         position: relative;
         vertical-align: middle;
       `;
-      
+
       // 创建按钮内容
-      const btnContent = document.createElement('div');
-      btnContent.className = 'w-e-bar-item-menu';
-      btnContent.title = '切换到Markdown模式';
+      const btnContent = document.createElement("div");
+      btnContent.className = "w-e-bar-item-menu";
+      btnContent.title = "切换到Markdown模式";
       btnContent.style.cssText = `
         display: flex;
         align-items: center;
@@ -135,27 +136,27 @@ const handleCreated = (editor: any) => {
         font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
         letter-spacing: 0.5px;
       `;
-      
+
       // 创建MD文字
       btnContent.innerHTML = `MD`;
-      
+
       // 鼠标悬停效果
-      btnContent.addEventListener('mouseenter', () => {
-        btnContent.style.backgroundColor = '#f1f1f1';
+      btnContent.addEventListener("mouseenter", () => {
+        btnContent.style.backgroundColor = "#f1f1f1";
       });
-      btnContent.addEventListener('mouseleave', () => {
-        btnContent.style.backgroundColor = 'transparent';
+      btnContent.addEventListener("mouseleave", () => {
+        btnContent.style.backgroundColor = "transparent";
       });
-      
+
       // 点击事件
-      customBtn.addEventListener('click', (e) => {
+      customBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         handleSwitchMode();
       });
-      
+
       customBtn.appendChild(btnContent);
-      
+
       // 先插入分隔线，再插入按钮
       toolbar.appendChild(divider);
       toolbar.appendChild(customBtn);

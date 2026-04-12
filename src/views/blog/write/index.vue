@@ -157,6 +157,7 @@
                     'catalog',
                     0, // 自定义工具栏位置
                   ]"
+                  @on-upload-img="handleMdUploadImg"
                 >
                   <template #defToolbars>
                     <NormalToolbar title="切换到富文本模式" @on-click="switchEditorMode">
@@ -199,6 +200,7 @@ import { MdEditor, NormalToolbar, config } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { marked } from "marked";
 import type { BlogPostForm } from "@/types/api";
+import FileAPI from "@/api/file";
 
 // 配置 Markdown 编辑器语言
 config({
@@ -426,6 +428,20 @@ async function handleSubmit(status: number) {
 
 function handleCancel() {
   router.push("/blog/list");
+}
+
+// Markdown 编辑器图片上传处理
+async function handleMdUploadImg(files: File[], callback: (urls: string[]) => void) {
+  try {
+    const uploadPromises = files.map((file) => FileAPI.uploadFile(file));
+    const results = await Promise.all(uploadPromises);
+    const urls = results.map((result) => result.url);
+    callback(urls);
+    ElMessage.success("上传成功");
+  } catch (error) {
+    ElMessage.error("上传失败");
+    console.error("图片上传失败:", error);
+  }
 }
 
 onMounted(async () => {
