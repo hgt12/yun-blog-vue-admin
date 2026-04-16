@@ -6,7 +6,7 @@
         <el-form-item label="关键字" prop="keywords">
           <el-input
             v-model="queryParams.keywords"
-            placeholder="文章标题"
+            placeholder="文章标题或摘要"
             clearable
             @keyup.enter="handleQuery"
           />
@@ -59,6 +59,7 @@
       >
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column label="文章标题" prop="title" min-width="200" show-overflow-tooltip />
+        <el-table-column label="摘要" prop="summary" min-width="250" show-overflow-tooltip />
         <el-table-column label="分类" prop="categoryName" width="120" align="center" />
         <el-table-column label="标签" prop="tags" min-width="150" show-overflow-tooltip>
           <template #default="{ row }">
