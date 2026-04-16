@@ -198,12 +198,48 @@ export default defineMock([
       code: "00000",
       data: {
         list: [
-          { id: "1", name: "Vue3", postCount: 8, createTime: "2025-12-01 10:00:00" },
-          { id: "2", name: "TypeScript", postCount: 6, createTime: "2025-12-01 10:00:00" },
-          { id: "3", name: "Java", postCount: 5, createTime: "2025-12-01 10:00:00" },
-          { id: "4", name: "Spring Boot", postCount: 4, createTime: "2025-12-01 10:00:00" },
-          { id: "5", name: "MySQL", postCount: 3, createTime: "2025-12-01 10:00:00" },
-          { id: "6", name: "Docker", postCount: 2, createTime: "2025-12-01 10:00:00" },
+          {
+            id: "1",
+            name: "Vue3",
+            remark: "Vue.js 3.x 版本相关技术",
+            postCount: 8,
+            createTime: "2025-12-01 10:00:00",
+          },
+          {
+            id: "2",
+            name: "TypeScript",
+            remark: "TypeScript 类型系统和最佳实践",
+            postCount: 6,
+            createTime: "2025-12-01 10:00:00",
+          },
+          {
+            id: "3",
+            name: "Java",
+            remark: "Java 编程语言及生态",
+            postCount: 5,
+            createTime: "2025-12-01 10:00:00",
+          },
+          {
+            id: "4",
+            name: "Spring Boot",
+            remark: "Spring Boot 框架开发",
+            postCount: 4,
+            createTime: "2025-12-01 10:00:00",
+          },
+          {
+            id: "5",
+            name: "MySQL",
+            remark: "MySQL 数据库相关",
+            postCount: 3,
+            createTime: "2025-12-01 10:00:00",
+          },
+          {
+            id: "6",
+            name: "Docker",
+            remark: "容器化技术",
+            postCount: 2,
+            createTime: "2025-12-01 10:00:00",
+          },
         ],
         total: 6,
       },
@@ -229,7 +265,11 @@ export default defineMock([
   {
     url: "/tags/:id/form",
     method: ["GET"],
-    body: { code: "00000", data: { id: "1", name: "Vue3" }, msg: "一切ok" },
+    body: {
+      code: "00000",
+      data: { id: "1", name: "Vue3", remark: "Vue.js 3.x 版本相关技术" },
+      msg: "一切ok",
+    },
   },
   {
     url: "/tags",

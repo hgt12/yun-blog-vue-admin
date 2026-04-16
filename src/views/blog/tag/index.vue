@@ -42,11 +42,12 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column label="标签名称" prop="name" min-width="150">
+        <el-table-column label="标签名称" prop="name" width="150">
           <template #default="{ row }">
             <el-tag>{{ row.name }}</el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="备注" prop="remark" min-width="200" show-overflow-tooltip />
         <el-table-column label="文章数量" prop="articleCount" width="120" align="center" />
         <el-table-column label="创建时间" prop="createTime" width="170" align="center" />
         <el-table-column fixed="right" label="操作" width="150" align="center">
@@ -77,10 +78,20 @@
     </el-card>
 
     <!-- 表单弹窗 -->
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="400px" @close="closeDialog">
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500px" @close="closeDialog">
       <el-form ref="formRef" :model="formData" :rules="rules" label-width="80px">
         <el-form-item label="标签名称" prop="name">
           <el-input v-model="formData.name" placeholder="请输入标签名称" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="formData.remark"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入备注信息"
+            maxlength="200"
+            show-word-limit
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -141,6 +152,7 @@ function handleCreateClick() {
   dialogTitle.value = "新增标签";
   formData.id = undefined;
   formData.name = "";
+  formData.remark = "";
   dialogVisible.value = true;
 }
 

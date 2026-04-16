@@ -85,6 +85,7 @@ export interface BlogTagQueryParams extends BaseQueryParams {
 export interface BlogTagItem {
   id?: string;
   name?: string;
+  remark?: string;
   articleCount?: number;
   createTime?: string;
 }
@@ -93,6 +94,7 @@ export interface BlogTagItem {
 export interface BlogTagForm {
   id?: string;
   name: string;
+  remark?: string;
 }
 
 // ==================== 友链 ====================
