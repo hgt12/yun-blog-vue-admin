@@ -23,6 +23,7 @@
               :drag="true"
               :limit="1"
               :auto-upload="false"
+              :before-upload="handleBeforeUpload"
               :on-exceed="handleFileExceed"
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -138,6 +139,18 @@ watch(visible, (newValue) => {
  */
 function handleFileExceed(): void {
   ElMessage.warning("只能上传一个文件");
+}
+
+/**
+ * 上传前验证文件大小
+ */
+function handleBeforeUpload(file: File): boolean {
+  const maxSize = 1 * 1024 * 1024; // 1MB
+  if (file.size > maxSize) {
+    ElMessage.warning("文件大小不能超过1MB");
+    return false;
+  }
+  return true;
 }
 
 /**

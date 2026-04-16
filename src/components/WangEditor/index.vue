@@ -78,6 +78,13 @@ const editorConfig: Partial<IEditorConfig> = {
   MENU_CONF: {
     uploadImage: {
       async customUpload(file: File, insertFn: InsertFnType) {
+        // 验证文件大小（2MB限制）
+        const maxSize = 2 * 1024 * 1024;
+        if (file.size > maxSize) {
+          ElMessage.warning("图片大小不能超过2MB");
+          return;
+        }
+
         const url = await FileAPI.uploadFile(file);
         // 后端返回的直接是图片URL字符串
         insertFn(url, file.name, url);

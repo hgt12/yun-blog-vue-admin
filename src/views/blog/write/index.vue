@@ -98,6 +98,7 @@
           <div class="thumbnail-upload-wrapper">
             <SingleImageUpload
               v-model="formData.thumbnail"
+              :max-file-size="2"
               :style="{ width: '200px', height: '150px' }"
             />
             <div class="el-upload__tip">
@@ -433,6 +434,14 @@ function handleCancel() {
 // Markdown 编辑器图片上传处理
 async function handleMdUploadImg(files: File[], callback: (urls: string[]) => void) {
   try {
+    // 验证文件大小（2MB限制）
+    const maxSize = 2 * 1024 * 1024;
+    const invalidFiles = files.filter((file) => file.size > maxSize);
+    if (invalidFiles.length > 0) {
+      ElMessage.warning("图片大小不能超过2MB");
+      return;
+    }
+
     const uploadPromises = files.map((file) => FileAPI.uploadFile(file));
     const urls = await Promise.all(uploadPromises);
     // 后端返回的直接是图片URL字符串数组

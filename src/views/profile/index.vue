@@ -587,6 +587,14 @@ const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files ? target.files[0] : null;
   if (file) {
+    // 验证文件大小（2MB限制）
+    const maxSize = 2 * 1024 * 1024;
+    if (file.size > maxSize) {
+      ElMessage.warning("头像大小不能超过2MB");
+      target.value = ""; // 清空文件选择
+      return;
+    }
+
     // 调用文件上传API
     const data = await FileAPI.uploadFile(file);
     // 更新用户信息
@@ -595,6 +603,7 @@ const handleFileChange = async (event: Event) => {
     });
     // 更新用户头像
     userStore.userInfo.avatar = data.url;
+    target.value = ""; // 清空文件选择，允许重新选择相同文件
   }
 };
 
