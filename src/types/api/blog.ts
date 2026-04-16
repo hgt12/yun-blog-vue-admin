@@ -51,14 +51,17 @@ export interface BlogPostForm {
 /** 分类查询参数 */
 export interface BlogCategoryQueryParams extends BaseQueryParams {
   keywords?: string;
+  status?: string;
 }
 
 /** 分类列表项 */
 export interface BlogCategoryItem {
   id?: string;
   name?: string;
+  description?: string;
   sort?: number;
   postCount?: number;
+  status?: string;
   createTime?: string;
 }
 
@@ -66,7 +69,9 @@ export interface BlogCategoryItem {
 export interface BlogCategoryForm {
   id?: string;
   name: string;
+  description?: string;
   sort?: number;
+  status: string;
 }
 
 // ==================== 标签 ====================

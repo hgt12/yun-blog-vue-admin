@@ -11,6 +11,12 @@
             @keyup.enter="handleQuery"
           />
         </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
+            <el-option label="正常" :value="0" />
+            <el-option label="禁用" :value="1" />
+          </el-select>
+        </el-form-item>
         <el-form-item class="search-buttons">
           <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
           <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
@@ -42,8 +48,16 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column label="分类名称" prop="name" min-width="150" />
+        <el-table-column label="分类名称" prop="name" width="150" />
+        <el-table-column label="描述" prop="description" min-width="200" show-overflow-tooltip />
         <el-table-column label="文章数量" prop="postCount" width="120" align="center" />
+        <el-table-column label="状态" width="90" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.status == 0 ? 'success' : 'info'">
+              {{ row.status == 0 ? "正常" : "禁用" }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="排序" prop="sort" width="100" align="center" />
         <el-table-column label="创建时间" prop="createTime" width="170" align="center" />
         <el-table-column fixed="right" label="操作" width="150" align="center">
@@ -79,6 +93,22 @@
         <el-form-item label="分类名称" prop="name">
           <el-input v-model="formData.name" placeholder="请输入分类名称" />
         </el-form-item>
+        <el-form-item label="描述" prop="description">
+          <el-input
+            v-model="formData.description"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入分类描述"
+            maxlength="200"
+            show-word-limit
+          />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="formData.status">
+            <el-radio :value="0">正常</el-radio>
+            <el-radio :value="1">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input-number
             v-model="formData.sort"
@@ -113,10 +143,11 @@ const dialogVisible = ref(false);
 const dialogTitle = ref("");
 
 const queryParams = reactive<BlogCategoryQueryParams>({ pageNum: 1, pageSize: 10 });
-const formData = reactive<BlogCategoryForm>({ sort: 1 });
+const formData = reactive<BlogCategoryForm>({ sort: 1, status: "0" });
 
 const rules = {
   name: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
+  status: [{ required: true, message: "请选择状态", trigger: "change" }],
 };
 
 async function fetchList() {
@@ -146,6 +177,8 @@ function handleCreateClick() {
   dialogTitle.value = "新增分类";
   formData.id = undefined;
   formData.name = "";
+  formData.description = "";
+  formData.status = "0";
   formData.sort = 1;
   dialogVisible.value = true;
 }
