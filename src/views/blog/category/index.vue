@@ -50,7 +50,7 @@
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column label="分类名称" prop="name" width="150" />
         <el-table-column label="描述" prop="description" min-width="200" show-overflow-tooltip />
-        <el-table-column label="文章数量" prop="postCount" width="120" align="center" />
+        <el-table-column label="文章数量" prop="articleCount" width="120" align="center" />
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
             <el-tag :type="row.status == 0 ? 'success' : 'info'">

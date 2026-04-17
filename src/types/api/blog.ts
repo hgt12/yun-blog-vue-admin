@@ -60,7 +60,7 @@ export interface BlogCategoryItem {
   name?: string;
   description?: string;
   sort?: number;
-  postCount?: number;
+  articleCount?: number;
   status?: string;
   createTime?: string;
 }
