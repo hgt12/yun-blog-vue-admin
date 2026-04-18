@@ -17,15 +17,20 @@ export const enum ApiCodeEnum {
   /**
    * 访问令牌无效或过期
    */
-  ACCESS_TOKEN_INVALID = "A0230",
+  ACCESS_TOKEN_INVALID = 10230,
 
   /**
    * 刷新令牌无效或过期
    */
-  REFRESH_TOKEN_INVALID = "A0231",
+  REFRESH_TOKEN_INVALID = 10231,
+
+  /**
+   * 需要登录
+   */
+  NEED_LOGIN = 401,
 
   /**
    * 权限不足
    */
-  PERMISSION_DENIED = "A0301",
+  NO_OPERATOR_AUTH = 403,
 }

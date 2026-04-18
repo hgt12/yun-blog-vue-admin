@@ -45,7 +45,7 @@ http.interceptors.response.use(
     const { code, data, msg } = response.data;
 
     // 处理 code 可能是字符串或数字的情况
-    if (code === ApiCodeEnum.SUCCESS || code === String(ApiCodeEnum.SUCCESS) || code === "00000") {
+    if (code === ApiCodeEnum.SUCCESS) {
       return data;
     }
 
@@ -63,7 +63,13 @@ http.interceptors.response.use(
 
     const { code, msg } = response.data as ApiResponse;
 
-    // Token 过期：尝试刷新 token 后自动重试一次
+    // 需要登录：401
+    if (code === ApiCodeEnum.NEED_LOGIN) {
+      await redirectToLogin("需要登录后操作");
+      return Promise.reject(new Error(msg || "需要登录"));
+    }
+
+    // Token 过期：尝试刷新 token 后自动重试一次（保留兼容旧的 230）
     if (code === ApiCodeEnum.ACCESS_TOKEN_INVALID) {
       // 已重试过，直接跳登录
       if (retriedConfigs.has(config)) {
@@ -95,14 +101,15 @@ http.interceptors.response.use(
       return Promise.reject(new Error(msg || "Token Invalid"));
     }
 
-    // 权限不足：刷新权限快照后提示
-    if (code === ApiCodeEnum.PERMISSION_DENIED) {
+    // 权限不足：403
+    if (code === ApiCodeEnum.NO_OPERATOR_AUTH) {
       const permissionStore = usePermissionStoreHook();
       await permissionStore.reloadPermissionSnapshotOnce();
       ElMessage.error(msg || "权限不足");
       return Promise.reject(new Error(msg || "权限不足"));
     }
 
+    // 其他业务错误统一处理
     ElMessage.error(msg || "请求失败");
     return Promise.reject(new Error(msg || "请求失败"));
   }
