@@ -105,8 +105,8 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="formData.status">
-            <el-radio :value="0">正常</el-radio>
-            <el-radio :value="1">禁用</el-radio>
+            <el-radio value="0">正常</el-radio>
+            <el-radio value="1">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
@@ -143,7 +143,7 @@ const dialogVisible = ref(false);
 const dialogTitle = ref("");
 
 const queryParams = reactive<BlogCategoryQueryParams>({ pageNum: 1, pageSize: 10 });
-const formData = reactive<BlogCategoryForm>({ sort: 1, status: "0" });
+const formData = reactive<BlogCategoryForm>({ name: "", sort: 1, status: "0" });
 
 const rules = {
   name: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
