@@ -196,8 +196,9 @@ async function handleSubmit() {
   submitting.value = true;
   try {
     if (formData.id) {
-      await BlogCategoryAPI.update(formData.id, formData);
-      ElMessage.success("修改成功");
+      const result = await BlogCategoryAPI.update(formData.id, formData);
+      // 修改时显示后端返回的提示信息
+      ElMessage.success(result || "修改成功");
     } else {
       await BlogCategoryAPI.create(formData);
       ElMessage.success("新增成功");

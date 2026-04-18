@@ -26,7 +26,7 @@ const BlogCategoryAPI = {
     return request({ url: BASE_URL, method: "post", data });
   },
   update(id: string, data: BlogCategoryForm) {
-    return request({ url: `${BASE_URL}/${id}`, method: "put", data });
+    return request<any, string>({ url: `${BASE_URL}/${id}`, method: "put", data });
   },
   deleteByIds(ids: string) {
     return request({ url: `${BASE_URL}/${ids}`, method: "delete" });
