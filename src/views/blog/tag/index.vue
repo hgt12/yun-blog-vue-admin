@@ -209,4 +209,5 @@ function handleDelete(id?: string) {
 }
 
 onMounted(() => handleQuery());
+onActivated(() => handleQuery());
 </script>
