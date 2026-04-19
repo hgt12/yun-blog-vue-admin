@@ -19,16 +19,12 @@ export interface BlogPostItem {
   id?: string;
   title?: string;
   summary?: string;
-  thumbnail?: string;
-  categoryId?: string;
   categoryName?: string;
-  tagNames?: string;
-  tags?: Array<{ id: string; name: string; createTime?: string }>;
-  author?: string;
+  categoryStatus?: string;
+  tags?: Array<{ id: string; name: string; status?: string; createTime?: string }>;
   status?: string;
   viewCount?: number;
   createTime?: string;
-  updateTime?: string;
 }
 
 /** 博客文章表单 */
@@ -79,6 +75,7 @@ export interface BlogCategoryForm {
 /** 标签查询参数 */
 export interface BlogTagQueryParams extends BaseQueryParams {
   keywords?: string;
+  status?: string;
 }
 
 /** 标签列表项 */
@@ -87,6 +84,8 @@ export interface BlogTagItem {
   name?: string;
   remark?: string;
   articleCount?: number;
+  status?: string;
+  sort?: number;
   createTime?: string;
 }
 
@@ -95,6 +94,8 @@ export interface BlogTagForm {
   id?: string;
   name: string;
   remark?: string;
+  status: string;
+  sort?: number;
 }
 
 // ==================== 友链 ====================

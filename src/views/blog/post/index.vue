@@ -60,10 +60,29 @@
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column label="文章标题" prop="title" min-width="200" show-overflow-tooltip />
         <el-table-column label="摘要" prop="summary" min-width="250" show-overflow-tooltip />
-        <el-table-column label="分类" prop="categoryName" width="120" align="center" />
+        <el-table-column label="分类" prop="categoryName" width="180" align="center">
+          <template #default="{ row }">
+            <div>
+              <div>{{ row.categoryName }}</div>
+              <div v-if="row.categoryStatus == 1" style=" font-size: 12px;color: #e6a23c">
+                (使用已禁用的分类)
+              </div>
+              <div v-if="row.categoryStatus == 1" style=" font-size: 12px;color: #e6a23c">
+                (该文章将无法在前台显示)
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="标签" prop="tags" min-width="150" show-overflow-tooltip>
           <template #default="{ row }">
-            <el-tag v-for="tag in row.tags || []" :key="tag.id" size="small" class="mr-1">
+            <el-tag
+              v-for="tag in row.tags || []"
+              :key="tag.id"
+              size="small"
+              class="mr-1"
+              :type="tag.status == 1 ? 'info' : ''"
+              :effect="tag.status == 1 ? 'plain' : 'light'"
+            >
               {{ tag.name }}
             </el-tag>
           </template>
