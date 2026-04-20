@@ -54,6 +54,7 @@
         :data="deptList"
         row-key="id"
         default-expand-all
+        border
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         class="table-section__content"
         @selection-change="handleSelectionChange"

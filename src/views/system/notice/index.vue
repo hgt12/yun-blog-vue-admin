@@ -58,6 +58,7 @@
         ref="dataTableRef"
         v-loading="loading"
         :data="pageData"
+        border
         highlight-current-row
         class="table-section__content"
         @selection-change="handleSelectionChange"
