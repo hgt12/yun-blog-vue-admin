@@ -21,6 +21,16 @@
             style="width: 130px"
           />
         </el-form-item>
+        <el-form-item label="标签" prop="tagId">
+          <el-select-v2
+            v-model="queryParams.tagId"
+            :options="tagOptions"
+            placeholder="全部"
+            filterable
+            clearable
+            style="width: 130px"
+          />
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
             <el-option label="已发布" :value="0" />
@@ -64,10 +74,10 @@
           <template #default="{ row }">
             <div>
               <div>{{ row.categoryName }}</div>
-              <div v-if="row.categoryStatus == 1" style=" font-size: 12px;color: #e6a23c">
+              <div v-if="row.categoryStatus == 1" style="font-size: 12px; color: #e6a23c">
                 (使用已禁用的分类)
               </div>
-              <div v-if="row.categoryStatus == 1" style=" font-size: 12px;color: #e6a23c">
+              <div v-if="row.categoryStatus == 1" style="font-size: 12px; color: #e6a23c">
                 (该文章将无法在前台显示)
               </div>
             </div>
@@ -123,6 +133,7 @@
 import { useRouter } from "vue-router";
 import BlogPostAPI from "@/api/blog/post";
 import BlogCategoryAPI from "@/api/blog/category";
+import BlogTagAPI from "@/api/blog/tag";
 import type { BlogPostItem, BlogPostQueryParams } from "@/types/api";
 
 defineOptions({ name: "BlogPost", inheritAttrs: false });
@@ -134,6 +145,7 @@ const total = ref(0);
 const selectIds = ref<string[]>([]);
 const postList = ref<BlogPostItem[]>([]);
 const categoryOptions = ref<OptionItem[]>([]);
+const tagOptions = ref<OptionItem[]>([]);
 
 const queryParams = reactive<BlogPostQueryParams>({ pageNum: 1, pageSize: 10 });
 
@@ -195,6 +207,7 @@ function handleDelete(id?: string) {
 
 onMounted(async () => {
   categoryOptions.value = await BlogCategoryAPI.getOptions();
+  tagOptions.value = await BlogTagAPI.getOptions();
   handleQuery();
 });
 
