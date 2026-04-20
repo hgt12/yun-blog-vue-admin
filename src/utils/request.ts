@@ -34,8 +34,9 @@ http.interceptors.request.use(
 
 // 响应拦截器
 http.interceptors.response.use(
-  (response: AxiosResponse<ApiResponse>) => {
-    const { responseType } = response.config;
+  async (response: AxiosResponse<ApiResponse>) => {
+    const { config } = response;
+    const { responseType } = config;
 
     // 二进制数据直接返回
     if (responseType === "blob" || responseType === "arraybuffer") {
@@ -49,22 +50,7 @@ http.interceptors.response.use(
       return data;
     }
 
-    ElMessage.error(msg || "系统出错");
-    return Promise.reject(new Error(msg || "系统出错"));
-  },
-
-  async (error) => {
-    const { config, response } = error;
-
-    if (!response) {
-      ElMessage.error("网络连接失败");
-      return Promise.reject(error);
-    }
-
-    const { code, msg } = response.data as ApiResponse;
-
     // Token 过期：尝试刷新 token 后自动重试一次
-    // token过期需要登录
     if (code === ApiCodeEnum.NEED_LOGIN) {
       // 已重试过，直接跳登录
       if (retriedConfigs.has(config)) {
@@ -84,7 +70,8 @@ http.interceptors.response.use(
         }
 
         return http(config);
-      } catch {
+      } catch (error) {
+        console.error("[Token] refreshToken失败:", error);
         await redirectToLogin("登录已过期，请重新登录");
         return Promise.reject(new Error("Token refresh failed"));
       }
@@ -103,6 +90,20 @@ http.interceptors.response.use(
       ElMessage.error(msg || "权限不足");
       return Promise.reject(new Error(msg || "权限不足"));
     }
+
+    ElMessage.error(msg || "系统出错");
+    return Promise.reject(new Error(msg || "系统出错"));
+  },
+
+  async (error) => {
+    const { response } = error;
+
+    if (!response) {
+      ElMessage.error("网络连接失败");
+      return Promise.reject(error);
+    }
+
+    const { msg } = response.data as ApiResponse;
 
     // 其他业务错误统一处理
     ElMessage.error(msg || "请求失败");
