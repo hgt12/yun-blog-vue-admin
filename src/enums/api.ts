@@ -15,19 +15,14 @@ export const enum ApiCodeEnum {
   SUCCESS = 200,
 
   /**
-   * 访问令牌无效或过期
+   * token失效 需要登录
    */
-  ACCESS_TOKEN_INVALID = 10230,
+  NEED_LOGIN = 401,
 
   /**
    * 刷新令牌无效或过期
    */
-  REFRESH_TOKEN_INVALID = 10231,
-
-  /**
-   * 需要登录
-   */
-  NEED_LOGIN = 401,
+  REFRESH_TOKEN_INVALID = 402,
 
   /**
    * 权限不足

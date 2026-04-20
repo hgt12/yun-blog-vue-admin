@@ -63,14 +63,9 @@ http.interceptors.response.use(
 
     const { code, msg } = response.data as ApiResponse;
 
-    // 需要登录：401
+    // Token 过期：尝试刷新 token 后自动重试一次
+    // token过期需要登录
     if (code === ApiCodeEnum.NEED_LOGIN) {
-      await redirectToLogin("需要登录后操作");
-      return Promise.reject(new Error(msg || "需要登录"));
-    }
-
-    // Token 过期：尝试刷新 token 后自动重试一次（保留兼容旧的 230）
-    if (code === ApiCodeEnum.ACCESS_TOKEN_INVALID) {
       // 已重试过，直接跳登录
       if (retriedConfigs.has(config)) {
         await redirectToLogin("登录已过期，请重新登录");
