@@ -51,7 +51,13 @@
         <el-table-column label="头像" width="80" align="center">
           <template #default="{ row }">
             <div style="display: flex; align-items: center; justify-content: center">
-              <el-avatar :size="40" :src="row.logo" />
+              <el-avatar
+                :size="40"
+                :src="row.logo || '/img/default_avatar.png'"
+                @error="() => true"
+              >
+                <img src="/img/default_avatar.png" alt="默认头像" />
+              </el-avatar>
             </div>
           </template>
         </el-table-column>
