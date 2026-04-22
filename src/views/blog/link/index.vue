@@ -48,6 +48,13 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" align="center" />
+        <el-table-column label="头像" width="80" align="center">
+          <template #default="{ row }">
+            <div style="display: flex; align-items: center; justify-content: center">
+              <el-avatar :size="40" :src="row.logo" />
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="站点名称" prop="name" min-width="130" />
         <el-table-column label="站点地址" prop="address" min-width="200" show-overflow-tooltip>
           <template #default="{ row }">
