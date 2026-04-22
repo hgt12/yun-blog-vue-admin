@@ -110,7 +110,7 @@
             placeholder="请输入站点地址，如 https://example.com"
           />
         </el-form-item>
-        <el-form-item label="站点 Logo" prop="logo">
+        <el-form-item label="头像地址" prop="logo">
           <el-input v-model="formData.logo" placeholder="请输入 Logo 图片地址（选填）" />
         </el-form-item>
         <el-form-item label="描述" prop="description">
