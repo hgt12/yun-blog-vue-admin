@@ -152,7 +152,7 @@ const dialogVisible = ref(false);
 const dialogTitle = ref("");
 
 const queryParams = reactive<BlogTagQueryParams>({ pageNum: 1, pageSize: 10 });
-const formData = reactive<BlogTagForm>({ name: "", sort: 1, status: "0" });
+const formData = reactive<BlogTagForm>({ name: "", sort: 0, status: "0" });
 
 const rules = {
   name: [{ required: true, message: "请输入标签名称", trigger: "blur" }],
@@ -188,7 +188,7 @@ function handleCreateClick() {
   formData.name = "";
   formData.remark = "";
   formData.status = "0";
-  formData.sort = 1;
+  formData.sort = 0;
   dialogVisible.value = true;
 }
 

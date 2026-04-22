@@ -13,8 +13,8 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option label="已通过" :value="1" />
-            <el-option label="待审核" :value="0" />
+            <el-option label="启用" :value="0" />
+            <el-option label="弃用" :value="1" />
           </el-select>
         </el-form-item>
         <el-form-item class="search-buttons">
@@ -57,8 +57,8 @@
         <el-table-column label="描述" prop="description" min-width="180" show-overflow-tooltip />
         <el-table-column label="状态" width="100" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'warning'">
-              {{ row.status === 1 ? "已通过" : "待审核" }}
+            <el-tag :type="row.status === 0 ? 'success' : 'info'">
+              {{ row.status === 0 ? "启用" : "弃用" }}
             </el-tag>
           </template>
         </el-table-column>
@@ -113,8 +113,8 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="formData.status">
-            <el-radio :value="1">已通过</el-radio>
-            <el-radio :value="0">待审核</el-radio>
+            <el-radio :value="0">启用</el-radio>
+            <el-radio :value="1">弃用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
@@ -151,7 +151,7 @@ const dialogVisible = ref(false);
 const dialogTitle = ref("");
 
 const queryParams = reactive<BlogLinkQueryParams>({ pageNum: 1, pageSize: 10 });
-const formData = reactive<BlogLinkForm>({ status: 1, sort: 1 });
+const formData = reactive<BlogLinkForm>({ name: "", url: "", status: "0", sort: 0 });
 
 const rules = {
   name: [{ required: true, message: "请输入站点名称", trigger: "blur" }],
@@ -189,8 +189,8 @@ function handleCreateClick() {
     url: "",
     logoUrl: "",
     description: "",
-    status: 1,
-    sort: 1,
+    status: "0",
+    sort: 0,
   });
   dialogVisible.value = true;
 }
