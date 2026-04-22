@@ -90,7 +90,7 @@
               :key="tag.id"
               size="small"
               class="mr-1"
-              :type="tag.status == 1 ? 'info' : ''"
+              :type="tag.status == 1 ? 'info' : undefined"
               :effect="tag.status == 1 ? 'plain' : 'light'"
             >
               {{ tag.name }}

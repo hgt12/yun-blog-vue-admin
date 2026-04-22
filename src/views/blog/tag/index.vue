@@ -50,7 +50,12 @@
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column label="标签名称" prop="name" width="150">
           <template #default="{ row }">
-            <el-tag>{{ row.name }}</el-tag>
+            <el-tag
+              :type="row.status == 1 ? 'info' : undefined"
+              :effect="row.status == 1 ? 'plain' : 'light'"
+            >
+              {{ row.name }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="备注" prop="remark" min-width="200" show-overflow-tooltip />
