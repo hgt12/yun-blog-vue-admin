@@ -56,29 +56,29 @@ export function useWeatherBackground() {
    */
   const backgroundImageMap: Record<WeatherType, Record<TimePeriod, string>> = {
     [WeatherType.SUNNY]: {
-      morning: "/background_image_sunny_morning.png",
-      afternoon: "/background_image_sunny_afternoon.png",
-      evening: "/background_image_sunny_evening.png",
+      morning: "/img/background_image_sunny_morning.png",
+      afternoon: "/img/background_image_sunny_afternoon.png",
+      evening: "/img/background_image_sunny_evening.png",
     },
     [WeatherType.OVERCAST]: {
-      morning: "/background_image_overcast_morning.png",
-      afternoon: "/background_image_overcast_afternoon.png",
-      evening: "/background_image_overcast_evening.png",
+      morning: "/img/background_image_overcast_morning.png",
+      afternoon: "/img/background_image_overcast_afternoon.png",
+      evening: "/img/background_image_overcast_evening.png",
     },
     [WeatherType.RAINING]: {
-      morning: "/background_image_raining_morning.png",
-      afternoon: "/background_image_raining_afternoon.png",
-      evening: "/background_image_raining_evening.png",
+      morning: "/img/background_image_raining_morning.png",
+      afternoon: "/img/background_image_raining_afternoon.png",
+      evening: "/img/background_image_raining_evening.png",
     },
     [WeatherType.SNOWING]: {
-      morning: "/background_image_snowing_morning.png",
-      afternoon: "/background_image_snowing_afternoon.png",
-      evening: "/background_image_snowing_evening.png",
+      morning: "/img/background_image_snowing_morning.png",
+      afternoon: "/img/background_image_snowing_afternoon.png",
+      evening: "/img/background_image_snowing_evening.png",
     },
     [WeatherType.FOG]: {
-      morning: "/background_image_fog_morning.png",
-      afternoon: "/background_image_fog_afternoon.png",
-      evening: "/background_image_fog_evening.png",
+      morning: "/img/background_image_fog_morning.png",
+      afternoon: "/img/background_image_fog_afternoon.png",
+      evening: "/img/background_image_fog_evening.png",
     },
   };
 
