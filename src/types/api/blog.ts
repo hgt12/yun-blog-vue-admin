@@ -110,8 +110,8 @@ export interface BlogLinkQueryParams extends BaseQueryParams {
 export interface BlogLinkItem {
   id?: string;
   name?: string;
-  url?: string;
-  logoUrl?: string;
+  address?: string;
+  logo?: string;
   description?: string;
   status?: string;
   sort?: number;
@@ -122,8 +122,8 @@ export interface BlogLinkItem {
 export interface BlogLinkForm {
   id?: string;
   name: string;
-  url: string;
-  logoUrl?: string;
+  address: string;
+  logo?: string;
   description?: string;
   status: string;
   sort?: number;

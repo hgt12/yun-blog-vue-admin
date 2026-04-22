@@ -13,8 +13,8 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option label="启用" :value="0" />
-            <el-option label="弃用" :value="1" />
+            <el-option label="启用" value="0" />
+            <el-option label="弃用" value="1" />
           </el-select>
         </el-form-item>
         <el-form-item class="search-buttons">
@@ -49,16 +49,16 @@
       >
         <el-table-column type="selection" width="50" align="center" />
         <el-table-column label="站点名称" prop="name" min-width="130" />
-        <el-table-column label="站点地址" prop="url" min-width="200" show-overflow-tooltip>
+        <el-table-column label="站点地址" prop="address" min-width="200" show-overflow-tooltip>
           <template #default="{ row }">
-            <el-link :href="row.url" target="_blank" type="primary">{{ row.url }}</el-link>
+            <el-link :href="row.address" target="_blank" type="primary">{{ row.address }}</el-link>
           </template>
         </el-table-column>
         <el-table-column label="描述" prop="description" min-width="180" show-overflow-tooltip />
         <el-table-column label="状态" width="100" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status === 0 ? 'success' : 'info'">
-              {{ row.status === 0 ? "启用" : "弃用" }}
+            <el-tag :type="row.status === '0' ? 'success' : 'info'">
+              {{ row.status === "0" ? "启用" : "弃用" }}
             </el-tag>
           </template>
         </el-table-column>
@@ -97,11 +97,14 @@
         <el-form-item label="站点名称" prop="name">
           <el-input v-model="formData.name" placeholder="请输入站点名称" />
         </el-form-item>
-        <el-form-item label="站点地址" prop="url">
-          <el-input v-model="formData.url" placeholder="请输入站点地址，如 https://example.com" />
+        <el-form-item label="站点地址" prop="address">
+          <el-input
+            v-model="formData.address"
+            placeholder="请输入站点地址，如 https://example.com"
+          />
         </el-form-item>
-        <el-form-item label="站点 Logo" prop="logoUrl">
-          <el-input v-model="formData.logoUrl" placeholder="请输入 Logo 图片地址（选填）" />
+        <el-form-item label="站点 Logo" prop="logo">
+          <el-input v-model="formData.logo" placeholder="请输入 Logo 图片地址（选填）" />
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input
@@ -113,8 +116,8 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="formData.status">
-            <el-radio :value="0">启用</el-radio>
-            <el-radio :value="1">弃用</el-radio>
+            <el-radio value="0">启用</el-radio>
+            <el-radio value="1">弃用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
@@ -151,11 +154,11 @@ const dialogVisible = ref(false);
 const dialogTitle = ref("");
 
 const queryParams = reactive<BlogLinkQueryParams>({ pageNum: 1, pageSize: 10 });
-const formData = reactive<BlogLinkForm>({ name: "", url: "", status: "0", sort: 0 });
+const formData = reactive<BlogLinkForm>({ name: "", address: "", status: "0", sort: 0 });
 
 const rules = {
   name: [{ required: true, message: "请输入站点名称", trigger: "blur" }],
-  url: [{ required: true, message: "请输入站点地址", trigger: "blur" }],
+  address: [{ required: true, message: "请输入站点地址", trigger: "blur" }],
 };
 
 async function fetchList() {
@@ -186,8 +189,8 @@ function handleCreateClick() {
   Object.assign(formData, {
     id: undefined,
     name: "",
-    url: "",
-    logoUrl: "",
+    address: "",
+    logo: "",
     description: "",
     status: "0",
     sort: 0,
