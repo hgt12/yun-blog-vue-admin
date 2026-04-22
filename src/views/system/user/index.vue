@@ -512,6 +512,10 @@ function openImportDialog(): void {
 onMounted(() => {
   handleQuery();
 });
+
+onActivated(() => {
+  handleQuery();
+});
 </script>
 
 <style scoped lang="scss"></style>

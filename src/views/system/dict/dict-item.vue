@@ -336,4 +336,8 @@ function handleDelete(id?: number): void {
 onMounted(() => {
   handleQuery();
 });
+
+onActivated(() => {
+  handleQuery();
+});
 </script>

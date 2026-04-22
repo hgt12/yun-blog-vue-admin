@@ -331,4 +331,8 @@ function openDictData(row: DictTypeItem): void {
 onMounted(() => {
   handleQuery();
 });
+
+onActivated(() => {
+  handleQuery();
+});
 </script>

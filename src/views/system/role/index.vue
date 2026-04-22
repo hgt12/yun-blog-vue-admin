@@ -542,4 +542,8 @@ function handleParentChildLinkedChange(val: any): void {
 onMounted(() => {
   handleQuery();
 });
+
+onActivated(() => {
+  handleQuery();
+});
 </script>

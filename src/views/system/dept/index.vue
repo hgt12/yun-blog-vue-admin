@@ -341,4 +341,8 @@ function closeDialog(): void {
 onMounted(() => {
   fetchData();
 });
+
+onActivated(() => {
+  fetchData();
+});
 </script>
