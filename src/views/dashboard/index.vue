@@ -16,7 +16,7 @@
             <p class="text-base font-semibold text-[--el-text-color-primary] leading-tight">
               {{ greetings }}
             </p>
-            <p class="text-sm text-gray">今日天气晴朗，气温在15℃至25℃之间，东南风。</p>
+            <p class="text-sm text-gray">{{ weatherDescription }}</p>
           </div>
         </div>
       </div>
@@ -301,6 +301,8 @@ import { formatGrowthRate } from "@/utils";
 import { useTransition, useDateFormat } from "@vueuse/core";
 import { CircleCheck, CircleClose, Loading, Clock, Menu } from "@element-plus/icons-vue";
 import { useOnlineCount, useRecentMenus } from "@/composables";
+import { getWeatherNow } from "@/api/weather";
+import type { WeatherNowResponse } from "@/api/weather";
 
 const router = useRouter();
 
@@ -337,6 +339,10 @@ const userStore = useUserStore();
 
 // 当前时间（用于计算问候语）
 const currentDate = new Date();
+
+// 天气信息
+const weatherInfo = ref<WeatherNowResponse | null>(null);
+const weatherLoading = ref(true);
 
 // 问候语：根据当前小时返回不同问候语
 const greetings = computed(() => {
@@ -564,9 +570,36 @@ watch(
   { immediate: true }
 );
 
-// 组件挂载后加载访客统计数据和通知公告数据
+/**
+ * 获取天气信息
+ */
+const fetchWeatherInfo = async () => {
+  try {
+    const data = await getWeatherNow();
+    weatherInfo.value = data;
+  } catch (error) {
+    console.error("获取天气信息失败", error);
+  } finally {
+    weatherLoading.value = false;
+  }
+};
+
+// 天气描述文本
+const weatherDescription = computed(() => {
+  if (weatherLoading.value) {
+    return "正在获取天气信息...";
+  }
+  if (!weatherInfo.value) {
+    return "今日天气晴朗，气温在15℃至25℃之间，东南风。";
+  }
+  const { text, temp, feelsLike, windDir, humidity } = weatherInfo.value;
+  return `今日天气：${text} ，气温${temp}℃（体感${feelsLike}℃），相对湿度${humidity}% ，${windDir}。`;
+});
+
+// 组件挂载后加载访客统计数据和天气信息
 onMounted(() => {
   fetchVisitStatsData();
+  fetchWeatherInfo();
 });
 </script>
 
