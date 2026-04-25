@@ -41,6 +41,7 @@
           children: 'children',
           hasChildren: 'hasChildren',
         }"
+        border
         class="table-section__content"
         @row-click="handleRowClick"
       >
