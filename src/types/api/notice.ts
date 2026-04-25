@@ -23,15 +23,15 @@ export interface NoticeForm {
   /** 通知内容 */
   content?: string;
   /** 通知类型 */
-  type?: number;
+  type?: string;
   /** 通知等级 */
   level?: string;
   /** 发布状态(0:草稿;1:已发布;-1:已撤回) */
-  status?: number;
+  status?: string;
   /** 目标用户ID列表 */
-  targetUsers?: number[];
+  targetUsers?: string[];
   /** 目标类型 (1:全部,2:指定用户等) */
-  targetType?: number;
+  targetType?: string;
 }
 
 /** 通知分页对象 */
@@ -43,13 +43,13 @@ export interface NoticeItem {
   /** 通知内容 */
   content: string;
   /** 通知类型 */
-  type: number;
+  type: string;
   /** 通知等级 */
   level: string;
   /** 发布状态 */
-  publishStatus: number;
+  publishStatus: string;
   /** 是否已读 */
-  isRead: number;
+  isRead: string;
   /** 发布时间 */
   publishTime?: Date;
   /** 撤回时间 */
@@ -65,11 +65,11 @@ export interface NoticeDetail {
   /** 通知内容 */
   content?: string;
   /** 通知类型 */
-  type?: number;
+  type?: string;
   /** 通知等级 */
   level?: string;
   /** 发布状态 */
-  publishStatus?: number;
+  publishStatus?: string;
   /** 目标用户ID */
   targetUserIds?: string;
   /** 发布人名称 */

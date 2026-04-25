@@ -32,10 +32,10 @@ export interface MenuItem {
   sort?: number;
   /** 菜单类型（C-目录 M-菜单 B-按钮） */
   type?: string;
-  /** 菜单是否可见(1:显示;0:隐藏) */
-  visible?: number;
+  /** 菜单是否可见(0:显示;1:隐藏) */
+  visible?: string;
   /** 菜单范围(1=平台 2=业务) */
-  scope?: number;
+  scope?: string;
 }
 
 /** 菜单表单对象 */
@@ -63,9 +63,9 @@ export interface MenuForm {
   /** 排序 */
   sort?: number;
   /** 菜单是否可见 */
-  visible?: number;
+  visible?: string;
   /** 菜单范围(1=平台 2=业务) */
-  scope?: number;
+  scope?: string;
   /** 按钮权限标识 */
   perm?: string;
   /** 路由参数（用于表单编辑 params） */

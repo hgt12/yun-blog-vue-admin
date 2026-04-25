@@ -25,7 +25,7 @@ export interface UserQueryParams extends BaseQueryParams {
   /** 搜索关键字 */
   keywords?: string;
   /** 用户状态 */
-  status?: number;
+  status?: string;
   /** 部门ID */
   deptId?: string;
   /** 创建时间 */
@@ -45,7 +45,7 @@ export interface UserItem {
   /** 用户邮箱 */
   email?: string;
   /** 性别 */
-  gender?: number;
+  gender?: string;
   /** 手机号 */
   mobile?: string;
   /** 用户昵称 */
@@ -53,7 +53,7 @@ export interface UserItem {
   /** 角色名称，多个使用英文逗号(,)分割 */
   roleNames?: string;
   /** 用户状态(1:启用;0:禁用) */
-  status?: number;
+  status?: string;
   /** 用户名 */
   username?: string;
 }
@@ -69,15 +69,15 @@ export interface UserForm {
   /** 用户邮箱 */
   email?: string;
   /** 性别 */
-  gender?: number;
+  gender?: string;
   /** 手机号 */
   mobile?: string;
   /** 用户昵称 */
   nickname?: string;
   /** 角色ID集合 */
-  roleIds?: number[];
+  roleIds?: string[];
   /** 用户状态(1:正常;0:禁用) */
-  status?: number;
+  status?: string;
   /** 用户名 */
   username?: string;
 }
@@ -93,7 +93,7 @@ export interface UserProfileDetail {
   /** 头像URL */
   avatar?: string;
   /** 性别 */
-  gender?: number;
+  gender?: string;
   /** 手机号 */
   mobile?: string;
   /** 邮箱 */
@@ -113,7 +113,7 @@ export interface UserProfileForm {
   /** 头像URL */
   avatar?: string;
   /** 性别 */
-  gender?: number;
+  gender?: string;
 }
 
 /** 修改密码表单 */
