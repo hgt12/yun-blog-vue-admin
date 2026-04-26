@@ -7,10 +7,20 @@
           <span class="text-lg font-medium">{{ isEdit ? "编辑文章" : "写博客" }}</span>
           <div>
             <el-button @click="handleCancel">取消</el-button>
-            <el-button type="primary" :loading="submitting" @click="handleSubmit(1)">
+            <el-button
+              v-hasPerm="['blog:post:create', 'blog:post:update']"
+              type="primary"
+              :loading="submitting"
+              @click="handleSubmit(1)"
+            >
               保存草稿
             </el-button>
-            <el-button type="success" :loading="submitting" @click="handleSubmit(0)">
+            <el-button
+              v-hasPerm="['blog:post:create', 'blog:post:update']"
+              type="success"
+              :loading="submitting"
+              @click="handleSubmit(0)"
+            >
               发布文章
             </el-button>
           </div>

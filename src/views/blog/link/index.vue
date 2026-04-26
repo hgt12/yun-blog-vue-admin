@@ -27,8 +27,16 @@
     <el-card shadow="hover" class="table-section">
       <div class="table-section__toolbar">
         <div class="table-section__toolbar--actions">
-          <el-button type="success" icon="plus" @click="handleCreateClick">新增</el-button>
           <el-button
+            v-hasPerm="['blog:link:create']"
+            type="success"
+            icon="plus"
+            @click="handleCreateClick"
+          >
+            新增
+          </el-button>
+          <el-button
+            v-hasPerm="['blog:link:delete']"
             type="danger"
             :disabled="selectIds.length === 0"
             icon="delete"
@@ -80,6 +88,7 @@
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template #default="{ row }">
             <el-button
+              v-hasPerm="['blog:link:update']"
               type="primary"
               size="small"
               link
@@ -88,7 +97,14 @@
             >
               编辑
             </el-button>
-            <el-button type="danger" size="small" link icon="delete" @click="handleDelete(row.id)">
+            <el-button
+              v-hasPerm="['blog:link:delete']"
+              type="danger"
+              size="small"
+              link
+              icon="delete"
+              @click="handleDelete(row.id)"
+            >
               删除
             </el-button>
           </template>

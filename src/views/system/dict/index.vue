@@ -21,8 +21,16 @@
     <el-card shadow="hover" class="table-section">
       <div class="table-section__toolbar">
         <div class="table-section__toolbar--actions">
-          <el-button type="success" icon="plus" @click="handleCreateClick()">新增</el-button>
           <el-button
+            v-hasPerm="['sys:dict:create']"
+            type="success"
+            icon="plus"
+            @click="handleCreateClick()"
+          >
+            新增
+          </el-button>
+          <el-button
+            v-hasPerm="['sys:dict:delete']"
             type="danger"
             :disabled="ids.length === 0"
             icon="delete"
@@ -53,7 +61,13 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="220">
           <template #default="scope">
-            <el-button type="primary" link size="small" @click.stop="openDictData(scope.row)">
+            <el-button
+              v-hasPerm="['sys:dict:query']"
+              type="primary"
+              link
+              size="small"
+              @click.stop="openDictData(scope.row)"
+            >
               <template #icon>
                 <Collection />
               </template>
@@ -61,6 +75,7 @@
             </el-button>
 
             <el-button
+              v-hasPerm="['sys:dict:update']"
               type="primary"
               link
               size="small"
@@ -70,6 +85,7 @@
               编辑
             </el-button>
             <el-button
+              v-hasPerm="['sys:dict:delete']"
               type="danger"
               link
               size="small"
