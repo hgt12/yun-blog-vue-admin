@@ -103,7 +103,7 @@ export interface MenuRouteItem {
   /** 菜单ID */
   id: number;
   /** 父菜单ID */
-  parentId: number;
+  parentId: string;
   /** 菜单名称 */
   name: string;
   /** 菜单类型（C-目录 M-菜单 B-按钮） */
