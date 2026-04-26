@@ -71,9 +71,9 @@ export interface MenuForm {
   /** 路由参数（用于表单编辑 params） */
   params?: { key?: string; value?: string }[];
   /** 是否始终显示（仅对目录生效） */
-  alwaysShow?: number | boolean;
+  alwaysShow?: string | boolean;
   /** 是否缓存（用于 keepAlive） */
-  keepAlive?: number | boolean;
+  keepAlive?: string | boolean;
 }
 
 /** 菜单选项 */
@@ -101,7 +101,7 @@ export interface RouteItem {
 /** 菜单路由对象（后端返回的菜单数据结构） */
 export interface MenuRouteItem {
   /** 菜单ID */
-  id: number;
+  id: string;
   /** 父菜单ID */
   parentId: string;
   /** 菜单名称 */

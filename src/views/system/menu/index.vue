@@ -77,7 +77,7 @@
 
         <el-table-column label="状态" align="center" width="80">
           <template #default="scope">
-            <el-tag v-if="scope.row.visible === 0" type="success">显示</el-tag>
+            <el-tag v-if="scope.row.visible === '0'" type="success">显示</el-tag>
             <el-tag v-else type="info">隐藏</el-tag>
           </template>
         </el-table-column>
@@ -265,8 +265,8 @@
 
         <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" prop="visible" label="显示状态">
           <el-radio-group v-model="formData.visible">
-            <el-radio :value="1">显示</el-radio>
-            <el-radio :value="0">隐藏</el-radio>
+            <el-radio value="0">显示</el-radio>
+            <el-radio value="1">隐藏</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -292,8 +292,8 @@
           </template>
 
           <el-radio-group v-model="formData.alwaysShow">
-            <el-radio :value="1">是</el-radio>
-            <el-radio :value="0">否</el-radio>
+            <el-radio value="1">是</el-radio>
+            <el-radio value="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -302,8 +302,8 @@
           label="缓存页面"
         >
           <el-radio-group v-model="formData.keepAlive">
-            <el-radio :value="1">开启</el-radio>
-            <el-radio :value="0">关闭</el-radio>
+            <el-radio value="1">开启</el-radio>
+            <el-radio value="0">关闭</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -378,11 +378,11 @@ const dialogState = reactive({
 const initialMenuFormData = ref<MenuForm>({
   id: undefined,
   parentId: "0",
-  visible: 1,
+  visible: "0",
   sort: 1,
   type: MenuTypeEnum.MENU,
-  alwaysShow: 0,
-  keepAlive: 1,
+  alwaysShow: "0",
+  keepAlive: "1",
   params: [],
 });
 const formData = ref({ ...initialMenuFormData.value });
@@ -571,11 +571,11 @@ function closeDialog(): void {
   formData.value = {
     id: undefined,
     parentId: "0",
-    visible: 1,
+    visible: "0",
     sort: 1,
     type: MenuTypeEnum.MENU,
-    alwaysShow: 0,
-    keepAlive: 1,
+    alwaysShow: "0",
+    keepAlive: "1",
     params: [],
   };
 }
