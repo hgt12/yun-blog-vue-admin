@@ -24,11 +24,11 @@ const MenuAPI = {
     });
   },
   /** 获取菜单下拉数据源 */
-  getOptions(onlyParent?: boolean, scope?: number) {
+  getOptions(onlyParent?: boolean) {
     return request<any, OptionItem[]>({
       url: `${MENU_BASE_URL}/options`,
       method: "get",
-      params: { onlyParent, scope },
+      params: { onlyParent },
     });
   },
   /** 获取菜单表单数据 */
