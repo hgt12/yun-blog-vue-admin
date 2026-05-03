@@ -12,18 +12,35 @@ function extractFileName(contentDisposition: string): string {
     return `download_${Date.now()}`;
   }
 
-  // 尝试从 filename*=UTF-8'' 格式中提取
-  const filenameRegex = /filename\*=UTF-8''(.+)/;
-  const matches = filenameRegex.exec(contentDisposition);
-  if (matches && matches[1]) {
-    return decodeURIComponent(matches[1]);
+  // 尝试从 filename*=UTF-8'' 格式中提取（RFC 5987）
+  const filenameStarRegex = /filename\*=UTF-8''(.+?)(?:;|$)/i;
+  const starMatches = filenameStarRegex.exec(contentDisposition);
+  if (starMatches && starMatches[1]) {
+    return decodeURIComponent(starMatches[1]);
   }
 
   // 尝试从 filename= 格式中提取
-  const fallbackRegex = /filename=([^;]+)/;
-  const fallbackMatches = fallbackRegex.exec(contentDisposition);
-  if (fallbackMatches && fallbackMatches[1]) {
-    return decodeURI(fallbackMatches[1].replace(/"/g, ""));
+  const filenameRegex = /filename=([^;]+)/i;
+  const matches = filenameRegex.exec(contentDisposition);
+  if (matches && matches[1]) {
+    let filename = matches[1].trim().replace(/^["']|["']$/g, "");
+
+    // 如果文件名包含 URL 编码的字符（如 %E8），进行解码
+    if (filename.includes("%")) {
+      try {
+        filename = decodeURIComponent(filename);
+      } catch (e) {
+        // 如果解码失败，尝试使用 decodeURI
+        try {
+          filename = decodeURI(filename);
+        } catch (e2) {
+          // 解码失败，使用原始文件名
+          console.warn("文件名解码失败:", filename);
+        }
+      }
+    }
+
+    return filename;
   }
 
   return `download_${Date.now()}`;
@@ -48,10 +65,12 @@ export function downloadFile(response: any, customFileName?: string): void {
   try {
     const fileData = response.data;
     const contentDisposition = response.headers["content-disposition"];
+    const contentType = response.headers["content-type"] || "application/octet-stream";
+
     const fileName = customFileName || extractFileName(contentDisposition);
 
-    // 创建 Blob 对象
-    const blob = new Blob([fileData]);
+    // 创建 Blob 对象，指定正确的 MIME 类型
+    const blob = new Blob([fileData], { type: contentType });
 
     // 创建下载链接
     const downloadUrl = window.URL.createObjectURL(blob);
