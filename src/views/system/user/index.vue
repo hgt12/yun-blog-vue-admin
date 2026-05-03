@@ -29,6 +29,7 @@
             start-placeholder="开始时间"
             end-placeholder="截止时间"
             value-format="YYYY-MM-DD"
+            style="width: 260px"
           />
         </el-form-item>
 
