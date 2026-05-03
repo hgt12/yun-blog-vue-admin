@@ -128,7 +128,7 @@
         </el-form-item>
 
         <!-- 自定义部门选择 -->
-        <el-form-item v-if="formData.dataScope === 5" label="选择部门" prop="deptIds">
+        <el-form-item v-if="formData.dataScope === '5'" label="选择部门" prop="deptIds">
           <el-tree-select
             v-model="formData.deptIds"
             :data="deptOptions"
@@ -276,7 +276,7 @@ const drawerSize = computed(() => (appStore.device === DeviceEnum.DESKTOP ? "600
 // 角色表单
 const formData = reactive<RoleForm>({
   sort: 1,
-  status: 1,
+  status: "1",
 });
 
 const rules = reactive({
@@ -364,7 +364,7 @@ function resetForm(): void {
 
   formData.id = undefined;
   formData.sort = 1;
-  formData.status = 1;
+  formData.status = "1";
   formData.dataScope = undefined;
   formData.deptIds = undefined;
 }
@@ -403,7 +403,7 @@ async function handleSubmit(): Promise<void> {
   if (!valid) return;
 
   const submitData = { ...formData };
-  if (submitData.dataScope !== 5) {
+  if (submitData.dataScope !== "5") {
     submitData.deptIds = undefined;
   }
 
