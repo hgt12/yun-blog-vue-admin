@@ -224,6 +224,23 @@
 
     <!-- 用户导入 -->
     <UserImportDialog v-model="importDialogVisible" @import-success="handleQuery()" />
+
+    <!-- 导出方式选择对话框 -->
+    <el-dialog v-model="exportDialogVisible" title="请选择导出方式" width="420px" append-to-body>
+      <div style="padding: 10px 0">
+        <div style="font-size: 14px; line-height: 1.8; color: #606266">
+          <p style="margin: 0 0 8px 0">导出当前页：{{ userList.length }} 条用户数据</p>
+          <p style="margin: 0">导出全部：{{ total }} 条用户数据</p>
+        </div>
+      </div>
+      <template #footer>
+        <div style="display: flex; gap: 12px; justify-content: center">
+          <el-button type="success" @click="handleConfirmExport(false)">导出全部</el-button>
+          <el-button type="primary" @click="handleConfirmExport(true)">导出当前页</el-button>
+          <el-button @click="exportDialogVisible = false">取消</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -273,6 +290,9 @@ const dialogState = reactive({
 
 // 导入弹窗状态
 const importDialogVisible = ref(false);
+
+// 导出弹窗状态
+const exportDialogVisible = ref(false);
 
 // 表单初始数据
 const initialFormData: UserForm = {
@@ -497,10 +517,53 @@ function handleDelete(id?: string): void {
 /**
  * 导出用户列表
  */
-async function exportUsers(): Promise<void> {
-  const response = await UserAPI.export(queryParams);
-  downloadFile(response);
-  ElMessage.success("导出成功");
+function exportUsers(): void {
+  exportDialogVisible.value = true;
+}
+
+/**
+ * 确认导出
+ * @param isCurrentPage 是否导出当前页
+ */
+function handleConfirmExport(isCurrentPage: boolean): void {
+  const exportType = isCurrentPage ? "当前页" : "全部";
+  const exportCount = isCurrentPage ? userList.value.length : total.value;
+
+  // 关闭导出方式选择对话框
+  exportDialogVisible.value = false;
+
+  // 二次确认
+  ElMessageBox.confirm(`确认导出${exportType} ${exportCount} 条用户数据？`, "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "info",
+  })
+    .then(async () => {
+      loading.value = true;
+
+      try {
+        // 构建导出参数
+        const exportParams: Partial<UserQueryParams> = { ...queryParams };
+
+        if (!isCurrentPage) {
+          // 导出全部：移除分页参数
+          exportParams.pageNum = undefined;
+          exportParams.pageSize = undefined;
+        }
+        // 导出当前页：保留原有的 pageNum 和 pageSize
+        const response = await UserAPI.export(exportParams);
+        downloadFile(response);
+        ElMessage.success(`${exportType}数据导出成功`);
+      } catch (error) {
+        console.error("导出失败:", error);
+        ElMessage.error("导出失败，请重试");
+      } finally {
+        loading.value = false;
+      }
+    })
+    .catch(() => {
+      // 用户取消导出，不做任何操作
+    });
 }
 
 /**

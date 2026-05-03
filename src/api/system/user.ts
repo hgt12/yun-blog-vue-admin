@@ -121,7 +121,7 @@ const UserAPI = {
    *
    * @param queryParams 查询参数
    */
-  export(queryParams: UserQueryParams) {
+  export(queryParams: Partial<UserQueryParams>) {
     return request({
       url: `${USER_BASE_URL}/export`,
       method: "get",
