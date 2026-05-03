@@ -8,7 +8,7 @@
           <div>
             <el-button @click="handleCancel">取消</el-button>
             <el-button
-              v-hasPerm="['blog:post:create', 'blog:post:update']"
+              v-hasPerm="['blog:post:save']"
               type="primary"
               :loading="submitting"
               @click="handleSubmit(1)"
@@ -16,7 +16,7 @@
               保存草稿
             </el-button>
             <el-button
-              v-hasPerm="['blog:post:create', 'blog:post:update']"
+              v-hasPerm="['blog:post:publish']"
               type="success"
               :loading="submitting"
               @click="handleSubmit(0)"
