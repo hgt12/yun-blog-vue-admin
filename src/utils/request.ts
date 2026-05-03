@@ -45,8 +45,12 @@ http.interceptors.response.use(
 
     const { code, data, msg } = response.data;
 
-    // 处理 code 可能是字符串或数字的情况
     if (code === ApiCodeEnum.SUCCESS) {
+      // 如果 data 为 null/undefined，返回包含 msg 的对象
+      // 这样删除等操作可以获取到后端返回的消息
+      if (data === null || data === undefined) {
+        return { msg };
+      }
       return data;
     }
 

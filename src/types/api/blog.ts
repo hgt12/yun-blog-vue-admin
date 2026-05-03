@@ -128,3 +128,60 @@ export interface BlogLinkForm {
   status: string;
   sort?: number;
 }
+
+// ==================== 评论 ====================
+
+/** 评论查询参数 */
+export interface BlogCommentQueryParams extends BaseQueryParams {
+  keywords?: string;
+  type?: string;
+  status?: string;
+  articleId?: string;
+  startTime?: string;
+  endTime?: string;
+}
+
+/** 评论列表项 */
+export interface BlogCommentItem {
+  id?: string;
+  type?: string;
+  articleId?: string;
+  articleTitle?: string;
+  userId?: string;
+  nickname?: string;
+  email?: string;
+  personalWebsite?: string;
+  content?: string;
+  rootId?: string;
+  replyToNickname?: string;
+  likeCount?: number;
+  status?: string;
+  createTime?: string;
+  children?: BlogCommentItem[];
+}
+
+/** 评论表单 */
+export interface BlogCommentForm {
+  id?: string;
+  type?: string;
+  articleId?: string;
+  userId?: string;
+  nickname?: string;
+  email?: string;
+  personalWebsite?: string;
+  avatar?: string;
+  content: string;
+  parentId?: string;
+  rootId?: string;
+  replyToUserId?: string;
+  replyToCommentId?: string;
+  status?: string;
+}
+
+/** 评论统计 */
+export interface BlogCommentStatistics {
+  total?: number;
+  pendingReview?: number;
+  todayCount?: number;
+  rejected?: number;
+}
