@@ -24,7 +24,7 @@ const props = defineProps({
   pageSizes: {
     type: Array as PropType<number[]>,
     default() {
-      return [10, 20, 30, 50];
+      return [10, 20, 30, 50, 100, 200, 500];
     },
   },
   layout: {
