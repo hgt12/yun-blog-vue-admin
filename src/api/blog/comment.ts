@@ -36,6 +36,7 @@ const BlogCommentAPI = {
     return request<any, { msg: string }>({
       url: `${BASE_URL}/${ids}/approve`,
       method: "put",
+      data: {},
     });
   },
 
@@ -43,6 +44,7 @@ const BlogCommentAPI = {
     return request<any, { msg: string }>({
       url: `${BASE_URL}/${ids}/reject`,
       method: "put",
+      data: {},
     });
   },
 
