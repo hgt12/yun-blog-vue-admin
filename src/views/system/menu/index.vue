@@ -242,7 +242,7 @@
 
               <span class="mx-1">=</span>
 
-              <el-input v-model="item.value" placeholder="参数名" style="width: 100px" />
+              <el-input v-model="item.value" placeholder="参数值" style="width: 100px" />
 
               <el-icon
                 v-if="formData.params.indexOf(item) === formData.params.length - 1"

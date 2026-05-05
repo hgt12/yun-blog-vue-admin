@@ -50,7 +50,7 @@ export interface MenuForm {
   path?: string;
   /** 路由名称（用于前端路由名） */
   routeName?: string;
-  /** 路由路径（可用于自定义路由字段） */
+  /** 路由路径（可用于自定义路由路径） */
   routePath?: string;
   /** 跳转路径 */
   redirect?: string;
@@ -70,12 +70,6 @@ export interface MenuForm {
   alwaysShow?: string | boolean;
   /** 是否缓存（用于 keepAlive） */
   keepAlive?: string | boolean;
-}
-
-/** 菜单选项 */
-export interface MenuOption {
-  key: string;
-  value: string;
 }
 
 /** 路由对象 */
