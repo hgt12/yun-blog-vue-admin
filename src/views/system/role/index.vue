@@ -58,7 +58,7 @@
 
         <el-table-column label="排序" align="center" width="80" prop="sort" />
 
-        <el-table-column fixed="right" label="操作" width="220">
+        <el-table-column fixed="right" align="center" label="操作" width="220">
           <template #default="scope">
             <el-button
               v-hasPerm="'sys:role:assign'"

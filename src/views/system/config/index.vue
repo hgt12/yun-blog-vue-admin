@@ -54,7 +54,7 @@
         <el-table-column key="configKey" label="配置键" prop="configKey" min-width="100" />
         <el-table-column key="configValue" label="配置值" prop="configValue" min-width="100" />
         <el-table-column key="remark" label="描述" prop="remark" min-width="100" />
-        <el-table-column fixed="right" label="操作" width="220">
+        <el-table-column fixed="right" align="center" label="操作" width="220">
           <template #default="scope">
             <el-button
               v-hasPerm="['sys:config:update']"

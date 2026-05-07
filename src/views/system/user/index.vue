@@ -102,7 +102,7 @@
           </template>
         </el-table-column>
         <el-table-column label="创建时间" align="center" prop="createTime" width="180" />
-        <el-table-column label="操作" fixed="right" width="220">
+        <el-table-column label="操作" align="center" fixed="right" width="220">
           <template #default="scope">
             <el-button
               v-hasPerm="'sys:user:reset-password'"
