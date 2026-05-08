@@ -85,7 +85,7 @@ const editorConfig: Partial<IEditorConfig> = {
           return;
         }
 
-        const url = await FileAPI.uploadFile(file);
+        const url = await FileAPI.uploadImage(file);
         // 后端返回的直接是图片URL字符串
         insertFn(url, file.name, url);
         ElMessage.success("上传成功");

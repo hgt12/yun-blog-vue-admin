@@ -136,7 +136,7 @@ function handleUpload(options: UploadRequestOptions) {
       formData.append(key, props.data[key]);
     });
 
-    FileAPI.upload(formData).then(
+    FileAPI.uploadImage(file).then(
       (data) => {
         resolve(data);
       },
