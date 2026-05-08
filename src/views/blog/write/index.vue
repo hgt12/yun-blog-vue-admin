@@ -133,54 +133,11 @@
                 v-show="editorMode === 'markdown'"
                 class="editor-mode-container markdown-editor-wrapper"
               >
-                <MdEditor
+                <MarkdownEditor
                   v-model="formData.content"
-                  :preview="false"
-                  :toolbars-exclude="['github']"
-                  language="zh-CN"
-                  style="height: 500px"
-                  :toolbars="[
-                    'bold',
-                    'underline',
-                    'italic',
-                    'strikeThrough',
-                    '-',
-                    'title',
-                    'sub',
-                    'sup',
-                    'quote',
-                    'unorderedList',
-                    'orderedList',
-                    'task',
-                    '-',
-                    'codeRow',
-                    'code',
-                    'link',
-                    'image',
-                    'table',
-                    '-',
-                    'revoke',
-                    'next',
-                    '-',
-                    'pageFullscreen',
-                    'fullscreen',
-                    'preview',
-                    'catalog',
-                    0, // 自定义工具栏位置
-                  ]"
-                  @on-upload-img="handleMdUploadImg"
-                >
-                  <template #defToolbars>
-                    <NormalToolbar title="切换到富文本模式" @on-click="switchEditorMode">
-                      <template #trigger>
-                        <el-button link size="small" style="padding: 2px 8px">
-                          <el-icon><Edit /></el-icon>
-                          <span style="margin-left: 4px; font-size: 14px">富文本</span>
-                        </el-button>
-                      </template>
-                    </NormalToolbar>
-                  </template>
-                </MdEditor>
+                  height="500px"
+                  @switch-mode="switchEditorMode"
+                />
               </div>
             </div>
             <div class="resize-handle" @mousedown="startResize"></div>
@@ -207,100 +164,9 @@ import BlogCategoryAPI from "@/api/blog/category";
 import BlogTagAPI from "@/api/blog/tag";
 import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import WangEditor from "@/components/WangEditor/index.vue";
-import { MdEditor, NormalToolbar, config } from "md-editor-v3";
-import "md-editor-v3/lib/style.css";
+import MarkdownEditor from "@/components/MarkdownEditor/index.vue";
 import { marked } from "marked";
 import type { BlogPostForm } from "@/types/api";
-import FileAPI from "@/api/file";
-
-// 配置 Markdown 编辑器语言
-config({
-  editorConfig: {
-    languageUserDefined: {
-      "zh-CN": {
-        toolbarTips: {
-          bold: "粗体",
-          underline: "下划线",
-          italic: "斜体",
-          strikeThrough: "删除线",
-          title: "标题",
-          sub: "下标",
-          sup: "上标",
-          quote: "引用",
-          unorderedList: "无序列表",
-          orderedList: "有序列表",
-          task: "任务列表",
-          codeRow: "行内代码",
-          code: "代码块",
-          link: "链接",
-          image: "图片",
-          table: "表格",
-          mermaid: "mermaid图",
-          katex: "katex公式",
-          revoke: "后退",
-          next: "前进",
-          save: "保存",
-          prettier: "美化",
-          pageFullscreen: "浏览器全屏",
-          fullscreen: "屏幕全屏",
-          preview: "预览",
-          htmlPreview: "html代码预览",
-          catalog: "目录",
-          github: "github",
-        },
-        titleItem: {
-          h1: "一级标题",
-          h2: "二级标题",
-          h3: "三级标题",
-          h4: "四级标题",
-          h5: "五级标题",
-          h6: "六级标题",
-        },
-        imgTitleItem: {
-          link: "添加图片链接",
-          upload: "上传图片",
-          clip2upload: "裁剪上传",
-        },
-        linkModalTips: {
-          linkTitle: "添加链接",
-          imageTitle: "添加图片",
-          descLabel: "链接描述：",
-          descLabelPlaceHolder: "请输入描述...",
-          urlLabel: "链接地址：",
-          urlLabelPlaceHolder: "请输入链接...",
-          buttonOK: "确定",
-        },
-        clipModalTips: {
-          title: "裁剪图片上传",
-          buttonUpload: "上传",
-        },
-        copyCode: {
-          text: "复制代码",
-          successTips: "已复制！",
-          failTips: "复制失败！",
-        },
-        mermaid: {
-          flow: "流程图",
-          sequence: "时序图",
-          gantt: "甘特图",
-          class: "类图",
-          state: "状态图",
-          pie: "饼图",
-          relationship: "关系图",
-          journey: "旅程图",
-        },
-        katex: {
-          inline: "行内公式",
-          block: "块级公式",
-        },
-        footer: {
-          markdownTotal: "字数",
-          scrollAuto: "同步滚动",
-        },
-      },
-    },
-  },
-});
 
 defineOptions({ name: "BlogWrite", inheritAttrs: false });
 
@@ -439,28 +305,6 @@ async function handleSubmit(status: number) {
 
 function handleCancel() {
   router.push("/blog/list");
-}
-
-// Markdown 编辑器图片上传处理
-async function handleMdUploadImg(files: File[], callback: (urls: string[]) => void) {
-  try {
-    // 验证文件大小（2MB限制）
-    const maxSize = 2 * 1024 * 1024;
-    const invalidFiles = files.filter((file) => file.size > maxSize);
-    if (invalidFiles.length > 0) {
-      ElMessage.warning("图片大小不能超过2MB");
-      return;
-    }
-
-    const uploadPromises = files.map((file) => FileAPI.uploadFile(file));
-    const urls = await Promise.all(uploadPromises);
-    // 后端返回的直接是图片URL字符串数组
-    callback(urls);
-    ElMessage.success("上传成功");
-  } catch (error) {
-    ElMessage.error("上传失败");
-    console.error("图片上传失败:", error);
-  }
 }
 
 onMounted(async () => {
