@@ -11,7 +11,7 @@
               v-hasPerm="['blog:post:save']"
               type="primary"
               :loading="submitting"
-              @click="handleSubmit(1)"
+              @click="handleSubmit('1')"
             >
               保存草稿
             </el-button>
@@ -19,7 +19,7 @@
               v-hasPerm="['blog:post:publish']"
               type="success"
               :loading="submitting"
-              @click="handleSubmit(0)"
+              @click="handleSubmit('0')"
             >
               发布文章
             </el-button>
@@ -180,7 +180,7 @@ const tagOptions = ref<OptionItem[]>([]);
 const postId = computed(() => route.query.id as string | undefined);
 const isEdit = computed(() => !!postId.value);
 
-const formData = reactive<BlogPostForm>({
+const defaultFormData = (): BlogPostForm => ({
   title: "",
   summary: "",
   content: "",
@@ -191,6 +191,15 @@ const formData = reactive<BlogPostForm>({
   isTop: "0",
   isComment: "1",
 });
+
+const formData = reactive<BlogPostForm>(defaultFormData());
+
+function resetForm() {
+  Object.assign(formData, defaultFormData());
+  formRef.value?.resetFields?.();
+  editorMode.value = "rich";
+  refreshPreview();
+}
 
 // 编辑器和预览的宽度控制
 const editorWidth = ref("50%");
@@ -280,22 +289,25 @@ const rules = {
   content: [{ required: true, message: "请输入文章内容", trigger: "blur" }],
 };
 
-async function handleSubmit(status: number) {
+async function handleSubmit(status: string) {
   const valid = await formRef.value?.validate().catch(() => false);
   if (!valid) return;
   submitting.value = true;
   try {
-    // 将status转换为字符串，并确保数据格式正确
     const payload = {
       ...formData,
-      status: String(status), // 0-已发布，1-草稿
+      status, // 0-已发布，1-草稿
     };
     if (isEdit.value) {
       await BlogPostAPI.update(postId.value!, payload);
+      const latestData = await BlogPostAPI.getFormData(postId.value!);
+      Object.assign(formData, latestData);
+      refreshPreview();
       ElMessage.success("修改成功");
     } else {
       await BlogPostAPI.create(payload);
-      ElMessage.success(status === 1 ? "已保存草稿" : "发布成功");
+      resetForm();
+      ElMessage.success(status === "1" ? "已保存草稿" : "发布成功");
     }
     router.push("/blog/list");
   } finally {
