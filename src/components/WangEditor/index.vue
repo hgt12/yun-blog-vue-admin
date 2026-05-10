@@ -41,7 +41,7 @@ import { IToolbarConfig, IEditorConfig } from "@wangeditor-next/editor";
 import FileAPI from "@/api/file";
 
 // 上传图片回调函数类型
-type InsertFnType = (_url: string, _alt: string, _href: string) => void;
+type InsertFnType = (_url: { url: string }, _alt: string, _href: { url: string }) => void;
 
 defineProps({
   height: {

@@ -172,7 +172,10 @@ const toolbars: ToolbarNames[] = [
 
 const editorStyle = computed(() => ({ height: props.height }));
 
-async function handleUploadImg(files: File[], callback: (urls: string[]) => void) {
+async function handleUploadImg(
+  files: File[],
+  callback: (urls: Awaited<{ url: string }>[]) => void
+) {
   try {
     const maxSize = 2 * 1024 * 1024;
     const invalidFiles = files.filter((file) => file.size > maxSize);
