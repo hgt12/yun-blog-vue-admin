@@ -92,7 +92,7 @@
               type="danger"
               size="small"
               icon="delete"
-              @click.stop="handleDelete(scope.row)"
+              @click.stop="handleDelete(scope.row.id)"
             >
               删除
             </el-button>
@@ -145,7 +145,11 @@
           >
             下载
           </el-button>
-          <el-button v-hasPerm="['sys:file:delete']" type="danger" @click="handleDelete()">
+          <el-button
+            v-hasPerm="['sys:file:delete']"
+            type="danger"
+            @click="handleDelete(currentFile?.id)"
+          >
             删除
           </el-button>
         </div>
