@@ -1,7 +1,17 @@
 import request from "@/utils/request";
+import type { FileItem, FileQueryParams } from "@/types/api";
 
 const FileAPI = {
-  /** 上传文件 （传入 FormData，上传进度回调） */
+  /** 获取文件资源列表 */
+  getList(queryParams: FileQueryParams) {
+    return request<any, { rows: FileItem[]; total: number }>({
+      url: "/files",
+      method: "get",
+      params: queryParams,
+    });
+  },
+
+  /** 上传通用文件（传入 FormData，上传进度回调） */
   upload(formData: FormData, onProgress?: (percent: number) => void) {
     return request<any, string>({
       url: "/files",
@@ -17,12 +27,12 @@ const FileAPI = {
     });
   },
 
-  /** 上传文件（传入 File） */
-  uploadFile(file: File) {
+  /** 上传图片（传入 File） */
+  uploadImage(file: File) {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("image", file);
     return request<any, string>({
-      url: "/files",
+      url: "/files/image",
       method: "post",
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
@@ -30,11 +40,10 @@ const FileAPI = {
   },
 
   /** 删除文件 */
-  delete(filePath?: string) {
+  deleteByIds(ids: string) {
     return request({
-      url: "/files",
+      url: `/files/${ids}`,
       method: "delete",
-      params: { filePath },
     });
   },
 

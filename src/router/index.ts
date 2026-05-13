@@ -64,6 +64,12 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/profile/notice/index.vue"),
         meta: { title: "我的通知", icon: "user", hidden: true },
       },
+      {
+        path: "file",
+        name: "SysFile",
+        component: () => import("@/views/system/file/index.vue"),
+        meta: { title: "文件管理", icon: "folder", hidden: true },
+      },
     ],
   },
 ];
