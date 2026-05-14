@@ -214,7 +214,7 @@ async function handleSubmit() {
     if (formData.id) {
       const result = await BlogCategoryAPI.update(formData.id, formData);
       // 修改时显示后端返回的提示信息
-      ElMessage.success(result || "修改成功");
+      ElMessage.success(result);
     } else {
       await BlogCategoryAPI.create(formData);
       ElMessage.success("新增成功");
