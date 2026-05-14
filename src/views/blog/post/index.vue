@@ -98,8 +98,8 @@
               :key="tag.id"
               size="small"
               class="mr-1"
-              :type="tag.status == 1 ? 'info' : undefined"
-              :effect="tag.status == 1 ? 'plain' : 'light'"
+              :type="tag.status === '1' ? 'info' : undefined"
+              :effect="tag.status === '1' ? 'plain' : 'light'"
             >
               {{ tag.name }}
             </el-tag>
@@ -107,8 +107,8 @@
         </el-table-column>
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status == 0 ? 'success' : 'info'">
-              {{ row.status == 0 ? "已发布" : "草稿" }}
+            <el-tag :type="row.status === '0' ? 'success' : 'info'">
+              {{ row.status === "0" ? "已发布" : "草稿" }}
             </el-tag>
           </template>
         </el-table-column>
