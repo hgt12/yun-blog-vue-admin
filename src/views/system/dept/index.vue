@@ -12,8 +12,8 @@
 
         <el-form-item label="部门状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option :value="1" label="正常" />
-            <el-option :value="0" label="禁用" />
+            <el-option :value="0" label="正常" />
+            <el-option :value="1" label="禁用" />
           </el-select>
         </el-form-item>
 
@@ -64,7 +64,7 @@
         <el-table-column prop="code" label="部门编号" width="200" />
         <el-table-column prop="status" align="center" label="状态" width="100">
           <template #default="scope">
-            <el-tag v-if="scope.row.status == 1" type="success">正常</el-tag>
+            <el-tag v-if="scope.row.status === '0'" type="success">正常</el-tag>
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
@@ -141,8 +141,8 @@
         </el-form-item>
         <el-form-item label="部门状态">
           <el-radio-group v-model="formData.status">
-            <el-radio :value="1">正常</el-radio>
-            <el-radio :value="0">禁用</el-radio>
+            <el-radio :value="0">正常</el-radio>
+            <el-radio :value="1">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -188,7 +188,7 @@ const dialogState = reactive({
 
 // 表单数据
 const formData = reactive<DeptForm>({
-  status: 1,
+  status: "0",
   parentId: "0",
   sort: 1,
 });
@@ -334,7 +334,7 @@ function closeDialog(): void {
   deptFormRef.value?.clearValidate();
   formData.id = undefined;
   formData.parentId = "0";
-  formData.status = 1;
+  formData.status = "0";
   formData.sort = 1;
 }
 

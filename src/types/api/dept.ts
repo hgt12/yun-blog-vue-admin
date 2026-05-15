@@ -7,7 +7,7 @@ export interface DeptQueryParams {
   /** 搜索关键字 */
   keywords?: string;
   /** 状态 */
-  status?: number;
+  status?: string;
 }
 
 /** 部门视图对象 */
@@ -24,8 +24,8 @@ export interface DeptItem {
   parentId?: string;
   /** 排序 */
   sort?: number;
-  /** 状态(1:启用；0:禁用) */
-  status?: number;
+  /** 状态(0:启用；1:禁用) */
+  status?: string;
   /** 父节点ID路径 */
   treePath?: string;
   /** 修改时间 */
@@ -44,6 +44,6 @@ export interface DeptForm {
   parentId?: string;
   /** 排序 */
   sort?: number;
-  /** 状态(1:启用；0:禁用) */
-  status?: number;
+  /** 状态(0:启用；1:禁用) */
+  status?: string;
 }
