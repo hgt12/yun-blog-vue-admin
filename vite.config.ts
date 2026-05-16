@@ -38,17 +38,40 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         },
       },
     },
+    // server: {
+    //   host: "0.0.0.0",
+    //   port: +env.VITE_APP_PORT,
+    //   open: true,
+    //   // 内网穿透将前端暴露出去，如果不用可以删掉
+    //   // allowedHosts: ['.cpolar.top'],
+    //   // hmr: {
+    //   //   clientPort: 443,
+    //   //   protocol: 'wss'
+    //   // },
+    //   proxy: {
+    //     // 代理 /dev-api 的请求
+    //     [env.VITE_APP_BASE_API]: {
+    //       changeOrigin: true,
+    //       // 代理目标地址：你的服务器地址
+    //       target: env.VITE_APP_API_URL,
+    //       rewrite: (path: string) => path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
+    //     },
+    //   },
+    // },
     server: {
-      host: "0.0.0.0",
-      port: +env.VITE_APP_PORT,
+      port: 3001,
       open: true,
+      // 内网穿透将前端暴露出去，如果不用可以删掉
+      // allowedHosts: ['.cpolar.top'],
+      // hmr: {
+      //   clientPort: 443,
+      //   protocol: 'wss'
+      // },
       proxy: {
-        // 代理 /dev-api 的请求
-        [env.VITE_APP_BASE_API]: {
-          changeOrigin: true,
-          // 代理目标地址：https://api.youlai.tech
+        "/api": {
           target: env.VITE_APP_API_URL,
-          rewrite: (path: string) => path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
     },
