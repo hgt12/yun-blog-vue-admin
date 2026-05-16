@@ -11,6 +11,12 @@
             @keyup.enter="handleQuery"
           />
         </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
+            <el-option label="正常" :value="0" />
+            <el-option label="禁用" :value="1" />
+          </el-select>
+        </el-form-item>
 
         <el-form-item class="search-buttons">
           <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
@@ -45,18 +51,24 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="角色名称" prop="name" min-width="100" />
-        <el-table-column label="角色编码" prop="code" width="150" />
+        <el-table-column label="角色编码" align="center" prop="roleCode" width="150" />
 
-        <el-table-column label="数据权限" align="center" width="140" prop="dataScopeLabel" />
+        <el-table-column label="数据权限" align="center" width="140">
+          <template #default="{ row }">
+            {{ dataScopeMap[row.dataScope as keyof typeof dataScopeMap] || "-" }}
+          </template>
+        </el-table-column>
 
         <el-table-column label="状态" align="center" width="100">
           <template #default="scope">
-            <el-tag v-if="scope.row.status === 1" type="success">正常</el-tag>
+            <el-tag v-if="scope.row.status === '0'" type="success">正常</el-tag>
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
 
         <el-table-column label="排序" align="center" width="80" prop="sort" />
+        <el-table-column label="创建时间" prop="createTime" width="170" align="center" />
+        <el-table-column label="更新时间" prop="updateTime" width="170" align="center" />
 
         <el-table-column fixed="right" align="center" label="操作" width="220">
           <template #default="scope">
@@ -113,8 +125,8 @@
           <el-input v-model="formData.name" placeholder="请输入角色名称" />
         </el-form-item>
 
-        <el-form-item label="角色编码" prop="code">
-          <el-input v-model="formData.code" placeholder="请输入角色编码" />
+        <el-form-item label="角色编码" prop="roleCode">
+          <el-input v-model="formData.roleCode" placeholder="请输入角色编码" />
         </el-form-item>
 
         <el-form-item label="数据权限" prop="dataScope">
@@ -128,7 +140,7 @@
         </el-form-item>
 
         <!-- 自定义部门选择 -->
-        <el-form-item v-if="formData.dataScope === '5'" label="选择部门" prop="deptIds">
+        <el-form-item v-if="formData.dataScope === 5" label="选择部门" prop="deptIds">
           <el-tree-select
             v-model="formData.deptIds"
             :data="deptOptions"
@@ -142,8 +154,8 @@
 
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="formData.status">
-            <el-radio :value="1">正常</el-radio>
-            <el-radio :value="0">停用</el-radio>
+            <el-radio value="0">正常</el-radio>
+            <el-radio value="1">停用</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -273,10 +285,18 @@ const dialogState = reactive({
 
 const drawerSize = computed(() => (appStore.device === DeviceEnum.DESKTOP ? "600px" : "90%"));
 
+const dataScopeMap: Record<number, string> = {
+  1: "全部数据",
+  2: "部门及子部门数据",
+  3: "本部门数据",
+  4: "本人数据",
+  5: "自定义部门数据",
+};
+
 // 角色表单
 const formData = reactive<RoleForm>({
   sort: 1,
-  status: "1",
+  status: "0",
 });
 
 const rules = reactive({
@@ -364,7 +384,7 @@ function resetForm(): void {
 
   formData.id = undefined;
   formData.sort = 1;
-  formData.status = "1";
+  formData.status = "0";
   formData.dataScope = undefined;
   formData.deptIds = undefined;
 }
@@ -389,8 +409,14 @@ async function handleEditClick(roleId: string): Promise<void> {
   if (deptOptions.value.length === 0) {
     deptOptions.value = await DeptAPI.getOptions();
   }
+
   const data = await RoleAPI.getFormData(roleId);
   Object.assign(formData, data);
+
+  if (data.dataScope === 5) {
+    formData.deptIds = await RoleAPI.getRoleDeptIds(roleId);
+  }
+
   openDialog();
 }
 
@@ -403,7 +429,7 @@ async function handleSubmit(): Promise<void> {
   if (!valid) return;
 
   const submitData = { ...formData };
-  if (submitData.dataScope !== "5") {
+  if (submitData.dataScope !== 5) {
     submitData.deptIds = undefined;
   }
 
