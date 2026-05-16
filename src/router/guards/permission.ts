@@ -3,6 +3,7 @@ import NProgress from "@/plugins/nprogress";
 import router from "@/router";
 import { usePermissionStore, useUserStore } from "@/store";
 import { addRecentMenu } from "@/composables/useRecentMenus";
+import StatisticsAPI from "@/api/system/statistics";
 
 /**
  * 路由权限守卫
@@ -70,7 +71,7 @@ export function setupPermissionGuard() {
     }
   });
 
-  router.afterEach((to) => {
+  router.afterEach((to, from) => {
     NProgress.done();
 
     // 记录最近访问
@@ -78,5 +79,17 @@ export function setupPermissionGuard() {
       const icon = typeof to.meta.icon === "string" ? to.meta.icon : undefined;
       addRecentMenu(to.path, to.meta.title as string, icon);
     }
+
+    // 记录页面访问统计
+    const pageTitle =
+      typeof to.meta?.title === "string" ? to.meta.title : document.title || to.fullPath;
+
+    StatisticsAPI.recordVisit({
+      pageUrl: to.fullPath,
+      pageTitle,
+      referrer: from.fullPath || undefined,
+    }).catch((error) => {
+      console.warn("未能记录页面访问记录：", error);
+    });
   });
 }

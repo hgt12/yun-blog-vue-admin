@@ -37,3 +37,13 @@ export interface VisitStatsDetail {
   /** 页面浏览量增长率 */
   pvGrowthRate: number;
 }
+
+/** 记录访问请求对象 */
+export interface RecordVisitDetail {
+  /** 访问的页面URL */
+  pageUrl: string;
+  /** 页面标题 */
+  pageTitle?: string;
+  /** 来源页面 */
+  referrer?: string;
+}
