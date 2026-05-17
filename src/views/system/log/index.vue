@@ -11,9 +11,9 @@
           />
         </el-form-item>
 
-        <el-form-item prop="createTime" label="操作时间">
+        <el-form-item prop="visitTime" label="访问时间">
           <el-date-picker
-            v-model="queryParams.createTime"
+            v-model="queryParams.visitTime"
             :editable="false"
             type="daterange"
             range-separator="~"
@@ -113,7 +113,7 @@ const queryParams = reactive<LogQueryParams>({
   pageNum: 1,
   pageSize: 10,
   keywords: "",
-  createTime: undefined as [string, string] | undefined,
+  visitTime: undefined as [string, string] | undefined,
 });
 
 // 列表数据

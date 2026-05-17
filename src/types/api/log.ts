@@ -8,8 +8,8 @@ import type { BaseQueryParams } from "./common";
 export interface LogQueryParams extends BaseQueryParams {
   /** 搜索关键字 */
   keywords?: string;
-  /** 操作时间 */
-  createTime?: [string, string];
+  /** 访问时间 */
+  visitTime?: [string, string];
 }
 
 /** 日志分页对象 */
