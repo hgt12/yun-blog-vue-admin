@@ -12,6 +12,16 @@ const LogAPI = {
       params: queryParams,
     });
   },
+
+  /** 导出日志 */
+  export(queryParams: Partial<LogQueryParams>) {
+    return request({
+      url: `${LOG_BASE_URL}/export`,
+      method: "get",
+      params: queryParams,
+      responseType: "blob",
+    });
+  },
 };
 
 export default LogAPI;

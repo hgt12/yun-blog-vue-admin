@@ -16,16 +16,16 @@ export interface LogQueryParams extends BaseQueryParams {
 export interface LogItem {
   /** 日志ID */
   id: string;
-  /** 日志模块 */
-  module: string;
-  /** 日志内容 */
-  content: string;
-  /** 请求路径 */
-  requestUri?: string;
+  /** 访问的页面URL（页面地址） */
+  pageUrl: string;
+  /** 来源页面（页面前地址） */
+  referrer: string;
   /** 请求方法 */
   method?: string;
   /** IP地址 */
   ip: string;
+  /** 页面标题 */
+  pageTitle: string;
   /** 地区 */
   region: string;
   /** 浏览器 */
@@ -34,10 +34,10 @@ export interface LogItem {
   os: string;
   /** 执行时间(毫秒) */
   executionTime: number;
-  /** 创建人ID */
-  createBy?: string;
-  /** 操作时间 */
-  createTime?: string;
+  /** 访问时间 */
+  visitTime?: string;
   /** 操作人 */
   operator: string;
+  /** 设备类型 */
+  deviceType: string;
 }
