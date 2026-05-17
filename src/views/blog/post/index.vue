@@ -33,8 +33,12 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option label="已发布" :value="0" />
-            <el-option label="草稿" :value="1" />
+            <el-option
+              v-for="option in articleStatusOptions"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item class="search-buttons">
@@ -82,10 +86,16 @@
           <template #default="{ row }">
             <div>
               <div>{{ row.categoryName }}</div>
-              <div v-if="row.categoryStatus == 1" style="font-size: 12px; color: #e6a23c">
+              <div
+                v-if="row.categoryStatus === CommonStatus.DISABLED"
+                style="font-size: 12px; color: #e6a23c"
+              >
                 (使用已禁用的分类)
               </div>
-              <div v-if="row.categoryStatus == 1" style="font-size: 12px; color: #e6a23c">
+              <div
+                v-if="row.categoryStatus === CommonStatus.DISABLED"
+                style="font-size: 12px; color: #e6a23c"
+              >
                 (该文章将无法在前台显示)
               </div>
             </div>
@@ -98,8 +108,8 @@
               :key="tag.id"
               size="small"
               class="mr-1"
-              :type="tag.status === '1' ? 'info' : undefined"
-              :effect="tag.status === '1' ? 'plain' : 'light'"
+              :type="tag.status === CommonStatus.DISABLED ? 'info' : undefined"
+              :effect="tag.status === CommonStatus.DISABLED ? 'plain' : 'light'"
             >
               {{ tag.name }}
             </el-tag>
@@ -107,8 +117,8 @@
         </el-table-column>
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status === '0' ? 'success' : 'info'">
-              {{ row.status === "0" ? "已发布" : "草稿" }}
+            <el-tag :type="row.status === ArticleStatus.PUBLISHED ? 'success' : 'info'">
+              {{ articleStatusText[String(row.status ?? ArticleStatus.DRAFT)] }}
             </el-tag>
           </template>
         </el-table-column>
@@ -157,6 +167,17 @@ import BlogPostAPI from "@/api/blog/post";
 import BlogCategoryAPI from "@/api/blog/category";
 import BlogTagAPI from "@/api/blog/tag";
 import type { BlogPostItem, BlogPostQueryParams } from "@/types/api";
+import { ArticleStatus, CommonStatus } from "@/enums/common";
+
+const articleStatusOptions = [
+  { label: "已发布", value: ArticleStatus.PUBLISHED },
+  { label: "草稿", value: ArticleStatus.DRAFT },
+];
+
+const articleStatusText: Record<string, string> = {
+  [ArticleStatus.PUBLISHED]: "已发布",
+  [ArticleStatus.DRAFT]: "草稿",
+};
 
 defineOptions({ name: "BlogPost", inheritAttrs: false });
 

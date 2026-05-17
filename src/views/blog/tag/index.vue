@@ -13,8 +13,12 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option label="正常" value="0" />
-            <el-option label="禁用" value="1" />
+            <el-option
+              v-for="option in commonStatusOptions"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item class="search-buttons">
@@ -59,8 +63,8 @@
         <el-table-column label="标签名称" prop="name" width="150">
           <template #default="{ row }">
             <el-tag
-              :type="row.status == 1 ? 'info' : undefined"
-              :effect="row.status == 1 ? 'plain' : 'light'"
+              :type="row.status === CommonStatus.DISABLED ? 'info' : undefined"
+              :effect="row.status === CommonStatus.DISABLED ? 'plain' : 'light'"
             >
               {{ row.name }}
             </el-tag>
@@ -70,8 +74,8 @@
         <el-table-column label="文章数量" prop="articleCount" width="120" align="center" />
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status == 0 ? 'success' : 'info'">
-              {{ row.status == 0 ? "正常" : "禁用" }}
+            <el-tag :type="row.status === CommonStatus.ENABLED ? 'success' : 'info'">
+              {{ commonStatusText[row.status ?? CommonStatus.DISABLED] }}
             </el-tag>
           </template>
         </el-table-column>
@@ -130,8 +134,13 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="formData.status">
-            <el-radio value="0">正常</el-radio>
-            <el-radio value="1">禁用</el-radio>
+            <el-radio
+              v-for="option in commonStatusOptions"
+              :key="option.value"
+              :value="option.value"
+            >
+              {{ option.label }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
@@ -154,6 +163,17 @@
 <script setup lang="ts">
 import BlogTagAPI from "@/api/blog/tag";
 import type { BlogTagItem, BlogTagForm, BlogTagQueryParams } from "@/types/api";
+import { CommonStatus } from "@/enums/common";
+
+const commonStatusOptions = [
+  { label: "正常", value: CommonStatus.ENABLED },
+  { label: "禁用", value: CommonStatus.DISABLED },
+];
+
+const commonStatusText: Record<string, string> = {
+  [CommonStatus.ENABLED]: "正常",
+  [CommonStatus.DISABLED]: "禁用",
+};
 
 defineOptions({ name: "BlogTag", inheritAttrs: false });
 
@@ -168,7 +188,7 @@ const dialogVisible = ref(false);
 const dialogTitle = ref("");
 
 const queryParams = reactive<BlogTagQueryParams>({ pageNum: 1, pageSize: 10 });
-const formData = reactive<BlogTagForm>({ name: "", sort: 0, status: "0" });
+const formData = reactive<BlogTagForm>({ name: "", sort: 0, status: CommonStatus.ENABLED });
 
 const rules = {
   name: [{ required: true, message: "请输入标签名称", trigger: "blur" }],

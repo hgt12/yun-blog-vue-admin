@@ -11,7 +11,7 @@
               v-hasPerm="['blog:post:save']"
               type="primary"
               :loading="submitting"
-              @click="handleSubmit('1')"
+              @click="handleSubmit(ArticleStatus.DRAFT)"
             >
               保存草稿
             </el-button>
@@ -19,7 +19,7 @@
               v-hasPerm="['blog:post:publish']"
               type="success"
               :loading="submitting"
-              @click="handleSubmit('0')"
+              @click="handleSubmit(ArticleStatus.PUBLISHED)"
             >
               发布文章
             </el-button>
@@ -84,8 +84,8 @@
             <el-form-item label="是否置顶" prop="isTop">
               <el-switch
                 v-model="formData.isTop"
-                active-value="1"
-                inactive-value="0"
+                :active-value="ArticleTopStatus.IS_TOP"
+                :inactive-value="ArticleTopStatus.NOT_TOP"
                 active-text="是"
                 inactive-text="否"
               />
@@ -95,8 +95,8 @@
             <el-form-item label="允许评论" prop="isComment">
               <el-switch
                 v-model="formData.isComment"
-                active-value="1"
-                inactive-value="0"
+                :active-value="ArticleCommentStatus.IS_COMMENT"
+                :inactive-value="ArticleCommentStatus.NOT_COMMENT"
                 active-text="是"
                 inactive-text="否"
               />
@@ -166,6 +166,7 @@ import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import WangEditor from "@/components/WangEditor/index.vue";
 import MarkdownEditor from "@/components/MarkdownEditor/index.vue";
 import { marked } from "marked";
+import { ArticleCommentStatus, ArticleStatus, ArticleTopStatus } from "@/enums/common";
 import type { BlogPostForm } from "@/types/api";
 
 defineOptions({ name: "BlogWrite", inheritAttrs: false });
@@ -187,9 +188,9 @@ const defaultFormData = (): BlogPostForm => ({
   categoryId: "",
   tags: [],
   thumbnail: "",
-  status: "1", // 默认草稿状态
-  isTop: "0",
-  isComment: "1",
+  status: ArticleStatus.DRAFT, // 默认草稿状态
+  isTop: ArticleTopStatus.NOT_TOP,
+  isComment: ArticleCommentStatus.IS_COMMENT,
 });
 
 const formData = reactive<BlogPostForm>(defaultFormData());
@@ -289,14 +290,14 @@ const rules = {
   content: [{ required: true, message: "请输入文章内容", trigger: "blur" }],
 };
 
-async function handleSubmit(status: string) {
+async function handleSubmit(status: ArticleStatus) {
   const valid = await formRef.value?.validate().catch(() => false);
   if (!valid) return;
   submitting.value = true;
   try {
     const payload = {
       ...formData,
-      status, // 0-已发布，1-草稿
+      status,
     };
     if (isEdit.value) {
       await BlogPostAPI.update(postId.value!, payload);
@@ -307,7 +308,7 @@ async function handleSubmit(status: string) {
     } else {
       await BlogPostAPI.create(payload);
       resetForm();
-      ElMessage.success(status === "1" ? "已保存草稿" : "发布成功");
+      ElMessage.success(status === ArticleStatus.DRAFT ? "已保存草稿" : "发布成功");
     }
     router.push("/blog/list");
   } finally {

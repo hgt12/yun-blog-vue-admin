@@ -13,8 +13,12 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option label="启用" value="0" />
-            <el-option label="弃用" value="1" />
+            <el-option
+              v-for="option in linkStatusOptions"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item class="search-buttons">
@@ -78,8 +82,8 @@
         <el-table-column label="描述" prop="description" min-width="180" show-overflow-tooltip />
         <el-table-column label="状态" width="100" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status === '0' ? 'success' : 'info'">
-              {{ row.status === "0" ? "启用" : "弃用" }}
+            <el-tag :type="row.status === LinkStatus.ENABLED ? 'success' : 'info'">
+              {{ linkStatusText[row.status ?? LinkStatus.DISABLED] }}
             </el-tag>
           </template>
         </el-table-column>
@@ -145,8 +149,9 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="formData.status">
-            <el-radio value="0">启用</el-radio>
-            <el-radio value="1">弃用</el-radio>
+            <el-radio v-for="option in linkStatusOptions" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
@@ -169,6 +174,17 @@
 <script setup lang="ts">
 import BlogLinkAPI from "@/api/blog/link";
 import type { BlogLinkItem, BlogLinkForm, BlogLinkQueryParams } from "@/types/api";
+import { LinkStatus } from "@/enums/common";
+
+const linkStatusOptions = [
+  { label: "启用", value: LinkStatus.ENABLED },
+  { label: "弃用", value: LinkStatus.DISABLED },
+];
+
+const linkStatusText: Record<string, string> = {
+  [LinkStatus.ENABLED]: "启用",
+  [LinkStatus.DISABLED]: "弃用",
+};
 
 defineOptions({ name: "BlogLink", inheritAttrs: false });
 
@@ -183,7 +199,12 @@ const dialogVisible = ref(false);
 const dialogTitle = ref("");
 
 const queryParams = reactive<BlogLinkQueryParams>({ pageNum: 1, pageSize: 10 });
-const formData = reactive<BlogLinkForm>({ name: "", address: "", status: "0", sort: 0 });
+const formData = reactive<BlogLinkForm>({
+  name: "",
+  address: "",
+  status: LinkStatus.ENABLED,
+  sort: 0,
+});
 
 const rules = {
   name: [{ required: true, message: "请输入站点名称", trigger: "blur" }],
@@ -221,7 +242,7 @@ function handleCreateClick() {
     address: "",
     logo: "",
     description: "",
-    status: "0",
+    status: LinkStatus.ENABLED,
     sort: 0,
   });
   dialogVisible.value = true;

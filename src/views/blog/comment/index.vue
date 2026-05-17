@@ -21,12 +21,19 @@
             style="width: 130px"
             @change="handleTypeChange"
           >
-            <el-option label="文章评论" value="0" />
-            <el-option label="友链留言" value="1" />
-            <el-option label="留言板" value="2" />
+            <el-option
+              v-for="option in commentTypeOptions"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="queryParams.type === '0'" label="所属文章" prop="articleId">
+        <el-form-item
+          v-if="queryParams.type === CommentType.ARTICLE"
+          label="所属文章"
+          prop="articleId"
+        >
           <el-select
             v-model="queryParams.articleId"
             placeholder="全部文章"
@@ -45,9 +52,12 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 120px">
-            <el-option label="正常" value="0" />
-            <el-option label="待审核" value="1" />
-            <el-option label="审核未通过" value="2" />
+            <el-option
+              v-for="option in commentStatusOptions"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="时间范围" prop="dateRange">
@@ -168,7 +178,7 @@
         </el-table-column>
         <el-table-column label="所属文章" prop="articleTitle" width="180" show-overflow-tooltip>
           <template #default="{ row }">
-            <span v-if="row.type === '0'">{{ row.articleTitle || "-" }}</span>
+            <span v-if="row.type === CommentType.ARTICLE">{{ row.articleTitle || "-" }}</span>
             <span v-else>-</span>
           </template>
         </el-table-column>
@@ -185,9 +195,9 @@
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
           <template #default="{ row }">
-            <el-tag v-if="row.status === '0'" type="success">正常</el-tag>
-            <el-tag v-else-if="row.status === '1'" type="warning">待审核</el-tag>
-            <el-tag v-else-if="row.status === '2'" type="danger">审核未通过</el-tag>
+            <el-tag :type="getCommentStatusTag(row.status)">
+              {{ getCommentStatusText(row.status) }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="评论时间" prop="createTime" width="170" align="center" />
@@ -204,7 +214,7 @@
               详情
             </el-button>
             <el-button
-              v-if="row.status === '1'"
+              v-if="row.status === AuditStatus.PENDING_REVIEW"
               v-hasPerm="['blog:comment:approve']"
               type="success"
               size="small"
@@ -276,9 +286,9 @@
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="状态">
-          <el-tag v-if="currentComment.status === '0'" type="success">正常</el-tag>
-          <el-tag v-else-if="currentComment.status === '1'" type="warning">待审核</el-tag>
-          <el-tag v-else-if="currentComment.status === '2'" type="danger">审核未通过</el-tag>
+          <el-tag :type="getCommentStatusTag(currentComment.status)">
+            {{ getCommentStatusText(currentComment.status) }}
+          </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="所属文章" :span="2">
           {{ currentComment.articleTitle || "-" }}
@@ -355,7 +365,9 @@
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="当前状态">
-          <el-tag type="warning">待审核</el-tag>
+          <el-tag type="warning">
+            {{ getCommentStatusText(String(AuditStatus.PENDING_REVIEW)) }}
+          </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="所属文章" :span="2">
           {{ currentComment.articleTitle || "-" }}
@@ -402,6 +414,7 @@
 import { ChatDotSquare, Clock, Close, Promotion } from "@element-plus/icons-vue";
 import BlogCommentAPI from "@/api/blog/comment";
 import BlogPostAPI from "@/api/blog/post";
+import { AuditStatus, CommentType } from "@/enums/common";
 import { downloadFile } from "@/utils/download";
 import type {
   BlogCommentItem,
@@ -410,6 +423,30 @@ import type {
   BlogCommentStatistics,
   BlogPostItem,
 } from "@/types/api";
+
+const commentTypeOptions = [
+  { label: "文章评论", value: CommentType.ARTICLE },
+  { label: "友链留言", value: CommentType.LINK },
+  { label: "留言板", value: CommentType.MESSAGE_BOARD },
+];
+
+const commentStatusOptions = [
+  { label: "正常", value: AuditStatus.NORMAL },
+  { label: "待审核", value: AuditStatus.PENDING_REVIEW },
+  { label: "审核未通过", value: AuditStatus.REVIEW_NOT_PASSED },
+];
+
+const commentStatusText: Record<string, string> = {
+  [AuditStatus.NORMAL]: "正常",
+  [AuditStatus.PENDING_REVIEW]: "待审核",
+  [AuditStatus.REVIEW_NOT_PASSED]: "审核未通过",
+};
+
+const commentStatusTagMap: Record<string, "success" | "warning" | "danger" | "info"> = {
+  [AuditStatus.NORMAL]: "success",
+  [AuditStatus.PENDING_REVIEW]: "warning",
+  [AuditStatus.REVIEW_NOT_PASSED]: "danger",
+};
 
 defineOptions({ name: "BlogComment", inheritAttrs: false });
 
@@ -450,21 +487,28 @@ const replyRules = {
 // 获取评论类型标签
 function getCommentTypeTag(type?: string): "success" | "warning" | "primary" | "info" | "danger" {
   const tags: Record<string, "success" | "warning" | "primary" | "info" | "danger"> = {
-    "0": "primary",
-    "1": "success",
-    "2": "warning",
+    [CommentType.ARTICLE]: "primary",
+    [CommentType.LINK]: "success",
+    [CommentType.MESSAGE_BOARD]: "warning",
   };
-  return tags[type ?? "0"];
+  return tags[type ?? CommentType.ARTICLE];
 }
 
-// 获取评论类型文本
 function getCommentTypeText(type?: string) {
   const texts: Record<string, string> = {
-    "0": "文章评论",
-    "1": "友链留言",
-    "2": "留言板",
+    [CommentType.ARTICLE]: "文章评论",
+    [CommentType.LINK]: "友链留言",
+    [CommentType.MESSAGE_BOARD]: "留言板",
   };
-  return texts[type ?? "0"];
+  return texts[type ?? CommentType.ARTICLE];
+}
+
+function getCommentStatusTag(status?: string) {
+  return commentStatusTagMap[status ?? AuditStatus.NORMAL] ?? "info";
+}
+
+function getCommentStatusText(status?: string) {
+  return commentStatusText[status ?? AuditStatus.NORMAL] ?? "未知";
 }
 
 // 获取评论列表
@@ -515,7 +559,7 @@ async function loadArticleList() {
 // 评论类型变化处理
 function handleTypeChange(value: string) {
   // 如果不是文章评论，清空文章ID
-  if (value !== "0") {
+  if (value !== CommentType.ARTICLE) {
     queryParams.articleId = undefined;
   }
 }

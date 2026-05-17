@@ -37,10 +37,62 @@ export enum CommonStatus {
  * 审核状态枚举
  */
 export enum AuditStatus {
+  /** 正常 */
+  NORMAL = "0",
   /** 待审核 */
-  PENDING = 0,
-  /** 已通过 */
-  APPROVED = 1,
-  /** 已拒绝 */
-  REJECTED = 2,
+  PENDING_REVIEW = "1",
+  /** 审核未通过 */
+  REVIEW_NOT_PASSED = "2",
+}
+
+/**
+ * 文章状态枚举
+ */
+export enum ArticleStatus {
+  /** 已发布 */
+  PUBLISHED = "0",
+  /** 草稿 */
+  DRAFT = "1",
+}
+
+/**
+ * 文章是否置顶
+ */
+export enum ArticleTopStatus {
+  /** 不置顶 */
+  NOT_TOP = "0",
+  /** 置顶 */
+  IS_TOP = "1",
+}
+
+/**
+ * 文章是否允许评论
+ */
+export enum ArticleCommentStatus {
+  /** 不允许评论 */
+  NOT_COMMENT = "0",
+  /** 允许评论 */
+  IS_COMMENT = "1",
+}
+
+/**
+ * 友链状态枚举
+ */
+export enum LinkStatus {
+  /** 启用 */
+  ENABLED = "0",
+  /** 弃用 */
+  DISABLED = "1",
+}
+
+/**
+ * 评论类型枚举
+ */
+export enum CommentType {
+  /** 文章评论 */
+  ARTICLE = "0",
+  /** 友链留言 */
+  LINK = "1",
+  /** 留言板 */
+  MESSAGE_BOARD = "2",
 }

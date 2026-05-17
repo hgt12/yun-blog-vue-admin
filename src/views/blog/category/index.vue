@@ -13,8 +13,12 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option label="正常" :value="0" />
-            <el-option label="禁用" :value="1" />
+            <el-option
+              v-for="option in commonStatusOptions"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item class="search-buttons">
@@ -61,8 +65,8 @@
         <el-table-column label="文章数量" prop="articleCount" width="120" align="center" />
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status == 0 ? 'success' : 'info'">
-              {{ row.status == 0 ? "正常" : "禁用" }}
+            <el-tag :type="row.status === CommonStatus.ENABLED ? 'success' : 'info'">
+              {{ commonStatusText[row.status ?? CommonStatus.DISABLED] }}
             </el-tag>
           </template>
         </el-table-column>
@@ -121,8 +125,13 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="formData.status">
-            <el-radio value="0">正常</el-radio>
-            <el-radio value="1">禁用</el-radio>
+            <el-radio
+              v-for="option in commonStatusOptions"
+              :key="option.value"
+              :label="option.value"
+            >
+              {{ option.label }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
@@ -145,6 +154,17 @@
 <script setup lang="ts">
 import BlogCategoryAPI from "@/api/blog/category";
 import type { BlogCategoryItem, BlogCategoryForm, BlogCategoryQueryParams } from "@/types/api";
+import { CommonStatus } from "@/enums/common";
+
+const commonStatusOptions = [
+  { label: "正常", value: CommonStatus.ENABLED },
+  { label: "禁用", value: CommonStatus.DISABLED },
+];
+
+const commonStatusText: Record<string, string> = {
+  [CommonStatus.ENABLED]: "正常",
+  [CommonStatus.DISABLED]: "禁用",
+};
 
 defineOptions({ name: "BlogCategory", inheritAttrs: false });
 
@@ -159,7 +179,7 @@ const dialogVisible = ref(false);
 const dialogTitle = ref("");
 
 const queryParams = reactive<BlogCategoryQueryParams>({ pageNum: 1, pageSize: 10 });
-const formData = reactive<BlogCategoryForm>({ name: "", sort: 0, status: "0" });
+const formData = reactive<BlogCategoryForm>({ name: "", sort: 0, status: CommonStatus.ENABLED });
 
 const rules = {
   name: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
@@ -194,7 +214,7 @@ function handleCreateClick() {
   formData.id = undefined;
   formData.name = "";
   formData.description = "";
-  formData.status = "0";
+  formData.status = CommonStatus.ENABLED;
   formData.sort = 0;
   dialogVisible.value = true;
 }
