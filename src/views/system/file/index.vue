@@ -55,7 +55,20 @@
         @row-click="handleRowClick"
       >
         <el-table-column type="selection" width="50" />
-        <el-table-column label="文件名" prop="name" min-width="220" />
+        <el-table-column label="缩略图" align="center" width="100">
+          <template #default="scope">
+            <el-image
+              v-if="isImage(scope.row.mimeType)"
+              :src="scope.row.url"
+              fit="cover"
+              class="file-thumb"
+              :preview-src-list="[scope.row.url]"
+              preview-teleported
+            />
+            <div v-else class="file-thumb file-thumb--placeholder">暂无缩略图</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="文件名" prop="name" min-width="180" />
         <el-table-column label="Mime-Type" align="center" prop="mimeType" width="120" />
         <el-table-column label="文件来源" align="center" prop="fileSource" width="120" />
         <el-table-column label="大小" align="center" prop="size" width="120">
@@ -286,6 +299,22 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.file-thumb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  background: var(--el-fill-color-light);
+  border-radius: 6px;
+}
+
+.file-thumb--placeholder {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
 .break-all {
   word-break: break-all;
   white-space: normal;
