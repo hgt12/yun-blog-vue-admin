@@ -47,7 +47,7 @@ export interface OptionItem {
 /** Excel 导入结果 */
 export interface ExcelResult {
   /** 响应码 */
-  code: string;
+  code: number;
   /** 无效数据数量 */
   invalidCount: number;
   /** 有效数据数量 */
