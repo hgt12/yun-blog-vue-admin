@@ -171,7 +171,7 @@
         :label-width="100"
       >
         <el-form-item label="昵称">
-          <el-input v-model="userProfileForm.nickname" />
+          <el-input v-model="userProfileForm.nickname" style="width: 300px" />
         </el-form-item>
         <el-form-item label="性别">
           <DictSelect v-model="userProfileForm.sex" code="gender" />
