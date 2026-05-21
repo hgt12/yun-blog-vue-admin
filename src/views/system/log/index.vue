@@ -151,7 +151,7 @@ function handleQuery(): void {
 function handleResetQuery(): void {
   queryFormRef.value?.resetFields();
   queryParams.pageNum = 1;
-  queryParams.createTime = undefined;
+  queryParams.visitTime = undefined;
   fetchData();
 }
 
