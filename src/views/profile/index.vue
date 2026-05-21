@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="profile-container">
     <el-row :gutter="20">
       <!-- 左侧个人信息卡片 -->
@@ -60,7 +60,7 @@
           <el-descriptions :column="1" border>
             <el-descriptions-item label="用户名">
               {{ userProfile.username }}
-              <el-icon v-if="userProfile.gender === 1" class="gender-icon male">
+              <el-icon v-if="userProfile.sex === '1'" class="gender-icon male">
                 <Male />
               </el-icon>
               <el-icon v-else class="gender-icon female">
@@ -174,7 +174,7 @@
           <el-input v-model="userProfileForm.nickname" />
         </el-form-item>
         <el-form-item label="性别">
-          <DictSelect v-model="userProfileForm.gender" code="gender" />
+          <DictSelect v-model="userProfileForm.sex" code="gender" />
         </el-form-item>
       </el-form>
 
@@ -282,7 +282,7 @@ import FileAPI from "@/api/file";
 import { useUserStoreHook } from "@/store";
 import { redirectToLogin } from "@/utils/auth";
 
-import { Camera } from "@element-plus/icons-vue";
+import { Camera, Edit, Female, Male } from "@element-plus/icons-vue";
 
 const userStore = useUserStoreHook();
 
@@ -399,7 +399,7 @@ const handleOpenDialog = (type: DialogType) => {
       // 初始化表单数据
       userProfileForm.nickname = userProfile.value.nickname;
       userProfileForm.avatar = userProfile.value.avatar;
-      userProfileForm.gender = userProfile.value.gender;
+      userProfileForm.sex = userProfile.value.sex;
       break;
     case DialogType.PASSWORD:
       dialogState.title = "修改密码";
@@ -586,7 +586,9 @@ const triggerFileUpload = () => {
 const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files ? target.files[0] : null;
-  if (file) {
+  if (!file) return;
+
+  try {
     // 验证文件大小（2MB限制）
     const maxSize = 2 * 1024 * 1024;
     if (file.size > maxSize) {
@@ -595,15 +597,21 @@ const handleFileChange = async (event: Event) => {
       return;
     }
 
-    // 调用文件上传API
-    const data = await FileAPI.uploadImage(file);
-    // 更新用户信息
+    const avatarUrl = await FileAPI.uploadImage(file);
+
     await UserAPI.updateProfile({
-      avatar: data.url,
+      avatar: avatarUrl,
+      nickname: userProfile.value.nickname,
+      sex: userProfile.value.sex,
     });
-    // 更新用户头像
-    userStore.userInfo.avatar = data.url;
-    target.value = ""; // 清空文件选择，允许重新选择相同文件
+
+    await loadUserProfile();
+    userStore.userInfo.avatar = userProfile.value.avatar;
+    userStore.userInfo.nickname = userProfile.value.nickname;
+
+    ElMessage.success("头像更新成功");
+  } finally {
+    target.value = "";
   }
 };
 
