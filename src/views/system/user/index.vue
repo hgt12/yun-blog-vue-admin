@@ -4,7 +4,7 @@
     <!-- 搜索区域 -->
     <div class="filter-section">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true" label-width="auto">
-        <el-form-item label="关键字" prop="keywords">
+        <el-form-item label="关键字" prop="keywords" class="query-form-item--dept">
           <el-input
             v-model="queryParams.keywords"
             placeholder="用户名/昵称/手机号"
@@ -13,10 +13,24 @@
           />
         </el-form-item>
 
+        <el-form-item label="部门" prop="deptId" class="query-form-item--dept">
+          <el-tree-select
+            v-model="queryParams.deptId"
+            placeholder="全部"
+            clearable
+            :data="deptOptions"
+            filterable
+            check-strictly
+            :render-after-expand="false"
+            class="dept-tree-select"
+            popper-class="dept-tree-select-popper"
+          />
+        </el-form-item>
+
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option label="正常" :value="1" />
-            <el-option label="禁用" :value="0" />
+            <el-option label="正常" :value="CommonStatus.ENABLED" />
+            <el-option label="禁用" :value="CommonStatus.DISABLED" />
           </el-select>
         </el-form-item>
 
@@ -83,11 +97,18 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" align="center" />
+        <el-table-column label="头像" width="90" align="center">
+          <template #default="scope">
+            <el-avatar :size="36" :src="scope.row.avatar">
+              {{ scope.row.nickname?.slice(0, 1) || scope.row.username?.slice(0, 1) || "U" }}
+            </el-avatar>
+          </template>
+        </el-table-column>
         <el-table-column label="用户名" prop="username" />
         <el-table-column label="昵称" width="200" align="center" prop="nickname" />
         <el-table-column label="性别" width="100" align="center">
           <template #default="scope">
-            <DictTag v-model="scope.row.gender" code="gender" />
+            <DictTag v-model="scope.row.sex" code="sex" />
           </template>
         </el-table-column>
         <el-table-column label="部门" width="120" align="center" prop="deptName" />
@@ -156,6 +177,18 @@
       @close="closeDialog"
     >
       <el-form ref="userFormRef" :model="formData" :rules="rules" label-width="80px">
+        <el-form-item v-if="formData.avatar" label="头像" prop="avatar">
+          <div class="avatar-preview">
+            <el-image
+              :src="formData.avatar"
+              fit="cover"
+              class="avatar-preview__image"
+              :preview-src-list="[formData.avatar]"
+              preview-teleported
+            />
+          </div>
+        </el-form-item>
+
         <el-form-item label="用户名" prop="username">
           <el-input
             v-model="formData.username"
@@ -179,8 +212,8 @@
           />
         </el-form-item>
 
-        <el-form-item label="性别" prop="gender">
-          <DictSelect v-model="formData.gender" code="gender" />
+        <el-form-item label="性别" prop="sex">
+          <DictSelect v-model="formData.sex" code="sex" />
         </el-form-item>
 
         <el-form-item label="角色" prop="roleIds">
@@ -203,14 +236,24 @@
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
-          <el-switch
-            v-model="formData.status"
-            inline-prompt
-            active-text="正常"
-            inactive-text="禁用"
-            :active-value="CommonStatus.ENABLED"
-            :inactive-value="CommonStatus.DISABLED"
-          />
+          <el-radio-group v-model="formData.status">
+            <el-radio :value="CommonStatus.ENABLED">正常</el-radio>
+            <el-radio :value="CommonStatus.DISABLED">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item v-if="formData.avatar" label="审核头像">
+          <div class="avatar-review-row">
+            <el-button
+              v-hasPerm="'sys:user:dismiss-avatar'"
+              type="danger"
+              plain
+              size="small"
+              @click="handleDismissAvatar"
+            >
+              驳回
+            </el-button>
+          </div>
         </el-form-item>
       </el-form>
 
@@ -480,6 +523,37 @@ const handleSubmit = useDebounceFn(async () => {
 }, 300);
 
 /**
+ * 驳回用户头像
+ */
+async function handleDismissAvatar(): Promise<void> {
+  if (!formData.id) {
+    ElMessage.warning("请先保存用户后再驳回头像");
+    return;
+  }
+
+  await ElMessageBox.confirm(
+    "驳回后该头像的源文件将从文件管理中删除，确认驳回该用户的头像吗？",
+    "提示",
+    {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    }
+  );
+
+  loading.value = true;
+  try {
+    await UserAPI.dismissAvatar(formData.id);
+    ElMessage.success("头像驳回成功");
+    const data = await UserAPI.getFormData(formData.id);
+    Object.assign(formData, data);
+    handleQuery();
+  } finally {
+    loading.value = false;
+  }
+}
+
+/**
  * 删除按钮点击事件
  * @param id 用户ID，不传则删除选中的用户
  */
@@ -573,7 +647,8 @@ function openImportDialog(): void {
   importDialogVisible.value = true;
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await loadFormOptions();
   handleQuery();
 });
 
@@ -582,4 +657,62 @@ onActivated(() => {
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.query-form-item--dept {
+  margin-right: 1px;
+}
+
+.dept-tree-select {
+  width: 180px;
+}
+
+:deep(.dept-tree-select-popper) {
+  min-width: 320px;
+}
+
+:deep(.dept-tree-select-popper .el-tree-node__label) {
+  max-width: none;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+:deep(.dept-tree-select-popper .el-select-dropdown__item) {
+  overflow: visible;
+}
+
+:deep(.dept-tree-select-popper .el-tree) {
+  min-width: 320px;
+}
+
+:deep(.dept-tree-select-popper .el-tree-node__content) {
+  height: 32px;
+}
+
+:deep(.dept-tree-select-popper .el-tree-node__expand-icon) {
+  flex-shrink: 0;
+}
+.avatar-preview {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-preview__image {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 12px;
+}
+
+.avatar-review-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.avatar-review-row__text {
+  font-size: 14px;
+  color: var(--el-text-color-secondary);
+}
+</style>

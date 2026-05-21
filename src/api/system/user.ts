@@ -229,6 +229,18 @@ const UserAPI = {
   },
 
   /**
+   * 驳回用户头像审核
+   *
+   * @param id 用户ID
+   */
+  dismissAvatar(id: string) {
+    return request({
+      url: `${USER_BASE_URL}/${id}/dismiss/avatar`,
+      method: "delete",
+    });
+  },
+
+  /**
    *  获取用户下拉列表
    */
   getOptions() {

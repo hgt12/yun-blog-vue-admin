@@ -45,14 +45,14 @@ export interface UserItem {
   /** 用户邮箱 */
   email?: string;
   /** 性别 */
-  gender?: string;
+  sex?: string;
   /** 手机号 */
   mobile?: string;
   /** 用户昵称 */
   nickname?: string;
   /** 角色名称，多个使用英文逗号(,)分割 */
   roleNames?: string;
-  /** 用户状态(1:启用;0:禁用) */
+  /** 用户状态(0:启用;1:禁用) */
   status?: string;
   /** 用户名 */
   username?: string;
@@ -69,7 +69,7 @@ export interface UserForm {
   /** 用户邮箱 */
   email?: string;
   /** 性别 */
-  gender?: string;
+  sex?: string;
   /** 手机号 */
   mobile?: string;
   /** 用户昵称 */
@@ -93,7 +93,7 @@ export interface UserProfileDetail {
   /** 头像URL */
   avatar?: string;
   /** 性别 */
-  gender?: string;
+  sex?: string;
   /** 手机号 */
   mobile?: string;
   /** 邮箱 */
@@ -113,7 +113,7 @@ export interface UserProfileForm {
   /** 头像URL */
   avatar?: string;
   /** 性别 */
-  gender?: string;
+  sex?: string;
 }
 
 /** 修改密码表单 */
