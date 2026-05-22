@@ -34,7 +34,7 @@
     <el-card shadow="hover" class="data-table">
       <div class="data-table__toolbar">
         <div class="data-table__toolbar--right">
-          <el-button v-hasPerm="['system:log:export']" icon="download" @click="handleExport">
+          <el-button v-hasPerm="['sys:log:export']" icon="download" @click="handleExport">
             导出
           </el-button>
         </div>
@@ -48,13 +48,20 @@
         class="data-table__content"
       >
         <el-table-column label="操作人" prop="operator" width="120" align="center" />
-        <el-table-column label="访问时间" prop="visitTime" width="220" align="center" />
+        <el-table-column label="访问时间" prop="visitTime" width="150" align="center" />
         <el-table-column label="页面标题" prop="pageTitle" width="100" align="center" />
+        <el-table-column label="请求方法" prop="method" width="100" align="center">
+          <template #default="{ row }">
+            <el-tag :type="getMethodTagType(row.method)" effect="light">
+              {{ row.method }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="页面地址" prop="pageUrl" min-width="100" align="center" />
         <el-table-column label="页面前地址" prop="referrer" min-width="100" align="center" />
         <el-table-column label="IP 地址" prop="ip" width="150" align="center" />
         <el-table-column label="地区信息" prop="region" width="150" align="center" />
-        <el-table-column label="浏览器" prop="browser" width="150" align="center" />
+        <el-table-column label="浏览器" prop="browser" width="90" align="center" />
         <el-table-column
           label="终端系统"
           prop="os"
@@ -196,6 +203,21 @@ function handleConfirmExport(isCurrentPage: boolean): void {
     .catch(() => {
       // 取消导出
     });
+}
+
+function getMethodTagType(method?: string): "success" | "warning" | "danger" | "info" {
+  switch (method?.toUpperCase()) {
+    case "GET":
+      return "success";
+    case "POST":
+      return "warning";
+    case "PUT":
+      return "info";
+    case "DELETE":
+      return "danger";
+    default:
+      return "info";
+  }
 }
 
 onMounted(() => {
