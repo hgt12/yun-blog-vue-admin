@@ -102,7 +102,7 @@ const UserAPI = {
    */
   deleteByIds(ids: string) {
     return request({
-      url: `${USER_BASE_URL}/${ids}`,
+      url: `${USER_BASE_URL}/batch/${ids}`,
       method: "delete",
     });
   },
