@@ -70,6 +70,18 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/system/file/index.vue"),
         meta: { title: "文件管理", icon: "folder", hidden: true },
       },
+      {
+        path: "system/dict",
+        name: "Dict",
+        component: () => import("@/views/system/dict/index.vue"),
+        meta: { title: "字典管理", icon: "dict", hidden: true },
+      },
+      {
+        path: "system/dict/item",
+        name: "DictItem",
+        component: () => import("@/views/system/dict/dict-item.vue"),
+        meta: { title: "字典数据", hidden: true },
+      },
     ],
   },
 ];
