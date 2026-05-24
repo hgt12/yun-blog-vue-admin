@@ -12,8 +12,8 @@
 
         <el-form-item label="部门状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option :value="0" label="正常" />
-            <el-option :value="1" label="禁用" />
+            <el-option value="0" label="正常" />
+            <el-option value="1" label="禁用" />
           </el-select>
         </el-form-item>
 
@@ -141,8 +141,8 @@
         </el-form-item>
         <el-form-item label="部门状态">
           <el-radio-group v-model="formData.status">
-            <el-radio :value="0">正常</el-radio>
-            <el-radio :value="1">禁用</el-radio>
+            <el-radio value="0">正常</el-radio>
+            <el-radio value="1">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
