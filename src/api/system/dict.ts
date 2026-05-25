@@ -67,7 +67,7 @@ const DictAPI = {
       params: queryParams,
     });
   },
-  /** 字典列表 */
+  /** 字典列表（代码生成页面里） */
   getList() {
     return request<any, OptionItem[]>({ url: `${DICT_BASE_URL}/options`, method: "get" });
   },

@@ -9,8 +9,8 @@ import type { BaseQueryParams } from "./common";
 export interface DictTypeQueryParams extends BaseQueryParams {
   /** 搜索关键字 */
   keywords?: string;
-  /** 状态(1:启用;0:禁用) */
-  status?: number;
+  /** 状态(0:启用;1:禁用) */
+  status?: string;
 }
 
 /** 字典分页对象 */
@@ -21,8 +21,8 @@ export interface DictTypeItem {
   name: string;
   /** 字典编码 */
   dictCode: string;
-  /** 状态(1:启用;0:禁用) */
-  status: number;
+  /** 状态(0:启用;1:禁用) */
+  status?: string;
 }
 
 /** 字典表单对象 */
@@ -33,8 +33,8 @@ export interface DictTypeForm {
   name?: string;
   /** 字典编码 */
   dictCode?: string;
-  /** 状态(1:启用;0:禁用) */
-  status?: number;
+  /** 状态(0:启用;1:禁用) */
+  status?: string;
   /** 备注 */
   remark?: string;
 }
@@ -45,6 +45,8 @@ export interface DictItemQueryParams extends BaseQueryParams {
   keywords?: string;
   /** 字典编码 */
   dictCode?: string;
+  /** 状态(0:启用;1:禁用) */
+  status?: string;
 }
 
 /** 字典项分页对象 */
@@ -57,8 +59,8 @@ export interface DictItem {
   label: string;
   /** 字典项值 */
   value: string;
-  /** 状态(1:启用;0:禁用) */
-  status: number;
+  /** 状态(0:启用;1:禁用) */
+  status?: string;
   /** 排序 */
   sort?: number;
 }
@@ -73,8 +75,8 @@ export interface DictItemForm {
   label?: string;
   /** 字典项值 */
   value?: string;
-  /** 状态(1:启用;0:禁用) */
-  status?: number;
+  /** 状态(0:启用;1:禁用) */
+  status?: string;
   /** 排序 */
   sort?: number;
   /** 标签类型 */

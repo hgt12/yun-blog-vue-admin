@@ -11,6 +11,13 @@
           />
         </el-form-item>
 
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
+            <el-option label="启用" value="0" />
+            <el-option label="禁用" value="1" />
+          </el-select>
+        </el-form-item>
+
         <el-form-item class="search-buttons">
           <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
           <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
@@ -54,8 +61,8 @@
         <el-table-column label="字典编码" prop="dictCode" />
         <el-table-column label="状态" prop="status">
           <template #default="scope">
-            <el-tag :type="scope.row.status === 1 ? 'success' : 'info'">
-              {{ scope.row.status === 1 ? "启用" : "禁用" }}
+            <el-tag :type="scope.row.status === '0' ? 'success' : 'info'">
+              {{ scope.row.status === "0" ? "启用" : "禁用" }}
             </el-tag>
           </template>
         </el-table-column>
@@ -124,8 +131,8 @@
 
         <el-form-item label="状态">
           <el-radio-group v-model="formData.status">
-            <el-radio :value="1">启用</el-radio>
-            <el-radio :value="0">禁用</el-radio>
+            <el-radio value="0">启用</el-radio>
+            <el-radio value="1">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -179,7 +186,7 @@ const dialogState = reactive({
 
 // 表单数据
 const formData = reactive<DictTypeForm>({
-  status: 1,
+  status: "0",
 });
 
 // 验证规则
@@ -254,7 +261,7 @@ function resetForm(): void {
   formData.id = undefined;
   formData.name = undefined;
   formData.dictCode = undefined;
-  formData.status = 1;
+  formData.status = "0";
   formData.remark = undefined;
 }
 

@@ -11,6 +11,13 @@
           />
         </el-form-item>
 
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
+            <el-option label="启用" value="0" />
+            <el-option label="禁用" value="1" />
+          </el-select>
+        </el-form-item>
+
         <el-form-item class="search-buttons">
           <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
           <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
@@ -54,8 +61,8 @@
         <el-table-column label="排序" prop="sort" />
         <el-table-column label="状态">
           <template #default="scope">
-            <el-tag :type="scope.row.status === 1 ? 'success' : 'info'">
-              {{ scope.row.status === 1 ? "启用" : "禁用" }}
+            <el-tag :type="scope.row.status === '0' ? 'success' : 'info'">
+              {{ scope.row.status === "0" ? "启用" : "禁用" }}
             </el-tag>
           </template>
         </el-table-column>
@@ -110,8 +117,8 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="formData.status">
-            <el-radio :value="1">启用</el-radio>
-            <el-radio :value="0">禁用</el-radio>
+            <el-radio value="0">启用</el-radio>
+            <el-radio value="1">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序">
@@ -196,7 +203,7 @@ const dialogState = reactive({
 // 表单数据
 const formData = reactive<DictItemForm>({
   sort: 1,
-  status: 1,
+  status: "0",
   tagType: "",
 });
 
@@ -271,7 +278,7 @@ function resetForm(): void {
   formData.label = undefined;
   formData.value = undefined;
   formData.sort = 1;
-  formData.status = 1;
+  formData.status = "0";
   formData.tagType = "";
 }
 
