@@ -8,6 +8,7 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { useDictStore } from "@/store";
 
 const props = defineProps({
@@ -24,16 +25,22 @@ const tagType = ref<"success" | "warning" | "info" | "primary" | "danger" | unde
 const tagSize = ref<"default" | "large" | "small">(props.size as "default" | "large" | "small"); // 标签大小
 
 const dictStore = useDictStore();
+const { dictVersion } = storeToRefs(dictStore);
 
 /**
  * 根据字典项的值获取对应的 label 和 tagType
  * @param dictCode 字典编码
  * @param value 字典项的值
+ * @param refresh 是否强制刷新缓存
  * @returns 包含 label 和 tagType 的对象
  */
-const getLabelAndTagByValue = async (dictCode: string, value: any) => {
+const getLabelAndTagByValue = async (dictCode: string, value: any, refresh = false) => {
   // 按需加载字典数据
-  await dictStore.loadDictItems(dictCode);
+  if (refresh) {
+    await dictStore.refreshDictItems(dictCode);
+  } else {
+    await dictStore.loadDictItems(dictCode);
+  }
   // 从缓存中获取字典数据
   const dictItems = dictStore.getDictItems(dictCode);
   // 查找对应的字典项
@@ -46,23 +53,25 @@ const getLabelAndTagByValue = async (dictCode: string, value: any) => {
 
 /**
  * 更新 label 和 tagType
+ * @param refresh 是否强制刷新缓存
  */
-const updateLabelAndTag = async () => {
+const updateLabelAndTag = async (refresh = false) => {
   if (!props.code || props.modelValue === undefined) return;
   const { label: newLabel, tagType: newTagType } = await getLabelAndTagByValue(
     props.code,
-    props.modelValue
+    props.modelValue,
+    refresh
   );
   label.value = newLabel;
   tagType.value = newTagType as typeof tagType.value;
 };
 
-// 初始化或code变化时更新标签和标签样式
+// 初始化、code变化、值变化或字典版本变化时更新标签和标签样式
 watch(
-  [() => props.code, () => props.modelValue],
+  [() => props.code, () => props.modelValue, () => dictVersion.value],
   async () => {
     if (props.code) {
-      await updateLabelAndTag();
+      await updateLabelAndTag(true);
     }
   },
   { immediate: true }

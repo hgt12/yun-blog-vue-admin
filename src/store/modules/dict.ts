@@ -7,6 +7,9 @@ export const useDictStore = defineStore("dict", () => {
   // 字典数据缓存
   const dictCache = useStorage<Record<string, DictItemOption[]>>(STORAGE_KEYS.DICT_CACHE, {});
 
+  // 字典刷新版本（用于通知依赖字典的组件重新拉取）
+  const dictVersion = ref(0);
+
   // 请求队列（防止重复请求）
   const requestQueue: Record<string, Promise<void>> = {};
 
@@ -20,11 +23,10 @@ export const useDictStore = defineStore("dict", () => {
   };
 
   /**
-   * 加载字典数据（如果缓存中没有则请求）
+   * 从服务端拉取字典数据
    * @param dictCode 字典编码
    */
-  const loadDictItems = async (dictCode: string) => {
-    if (dictCache.value[dictCode]) return;
+  const fetchDictItems = async (dictCode: string) => {
     // 防止重复请求
     if (!requestQueue[dictCode]) {
       requestQueue[dictCode] = DictAPI.getDictItems(dictCode)
@@ -39,6 +41,24 @@ export const useDictStore = defineStore("dict", () => {
         });
     }
     await requestQueue[dictCode];
+  };
+
+  /**
+   * 加载字典数据（如果缓存中没有则请求）
+   * @param dictCode 字典编码
+   */
+  const loadDictItems = async (dictCode: string) => {
+    if (dictCache.value[dictCode]) return;
+    await fetchDictItems(dictCode);
+  };
+
+  /**
+   * 强制刷新字典数据（先清缓存，再重新拉取）
+   * @param dictCode 字典编码
+   */
+  const refreshDictItems = async (dictCode: string) => {
+    removeDictItem(dictCode);
+    await fetchDictItems(dictCode);
   };
 
   /**
@@ -57,6 +77,7 @@ export const useDictStore = defineStore("dict", () => {
   const removeDictItem = (dictCode: string) => {
     if (dictCache.value[dictCode]) {
       Reflect.deleteProperty(dictCache.value, dictCode);
+      dictVersion.value += 1;
     }
   };
 
@@ -65,10 +86,13 @@ export const useDictStore = defineStore("dict", () => {
    */
   const clearDictCache = () => {
     dictCache.value = {};
+    dictVersion.value += 1;
   };
 
   return {
+    dictVersion,
     loadDictItems,
+    refreshDictItems,
     getDictItems,
     removeDictItem,
     clearDictCache,

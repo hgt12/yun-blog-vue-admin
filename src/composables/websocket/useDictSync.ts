@@ -69,7 +69,7 @@ function createDictSyncComposable() {
         return;
       }
 
-      // 清除缓存，等待按需加载
+      // 清除缓存并触发依赖组件重新拉取
       dictStore.removeDictItem(dictCode);
 
       // 执行所有注册的回调函数
