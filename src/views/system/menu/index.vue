@@ -348,6 +348,7 @@ import MenuAPI from "@/api/system/menu";
 import type { MenuQueryParams, MenuForm, MenuItem } from "@/types/api";
 import type { FormInstance, FormRules } from "element-plus";
 import { MenuTypeEnum } from "@/enums/business";
+import { QuestionFilled } from "@element-plus/icons-vue";
 
 defineOptions({
   name: "SysMenu",
