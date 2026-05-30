@@ -32,20 +32,6 @@
             <div class="user-role">{{ userProfile.roleNames }}</div>
           </div>
           <el-divider />
-          <div class="user-stats">
-            <div class="stat-item">
-              <div class="stat-value">0</div>
-              <div class="stat-label">待办</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">0</div>
-              <div class="stat-label">消息</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-value">0</div>
-              <div class="stat-label">通知</div>
-            </div>
-          </div>
         </el-card>
       </el-col>
 
@@ -60,10 +46,10 @@
           <el-descriptions :column="1" border>
             <el-descriptions-item label="用户名">
               {{ userProfile.username }}
-              <el-icon v-if="userProfile.sex === '1'" class="gender-icon male">
+              <el-icon v-if="userProfile.sex === '0'" class="gender-icon male">
                 <Male />
               </el-icon>
-              <el-icon v-else class="gender-icon female">
+              <el-icon v-else-if="userProfile.sex === '1'" class="gender-icon female">
                 <Female />
               </el-icon>
             </el-descriptions-item>
@@ -174,7 +160,7 @@
           <el-input v-model="userProfileForm.nickname" style="width: 300px" />
         </el-form-item>
         <el-form-item label="性别">
-          <DictSelect v-model="userProfileForm.sex" code="gender" />
+          <DictSelect v-model="userProfileForm.sex" code="sex" />
         </el-form-item>
       </el-form>
 
@@ -619,6 +605,8 @@ const handleFileChange = async (event: Event) => {
 const loadUserProfile = async () => {
   const data = await UserAPI.getProfile();
   userProfile.value = data;
+  userStore.userInfo.avatar = data.avatar;
+  userStore.userInfo.nickname = data.nickname;
 };
 
 onMounted(async () => {
@@ -650,7 +638,7 @@ onBeforeUnmount(() => {
 
 .user-card {
   .user-info {
-    padding: 20px 0;
+    padding: 26px 0;
     text-align: center;
 
     .avatar-wrapper {
