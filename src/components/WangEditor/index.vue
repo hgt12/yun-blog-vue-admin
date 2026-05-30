@@ -43,10 +43,14 @@ import FileAPI from "@/api/file";
 // 上传图片回调函数类型
 type InsertFnType = (_url: string, _alt: string, _href: string) => void;
 
-defineProps({
+const props = defineProps({
   height: {
     type: String,
     default: "500px",
+  },
+  showSwitchMode: {
+    type: Boolean,
+    default: true,
   },
 });
 
@@ -114,60 +118,62 @@ const handleCreated = (editor: any) => {
         vertical-align: middle;
       `;
 
-      // 创建自定义按钮容器
-      const customBtn = document.createElement("div");
-      customBtn.className = "w-e-bar-item";
-      customBtn.style.cssText = `
-        display: inline-flex;
-        align-items: center;
-        padding: 0 5px;
-        cursor: pointer;
-        position: relative;
-        vertical-align: middle;
-      `;
+      if (props.showSwitchMode) {
+        // 创建自定义按钮容器
+        const customBtn = document.createElement("div");
+        customBtn.className = "w-e-bar-item";
+        customBtn.style.cssText = `
+          display: inline-flex;
+          align-items: center;
+          padding: 0 5px;
+          cursor: pointer;
+          position: relative;
+          vertical-align: middle;
+        `;
 
-      // 创建按钮内容
-      const btnContent = document.createElement("div");
-      btnContent.className = "w-e-bar-item-menu";
-      btnContent.title = "切换到Markdown模式";
-      btnContent.style.cssText = `
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 30px;
-        border-radius: 3px;
-        transition: background-color 0.3s;
-        font-size: 14px;
-        font-weight: 600;
-        color: #595959;
-        font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
-        letter-spacing: 0.5px;
-      `;
+        // 创建按钮内容
+        const btnContent = document.createElement("div");
+        btnContent.className = "w-e-bar-item-menu";
+        btnContent.title = "切换到Markdown模式";
+        btnContent.style.cssText = `
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 30px;
+          border-radius: 3px;
+          transition: background-color 0.3s;
+          font-size: 14px;
+          font-weight: 600;
+          color: #595959;
+          font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
+          letter-spacing: 0.5px;
+        `;
 
-      // 创建MD文字
-      btnContent.innerHTML = `MD`;
+        // 创建MD文字
+        btnContent.innerHTML = `MD`;
 
-      // 鼠标悬停效果
-      btnContent.addEventListener("mouseenter", () => {
-        btnContent.style.backgroundColor = "#f1f1f1";
-      });
-      btnContent.addEventListener("mouseleave", () => {
-        btnContent.style.backgroundColor = "transparent";
-      });
+        // 鼠标悬停效果
+        btnContent.addEventListener("mouseenter", () => {
+          btnContent.style.backgroundColor = "#f1f1f1";
+        });
+        btnContent.addEventListener("mouseleave", () => {
+          btnContent.style.backgroundColor = "transparent";
+        });
 
-      // 点击事件
-      customBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleSwitchMode();
-      });
+        // 点击事件
+        customBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSwitchMode();
+        });
 
-      customBtn.appendChild(btnContent);
+        customBtn.appendChild(btnContent);
 
-      // 先插入分隔线，再插入按钮
-      toolbar.appendChild(divider);
-      toolbar.appendChild(customBtn);
+        // 先插入分隔线，再插入按钮
+        toolbar.appendChild(divider);
+        toolbar.appendChild(customBtn);
+      }
     }
   });
 };

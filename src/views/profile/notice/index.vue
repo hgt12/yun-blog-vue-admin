@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="app-container">
     <!-- 搜索区域 -->
     <div class="filter-section">
@@ -34,6 +34,7 @@
         ref="dataTableRef"
         v-loading="loading"
         :data="pageData"
+        border
         highlight-current-row
         class="table-section__content"
       >
@@ -65,7 +66,13 @@
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="80">
           <template #default="scope">
-            <el-button type="primary" size="small" link @click="handleReadNotice(scope.row.id)">
+            <el-button
+              type="primary"
+              size="small"
+              link
+              icon="View"
+              @click="handleReadNotice(scope.row.id)"
+            >
               查看
             </el-button>
           </template>
@@ -93,7 +100,7 @@
             <el-icon><User /></el-icon>
             {{ noticeDetail.publisherName }}
           </span>
-          <span class="ml-2">
+          <span>
             <el-icon><Timer /></el-icon>
             {{ noticeDetail.publishTime }}
           </span>
@@ -113,7 +120,8 @@ defineOptions({
   inheritAttrs: false,
 });
 
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, onBeforeUnmount, reactive, ref } from "vue";
+import { Timer } from "@element-plus/icons-vue";
 import NoticeAPI from "@/api/system/notice";
 import type { NoticeDetail, NoticeItem, NoticeQueryParams } from "@/types/api";
 
@@ -151,45 +159,123 @@ async function handleReadNotice(id: string) {
   const data = await NoticeAPI.getDetail(id);
   noticeDetail.value = data;
   noticeDialogVisible.value = true;
+  await handleQuery();
+}
+
+function handleNoticeReadUpdated() {
+  handleQuery();
 }
 
 onMounted(() => {
   handleQuery();
+  window.addEventListener("notice-read-updated", handleNoticeReadUpdated as EventListener);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("notice-read-updated", handleNoticeReadUpdated as EventListener);
 });
 </script>
 
 <style lang="scss" scoped>
 :deep(.el-dialog__header) {
+  padding-bottom: 14px;
   text-align: center;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+:deep(.el-dialog__body) {
+  padding-top: 0;
 }
 
 .notice-detail {
   &__wrapper {
-    padding: 0 20px;
+    padding: 6px 20px 20px;
+  }
+
+  &__banner {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+    border: 1px solid #dbeafe;
+    border-radius: 16px;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+    color: #2563eb;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgb(37 99 235 / 12%);
+  }
+
+  &__banner-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--el-text-color-primary);
+  }
+
+  &__banner-sub {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--el-text-color-secondary);
   }
 
   &__meta {
     display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
     align-items: center;
+    padding: 12px 14px;
     margin-bottom: 16px;
     font-size: 13px;
     color: var(--el-text-color-secondary);
-  }
+    background: #f8fafc;
+    border: 1px solid var(--el-border-color-lighter);
+    border-radius: 12px;
 
-  &__publisher {
-    margin-right: 24px;
-
-    i {
-      margin-right: 4px;
+    span {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
     }
   }
 
   &__content {
     max-height: 60vh;
-    padding-top: 16px;
-    margin-bottom: 24px;
+    padding: 18px 18px 20px;
     overflow-y: auto;
-    border-top: 1px solid var(--el-border-color);
+    line-height: 1.8;
+    color: var(--el-text-color-primary);
+    background: #fff;
+    border: 1px solid var(--el-border-color-lighter);
+    border-radius: 14px;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 60%);
+
+    :deep(img) {
+      max-width: 100%;
+      height: auto;
+    }
+
+    :deep(p) {
+      margin: 0 0 12px;
+    }
+
+    :deep(blockquote) {
+      padding: 12px 16px;
+      margin: 12px 0;
+      color: var(--el-text-color-secondary);
+      background: #f8fafc;
+      border-left: 4px solid #cbd5e1;
+      border-radius: 8px;
+    }
 
     &::-webkit-scrollbar {
       width: 6px;

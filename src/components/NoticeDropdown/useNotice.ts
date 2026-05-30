@@ -1,7 +1,7 @@
 /**
  * 通知中心逻辑
  */
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, type Ref } from "vue";
 import type { NoticeItem, NoticeDetail, NoticeQueryParams } from "@/types/api";
 import NoticeAPI from "@/api/system/notice";
 import { useStomp } from "@/composables";
@@ -9,7 +9,7 @@ import router from "@/router";
 
 const PAGE_SIZE = 5;
 
-export function useNotice() {
+export function useNotice(dropdownRef?: Ref<any>) {
   const { subscribe, unsubscribe, isConnected } = useStomp();
 
   // 状态
@@ -28,12 +28,12 @@ export function useNotice() {
     const query: NoticeQueryParams = {
       pageNum: 1,
       pageSize: PAGE_SIZE,
-      isRead: 0,
       ...params,
     };
     const page = await NoticeAPI.getMyNoticePage(query);
-    list.value = page.list || [];
-    unreadTotal.value = page.total ?? 0;
+    const rows = page.rows || [];
+    list.value = rows.filter((item: NoticeItem) => item.isRead === "0");
+    unreadTotal.value = list.value.length;
   }
 
   async function read(id: string) {
@@ -41,11 +41,11 @@ export function useNotice() {
     dialogVisible.value = true;
 
     // 从列表中移除已读项
-    const idx = list.value.findIndex((item: NoticeItem) => item.id === id);
-    if (idx >= 0) list.value.splice(idx, 1);
+    list.value = list.value.filter((item: NoticeItem) => item.id !== id);
     if (unreadTotal.value > 0) unreadTotal.value -= 1;
 
     await fetchList();
+    window.dispatchEvent(new CustomEvent("notice-read-updated", { detail: { id } }));
   }
 
   async function readAll() {
@@ -56,6 +56,7 @@ export function useNotice() {
   }
 
   function goMore() {
+    dropdownRef?.value?.handleClose?.();
     router.push({ name: "MyNotice" });
   }
 
@@ -74,6 +75,8 @@ export function useNotice() {
         // 避免重复
         if (list.value.some((item: NoticeItem) => item.id === data.id)) return;
 
+        if (data.isRead === "1") return;
+
         unreadTotal.value += 1;
 
         list.value.unshift({
@@ -81,6 +84,7 @@ export function useNotice() {
           title: data.title,
           type: data.type,
           publishTime: data.publishTime,
+          isRead: "0",
         } as NoticeItem);
 
         if (list.value.length > PAGE_SIZE) {

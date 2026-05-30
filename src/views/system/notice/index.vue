@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="app-container">
     <div class="filter-section">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true" label-suffix=":">
@@ -12,15 +12,10 @@
         </el-form-item>
 
         <el-form-item label="发布状态" prop="publishStatus">
-          <el-select
-            v-model="queryParams.publishStatus"
-            clearable
-            placeholder="全部"
-            style="width: 100px"
-          >
-            <el-option :value="0" label="未发布" />
-            <el-option :value="1" label="已发布" />
-            <el-option :value="-1" label="已撤回" />
+          <el-select v-model="queryParams.status" clearable placeholder="全部" style="width: 100px">
+            <el-option value="0" label="未发布" />
+            <el-option value="1" label="已发布" />
+            <el-option value="2" label="已撤回" />
           </el-select>
         </el-form-item>
 
@@ -77,7 +72,7 @@
             <DictTag v-model="scope.row.level" code="notice_level" />
           </template>
         </el-table-column>
-        <el-table-column align="center" label="通告目标类型" prop="targetType" min-width="100">
+        <el-table-column align="center" label="通告目标类型" prop="targetType" min-width="120">
           <template #default="scope">
             <el-tag v-if="scope.row.targetType == 1" type="warning">全体</el-tag>
             <el-tag v-if="scope.row.targetType == 2" type="success">指定</el-tag>
@@ -85,68 +80,78 @@
         </el-table-column>
         <el-table-column align="center" label="发布状态" min-width="100">
           <template #default="scope">
-            <el-tag v-if="scope.row.publishStatus == 0" type="info">未发布</el-tag>
-            <el-tag v-if="scope.row.publishStatus == 1" type="success">已发布</el-tag>
-            <el-tag v-if="scope.row.publishStatus == -1" type="warning">已撤回</el-tag>
+            <el-tag v-if="scope.row.status == 0" type="info">未发布</el-tag>
+            <el-tag v-if="scope.row.status == 1" type="success">已发布</el-tag>
+            <el-tag v-if="scope.row.status == 2" type="warning">已撤回</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作时间" width="250">
+        <el-table-column label="操作时间" width="240" align="center">
           <template #default="scope">
             <div class="flex-x-start">
               <span>创建时间：</span>
               <span>{{ scope.row.createTime || "-" }}</span>
             </div>
 
-            <div v-if="scope.row.publishStatus === 1" class="flex-x-start">
+            <div v-if="scope.row.status === '1'" class="flex-x-start">
               <span>发布时间：</span>
               <span>{{ scope.row.publishTime || "-" }}</span>
             </div>
-            <div v-else-if="scope.row.publishStatus === -1" class="flex-x-start">
+            <div v-else-if="scope.row.status === '2'" class="flex-x-start">
               <span>撤回时间：</span>
               <span>{{ scope.row.revokeTime || "-" }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="150">
+        <el-table-column align="center" fixed="right" label="操作" width="190">
           <template #default="scope">
-            <el-button type="primary" size="small" link @click="openDetailDialog(scope.row.id)">
+            <el-button
+              type="primary"
+              size="small"
+              link
+              icon="View"
+              @click="openDetailDialog(scope.row.id)"
+            >
               查看
             </el-button>
             <el-button
-              v-if="scope.row.publishStatus != 1"
+              v-if="scope.row.status != '1'"
               v-hasPerm="['sys:notice:publish']"
               type="primary"
               size="small"
+              icon="Position"
               link
               @click="handlePublish(scope.row.id)"
             >
               发布
             </el-button>
             <el-button
-              v-if="scope.row.publishStatus == 1"
+              v-if="scope.row.status == '1'"
               v-hasPerm="['sys:notice:revoke']"
               type="primary"
               size="small"
+              icon="RefreshLeft"
               link
               @click="handleRevoke(scope.row.id)"
             >
               撤回
             </el-button>
             <el-button
-              v-if="scope.row.publishStatus != 1"
+              v-if="scope.row.status != '1'"
               v-hasPerm="['sys:notice:update']"
               type="primary"
               size="small"
+              icon="edit"
               link
               @click="openDialog(scope.row.id)"
             >
               编辑
             </el-button>
             <el-button
-              v-if="scope.row.publishStatus != 1"
+              v-if="scope.row.status != '1'"
               v-hasPerm="['sys:notice:delete']"
               type="danger"
               size="small"
+              icon="delete"
               link
               @click="handleDelete(scope.row.id)"
             >
@@ -205,11 +210,11 @@
         </el-form-item>
         <el-form-item label="目标类型" prop="targetType">
           <el-radio-group v-model="formData.targetType">
-            <el-radio :value="1">全体</el-radio>
-            <el-radio :value="2">指定</el-radio>
+            <el-radio value="1">全体</el-radio>
+            <el-radio value="2">指定</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="formData.targetType == 2" label="指定用户" prop="targetUsers">
+        <el-form-item v-if="formData.targetType === '2'" label="指定用户" prop="targetUsers">
           <el-select v-model="formData.targetUsers" multiple search placeholder="请选择指定用户">
             <el-option
               v-for="item in userOptions"
@@ -220,7 +225,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="通知内容" prop="content">
-          <WangEditor v-model="formData.content" height="350px" />
+          <WangEditor v-model="formData.content" height="350px" :show-switch-mode="false" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -230,49 +235,13 @@
         </div>
       </template>
     </el-dialog>
-    <el-dialog
-      v-model="detailDialog.visible"
-      :show-close="false"
-      width="50%"
-      append-to-body
-      @close="closeDetailDialog"
-    >
-      <template #header>
-        <div class="flex-x-between">
-          <span>通知公告详情</span>
-          <div class="dialog-toolbar">
-            <el-button circle @click="closeDetailDialog">
-              <template #icon>
-                <Close />
-              </template>
-            </el-button>
-          </div>
-        </div>
-      </template>
-      <el-descriptions :column="1">
-        <el-descriptions-item label="标题：">
-          {{ currentNotice.title }}
-        </el-descriptions-item>
-        <el-descriptions-item label="发布状态：">
-          <el-tag v-if="currentNotice.publishStatus == 0" type="info">未发布</el-tag>
-          <el-tag v-else-if="currentNotice.publishStatus == 1" type="success">已发布</el-tag>
-          <el-tag v-else-if="currentNotice.publishStatus == -1" type="warning">已撤回</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="发布人：">
-          {{ currentNotice.publisherName }}
-        </el-descriptions-item>
-        <el-descriptions-item label="发布时间：">
-          {{ currentNotice.publishTime }}
-        </el-descriptions-item>
-        <el-descriptions-item label="公告内容：">
-          <div class="notice-content" v-html="currentNotice.content" />
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-dialog>
+    <NoticeDetailDialog v-model="detailDialog.visible" :notice="currentNotice" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { Close, CopyDocument, FullScreen } from "@element-plus/icons-vue";
+
 defineOptions({
   name: "Notice",
   inheritAttrs: false,
@@ -281,7 +250,8 @@ defineOptions({
 import NoticeAPI from "@/api/system/notice";
 import type { NoticeItem, NoticeForm, NoticeQueryParams, NoticeDetail } from "@/types/api";
 import UserAPI from "@/api/system/user";
-import type { FormInstance, FormRules } from "element-plus";
+import { ElMessage, type FormInstance, type FormRules } from "element-plus";
+import NoticeDetailDialog from "@/components/NoticeDetailDialog/index.vue";
 
 // 表单引用
 const queryFormRef = ref<FormInstance>();
@@ -310,7 +280,8 @@ const dialogState = reactive({
 // 表单数据
 const formData = reactive<NoticeForm>({
   level: "L",
-  targetType: 1,
+  targetType: "1",
+  status: "0",
 });
 
 // 验证规则
@@ -321,7 +292,7 @@ const rules: FormRules = {
       required: true,
       message: "请输入通知内容",
       trigger: "blur",
-      validator: (rule, value: string, callback) => {
+      validator: (_rule, value: string, callback) => {
         if (!value.replace(/<[^>]+>/g, "").trim()) {
           callback(new Error("请输入通知内容"));
         } else {
@@ -400,7 +371,12 @@ function openDialog(id?: string): void {
       });
     });
   } else {
-    Object.assign(formData, { level: "L", targetType: 1, targetUsers: [] });
+    Object.assign(formData, {
+      level: "L",
+      targetType: "1",
+      targetUsers: [],
+      status: "0",
+    });
     dialogState.title = "新增公告";
   }
 }
@@ -436,8 +412,8 @@ function handleSubmit(): void {
       loading.value = true;
       const payload = {
         ...formData,
-        targetUserIds: formData.targetType === 2 ? (formData.targetUsers ?? []) : [],
-      } as NoticeForm & { targetUserIds: number[] };
+        targetUserIds: formData.targetType === "2" ? (formData.targetUsers ?? []) : [],
+      } as NoticeForm & { targetUserIds: string[] };
       delete (payload as NoticeForm).targetUsers;
       const id = formData.id;
       if (id) {
@@ -470,7 +446,7 @@ function closeDialog(): void {
   dataFormRef.value?.resetFields();
   dataFormRef.value?.clearValidate();
   formData.id = undefined;
-  formData.targetType = 1;
+  formData.targetType = "1";
   formData.targetUsers = [];
   formData.content = "";
 }
@@ -556,14 +532,9 @@ async function openDetailDialog(id: string): Promise<void> {
   detailDialog.visible = true;
 }
 
-/**
- * 关闭详情弹窗
- */
-function closeDetailDialog(): void {
-  detailDialog.visible = false;
-}
-
 onMounted(() => {
   handleQuery();
 });
 </script>
+
+<style scoped lang="scss"></style>
