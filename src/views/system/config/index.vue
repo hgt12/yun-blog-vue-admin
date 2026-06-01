@@ -49,11 +49,32 @@
         border
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="index" label="序号" width="60" />
-        <el-table-column key="configName" label="配置名称" prop="configName" min-width="100" />
-        <el-table-column key="configKey" label="配置键" prop="configKey" min-width="100" />
-        <el-table-column key="configValue" label="配置值" prop="configValue" min-width="100" />
-        <el-table-column key="remark" label="描述" prop="remark" min-width="100" />
+        <el-table-column type="index" label="序号" width="60" align="center" />
+        <el-table-column
+          key="configName"
+          label="配置名称"
+          prop="configName"
+          min-width="100"
+          align="center"
+        />
+        <el-table-column key="configKey" label="配置键" prop="configKey" min-width="110" />
+        <el-table-column key="configValue" label="配置值" prop="configValue" min-width="140">
+          <template #default="{ row }">
+            <template v-if="isImageUrl(row.configValue)">
+              <el-image
+                :src="row.configValue"
+                :preview-src-list="[row.configValue]"
+                fit="cover"
+                class="config-value-image"
+                preview-teleported
+              />
+            </template>
+            <template v-else>
+              <span>{{ row.configValue }}</span>
+            </template>
+          </template>
+        </el-table-column>
+        <el-table-column key="remark" label="描述" prop="remark" min-width="160" />
         <el-table-column fixed="right" align="center" label="操作" width="220">
           <template #default="scope">
             <el-button
@@ -142,6 +163,11 @@ import ConfigAPI from "@/api/system/config";
 import type { ConfigItem, ConfigForm, ConfigQueryParams } from "@/types/api";
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
 import { useDebounceFn } from "@vueuse/core";
+
+function isImageUrl(value?: string): boolean {
+  if (!value) return false;
+  return /^(https?:)?\/\//i.test(value) && /\.(png|jpe?g|gif|webp|bmp)(\?.*)?$/i.test(value);
+}
 
 // 表单引用
 const queryFormRef = ref<FormInstance>();
@@ -260,7 +286,8 @@ function handleSubmit(): void {
           .then(() => {
             ElMessage.success("修改成功");
             closeDialog();
-            handleResetQuery();
+            //handleResetQuery();// 修改成功后返回第一页
+            fetchData(); // 修改成功后停留在当前页
           })
           .finally(() => (loading.value = false));
       } else {
