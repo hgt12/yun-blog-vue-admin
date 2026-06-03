@@ -20,7 +20,7 @@ export interface FileItem {
   size?: number;
   mimeType?: string;
   delFlag?: string;
-  createBy?: string;
+  creatorName?: string;
   createTime?: string;
   updateBy?: string;
   updateTime?: string;

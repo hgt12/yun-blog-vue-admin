@@ -74,7 +74,7 @@
         <el-table-column label="大小" align="center" prop="size" width="120">
           <template #default="scope">{{ formatSize(scope.row.size) }}</template>
         </el-table-column>
-        <el-table-column label="创建者" align="center" prop="createBy" width="120" />
+        <el-table-column label="创建者" align="center" prop="creatorName" width="120" />
         <el-table-column label="创建时间" align="center" prop="createTime" width="180" />
         <el-table-column label="更新时间" align="center" prop="updateTime" width="180" />
         <el-table-column fixed="right" align="center" label="操作" width="200">
