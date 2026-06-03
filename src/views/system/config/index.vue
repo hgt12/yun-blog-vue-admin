@@ -74,7 +74,17 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column key="remark" label="描述" prop="remark" min-width="160" />
+        <el-table-column
+          key="remark"
+          label="描述"
+          prop="remark"
+          min-width="160"
+          class-name="remark-column"
+        >
+          <template #default="{ row }">
+            <div class="remark-text">{{ row.remark }}</div>
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" align="center" label="操作" width="220">
           <template #default="scope">
             <el-button
@@ -337,3 +347,17 @@ onMounted(() => {
   handleQuery();
 });
 </script>
+
+<style scoped>
+.remark-column :deep(.cell) {
+  line-height: 1.5;
+  word-break: break-all;
+  white-space: pre-line;
+}
+
+.remark-text {
+  display: inline-block;
+  word-break: break-all;
+  white-space: pre-line;
+}
+</style>
