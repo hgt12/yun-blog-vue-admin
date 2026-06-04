@@ -1,4 +1,4 @@
-﻿<!--主页仪表盘-->
+<!--主页仪表盘-->
 <template>
   <div class="relative p-6">
     <el-card shadow="never" class="mt-2">
@@ -32,7 +32,22 @@
         >
           <template #header>
             <div class="flex-x-between">
-              <span class="text-xs font-medium text-[--el-text-color-secondary]">在线用户</span>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium text-[--el-text-color-secondary]">在线用户</span>
+                <el-button
+                  size="small"
+                  plain
+                  round
+                  class="!h-6 !px-2.5 !text-[11px] !leading-none"
+                  :type="onlineMode === 'admin' ? 'primary' : 'success'"
+                  @click="toggleOnlineMode"
+                >
+                  <el-icon class="mr-1 text-[11px]">
+                    <Switch />
+                  </el-icon>
+                  {{ onlineModeLabel }}
+                </el-button>
+              </div>
               <div class="flex items-center gap-2">
                 <span
                   class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs leading-5 rounded-full border select-none"
@@ -292,14 +307,14 @@ defineOptions({
 });
 
 import { dayjs } from "element-plus";
-import { ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import StatisticsAPI from "@/api/system/statistics";
 import type { VisitStatsDetail, VisitTrendDetail } from "@/types/api";
 import { useUserStore } from "@/store/modules/user";
 import { formatGrowthRate } from "@/utils";
 import { useTransition, useDateFormat } from "@vueuse/core";
-import { CircleCheck, CircleClose, Loading, Clock, Menu } from "@element-plus/icons-vue";
+import { CircleCheck, CircleClose, Loading, Clock, Menu, Switch } from "@element-plus/icons-vue";
 import { useOnlineCount, useRecentMenus } from "@/composables";
 import { getWeatherNow } from "@/api/weather";
 import type { WeatherNowResponse } from "@/api/weather";
@@ -307,7 +322,23 @@ import type { WeatherNowResponse } from "@/api/weather";
 const router = useRouter();
 
 // 在线用户数量组件相关
-const { onlineUserCount, lastUpdateTime, isConnected, connectionState } = useOnlineCount();
+const onlineCount = useOnlineCount();
+const {
+  onlineUserCount,
+  lastUpdateTime,
+  isConnected,
+  connectionState,
+  mode: onlineMode,
+} = onlineCount;
+const onlineModeLabel = computed(() => (onlineMode.value === "admin" ? "后台" : "前台"));
+const toggleOnlineMode = () => {
+  const nextMode = onlineMode.value === "admin" ? "blog" : "admin";
+  if (isConnected.value) {
+    onlineCount.setMode(nextMode);
+    return;
+  }
+  onlineCount.initialize(nextMode);
+};
 
 // 最近访问菜单
 const { recentMenus, clearRecentMenus } = useRecentMenus();

@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted, getCurrentInstance } from "vue";
+import { ref, onMounted, onUnmounted, getCurrentInstance, readonly, computed } from "vue";
 import { useStomp } from "./useStomp";
 import { AuthStorage } from "@/utils/auth";
 
@@ -9,6 +9,13 @@ interface OnlineCountMessage {
   count?: number;
   timestamp?: number;
 }
+
+type OnlineCountMode = "admin" | "blog";
+
+const ONLINE_COUNT_TOPICS: Record<OnlineCountMode, string> = {
+  admin: "/topic/admin/online-count",
+  blog: "/topic/blog/online-count",
+};
 
 /**
  * 全局单例实例
@@ -22,6 +29,7 @@ function createOnlineCountComposable() {
   // ==================== 状态管理 ====================
   const onlineUserCount = ref(0);
   const lastUpdateTime = ref(0);
+  const mode = ref<OnlineCountMode>("admin");
 
   // ==================== WebSocket 客户端 ====================
   const stomp = useStomp({
@@ -33,11 +41,10 @@ function createOnlineCountComposable() {
     debug: false,
   });
 
-  // 在线用户计数主题
-  const ONLINE_COUNT_TOPIC = "/topic/online-count";
-
   // 订阅 ID
   let subscriptionId: string | null = null;
+
+  const getTopic = () => ONLINE_COUNT_TOPICS[mode.value];
 
   /**
    * 处理在线用户数量消息
@@ -67,18 +74,36 @@ function createOnlineCountComposable() {
    * 订阅在线用户计数主题
    */
   const subscribeToOnlineCount = () => {
+    const topic = getTopic();
     if (subscriptionId) {
+      stomp.unsubscribe(subscriptionId);
+      subscriptionId = null;
+    }
+
+    subscriptionId = stomp.subscribe(topic, handleOnlineCountMessage);
+  };
+
+  /**
+   * 切换在线人数模式
+   */
+  const setMode = (nextMode: OnlineCountMode) => {
+    if (mode.value === nextMode) {
       return;
     }
 
-    // 订阅在线用户计数主题（useStomp 会处理重连后的订阅恢复）
-    subscriptionId = stomp.subscribe(ONLINE_COUNT_TOPIC, handleOnlineCountMessage);
+    mode.value = nextMode;
+
+    if (stomp.isConnected.value) {
+      subscribeToOnlineCount();
+    }
   };
 
   /**
    * 初始化 WebSocket 连接并订阅在线用户主题
    */
-  const initialize = () => {
+  const initialize = (nextMode: OnlineCountMode = mode.value) => {
+    setMode(nextMode);
+
     // 检查 WebSocket 端点是否配置
     const wsEndpoint = import.meta.env.VITE_APP_WS_ENDPOINT;
     if (!wsEndpoint) {
@@ -110,9 +135,6 @@ function createOnlineCountComposable() {
       subscriptionId = null;
     }
 
-    // 也可以通过主题地址取消订阅
-    stomp.unsubscribeDestination(ONLINE_COUNT_TOPIC);
-
     // 断开连接
     stomp.disconnect();
 
@@ -121,16 +143,21 @@ function createOnlineCountComposable() {
     lastUpdateTime.value = 0;
   };
 
+  const currentTopic = computed(() => getTopic());
+
   return {
     // 状态
     onlineUserCount: readonly(onlineUserCount),
     lastUpdateTime: readonly(lastUpdateTime),
+    mode: readonly(mode),
+    currentTopic: readonly(currentTopic),
     isConnected: stomp.isConnected,
     connectionState: stomp.connectionState,
 
     // 方法
     initialize,
     cleanup,
+    setMode,
   };
 }
 
