@@ -17,6 +17,8 @@ const ONLINE_COUNT_TOPICS: Record<OnlineCountMode, string> = {
   blog: "/topic/blog/online-count",
 };
 
+const VISITOR_ONLINE_COUNT_TOPIC = "/topic/blog/visitor/online-count";
+
 /**
  * 全局单例实例
  */
@@ -28,8 +30,11 @@ let globalInstance: ReturnType<typeof createOnlineCountComposable> | null = null
 function createOnlineCountComposable() {
   // ==================== 状态管理 ====================
   const onlineUserCount = ref(0);
+  const visitorCount = ref(0);
   const lastUpdateTime = ref(0);
   const mode = ref<OnlineCountMode>("admin");
+
+  const totalCount = computed(() => onlineUserCount.value + visitorCount.value);
 
   // ==================== WebSocket 客户端 ====================
   const stomp = useStomp({
@@ -42,9 +47,11 @@ function createOnlineCountComposable() {
   });
 
   // 订阅 ID
-  let subscriptionId: string | null = null;
+  let onlineCountSubscriptionId: string | null = null;
+  let visitorCountSubscriptionId: string | null = null;
 
   const getTopic = () => ONLINE_COUNT_TOPICS[mode.value];
+  const getVisitorTopic = () => VISITOR_ONLINE_COUNT_TOPIC;
 
   /**
    * 处理在线用户数量消息
@@ -71,17 +78,60 @@ function createOnlineCountComposable() {
   };
 
   /**
+   * 处理游客在线人数消息
+   */
+  const handleVisitorCountMessage = (message: any) => {
+    try {
+      const data = message.body;
+      const jsonData = JSON.parse(data) as OnlineCountMessage;
+      const count = typeof jsonData === "number" ? jsonData : jsonData.count;
+
+      if (count !== undefined && !isNaN(count)) {
+        visitorCount.value = count;
+      } else {
+        console.warn("[useOnlineCount] 收到无效的游客在线数:", data);
+      }
+    } catch (error) {
+      console.error("[useOnlineCount] 解析游客在线数失败:", error);
+    }
+  };
+
+  /**
    * 订阅在线用户计数主题
    */
   const subscribeToOnlineCount = () => {
     const topic = getTopic();
-    if (subscriptionId) {
-      stomp.unsubscribe(subscriptionId);
-      subscriptionId = null;
+    if (onlineCountSubscriptionId) {
+      stomp.unsubscribe(onlineCountSubscriptionId);
+      onlineCountSubscriptionId = null;
     }
 
-    subscriptionId = stomp.subscribe(topic, handleOnlineCountMessage);
+    onlineCountSubscriptionId = stomp.subscribe(topic, handleOnlineCountMessage);
   };
+
+  /**
+   * 订阅游客在线人数主题
+   */
+  const subscribeToVisitorCount = () => {
+    if (visitorCountSubscriptionId) {
+      stomp.unsubscribe(visitorCountSubscriptionId);
+      visitorCountSubscriptionId = null;
+    }
+
+    visitorCountSubscriptionId = stomp.subscribe(getVisitorTopic(), handleVisitorCountMessage);
+  };
+
+  /**
+   * 计算前台模式下展示的总在线人数
+   */
+  const totalOnlineCount = computed(() => onlineUserCount.value + visitorCount.value);
+
+  /**
+   * 计算当前模式下应展示的人数
+   */
+  const displayOnlineCount = computed(() => {
+    return mode.value === "blog" ? totalOnlineCount.value : onlineUserCount.value;
+  });
 
   /**
    * 切换在线人数模式
@@ -93,10 +143,23 @@ function createOnlineCountComposable() {
 
     mode.value = nextMode;
 
-    if (stomp.isConnected.value) {
+    if (!stomp.isConnected.value) {
+      return;
+    }
+
+    if (nextMode === "blog") {
+      subscribeToVisitorCount();
+      subscribeToOnlineCount();
+    } else {
+      if (visitorCountSubscriptionId) {
+        stomp.unsubscribe(visitorCountSubscriptionId);
+        visitorCountSubscriptionId = null;
+      }
       subscribeToOnlineCount();
     }
   };
+
+  const isBlogMode = (nextMode: OnlineCountMode) => nextMode === "blog";
 
   /**
    * 初始化 WebSocket 连接并订阅在线用户主题
@@ -108,6 +171,13 @@ function createOnlineCountComposable() {
     const wsEndpoint = import.meta.env.VITE_APP_WS_ENDPOINT;
     if (!wsEndpoint) {
       console.log("[useOnlineCount] 未配置 WebSocket 端点，跳过初始化");
+      return;
+    }
+
+    // 游客模式不需要 token，前台游客人数单独订阅游客主题
+    if (isBlogMode(nextMode)) {
+      stomp.connect();
+      subscribeToVisitorCount();
       return;
     }
 
@@ -130,9 +200,13 @@ function createOnlineCountComposable() {
    */
   const cleanup = () => {
     // 取消订阅
-    if (subscriptionId) {
-      stomp.unsubscribe(subscriptionId);
-      subscriptionId = null;
+    if (onlineCountSubscriptionId) {
+      stomp.unsubscribe(onlineCountSubscriptionId);
+      onlineCountSubscriptionId = null;
+    }
+    if (visitorCountSubscriptionId) {
+      stomp.unsubscribe(visitorCountSubscriptionId);
+      visitorCountSubscriptionId = null;
     }
 
     // 断开连接
@@ -140,14 +214,26 @@ function createOnlineCountComposable() {
 
     // 重置状态
     onlineUserCount.value = 0;
+    visitorCount.value = 0;
     lastUpdateTime.value = 0;
   };
 
   const currentTopic = computed(() => getTopic());
 
+  const visibleOnlineCount = computed(() => {
+    if (mode.value === "blog") {
+      return `${onlineUserCount.value} 人（游客：${visitorCount.value} 人）`;
+    }
+    return `${onlineUserCount.value} 人`;
+  });
+
   return {
     // 状态
     onlineUserCount: readonly(onlineUserCount),
+    visitorCount: readonly(visitorCount),
+    totalCount: readonly(totalCount),
+    displayOnlineCount: readonly(displayOnlineCount),
+    visibleOnlineCount: readonly(visibleOnlineCount),
     lastUpdateTime: readonly(lastUpdateTime),
     mode: readonly(mode),
     currentTopic: readonly(currentTopic),

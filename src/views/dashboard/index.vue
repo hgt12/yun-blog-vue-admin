@@ -1,4 +1,4 @@
-<!--主页仪表盘-->
+﻿<!--主页仪表盘-->
 <template>
   <div class="relative p-6">
     <el-card shadow="never" class="mt-2">
@@ -72,8 +72,11 @@
 
           <div class="mt-2 flex-1 flex items-end">
             <div class="flex items-baseline gap-1.5">
-              <span class="text-xl font-semibold tracking-wide">{{ onlineUserCount }}</span>
-              <span class="text-xs text-[--el-text-color-secondary]">人</span>
+              <span class="text-xl font-semibold tracking-wide">{{ displayOnlineCount }}</span>
+              <span class="text-xs text-[--el-text-color-secondary]">
+                人
+                <template v-if="onlineMode === 'blog'">（游客：{{ visitorCount }} 人）</template>
+              </span>
             </div>
           </div>
 
@@ -324,7 +327,8 @@ const router = useRouter();
 // 在线用户数量组件相关
 const onlineCount = useOnlineCount();
 const {
-  onlineUserCount,
+  visitorCount,
+  displayOnlineCount,
   lastUpdateTime,
   isConnected,
   connectionState,
