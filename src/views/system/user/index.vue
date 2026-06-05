@@ -104,9 +104,9 @@
             </el-avatar>
           </template>
         </el-table-column>
-        <el-table-column label="用户名" prop="username" />
+        <el-table-column label="用户名" prop="username" width="100" align="center" />
         <el-table-column label="昵称" width="200" align="center" prop="nickname" />
-        <el-table-column label="性别" width="100" align="center">
+        <el-table-column label="性别" width="60" align="center">
           <template #default="scope">
             <DictTag v-model="scope.row.sex" code="sex" />
           </template>

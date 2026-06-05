@@ -134,7 +134,7 @@ const captchaBase64 = ref();
 // 记住我
 const rememberMe = AuthStorage.getRememberMe();
 const loginFormData = ref<LoginRequest>({
-  username: "admin",
+  username: "visitor",
   password: "123456",
   captchaId: "",
   captchaCode: "",
