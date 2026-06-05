@@ -292,8 +292,8 @@
           </template>
 
           <el-radio-group v-model="formData.alwaysShow">
-            <el-radio value="1">是</el-radio>
-            <el-radio value="0">否</el-radio>
+            <el-radio value="0">是</el-radio>
+            <el-radio value="1">否</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -302,8 +302,8 @@
           label="缓存页面"
         >
           <el-radio-group v-model="formData.keepAlive">
-            <el-radio value="1">开启</el-radio>
-            <el-radio value="0">关闭</el-radio>
+            <el-radio value="0">开启</el-radio>
+            <el-radio value="1">关闭</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -383,7 +383,7 @@ const initialMenuFormData = ref<MenuForm>({
   sort: 1,
   type: MenuTypeEnum.MENU,
   alwaysShow: "0",
-  keepAlive: "1",
+  keepAlive: "0",
   params: [],
 });
 const formData = ref({ ...initialMenuFormData.value });
