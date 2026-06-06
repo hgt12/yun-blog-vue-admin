@@ -20,6 +20,8 @@ export interface ConfigForm {
   configKey?: string;
   /** 配置值 */
   configValue?: string;
+  /** 排序 */
+  sort?: number;
   /** 备注 */
   remark?: string;
 }

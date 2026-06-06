@@ -74,6 +74,7 @@
             </template>
           </template>
         </el-table-column>
+        <el-table-column key="sort" label="排序" prop="sort" width="90" align="center" />
         <el-table-column
           key="remark"
           label="描述"
@@ -142,6 +143,14 @@
         <el-form-item label="配置值" prop="configValue">
           <el-input v-model="formData.configValue" placeholder="请输入配置值" :maxlength="100" />
         </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input-number
+            v-model="formData.sort"
+            :min="0"
+            controls-position="right"
+            style="width: 100px"
+          />
+        </el-form-item>
         <el-form-item label="描述" prop="remark">
           <el-input
             v-model="formData.remark"
@@ -208,6 +217,7 @@ const formData = reactive<ConfigForm>({
   configName: "",
   configKey: "",
   configValue: "",
+  sort: 1,
   remark: "",
 });
 
@@ -267,10 +277,18 @@ function openDialog(id?: string): void {
     dialogState.title = "修改系统配置";
     ConfigAPI.getFormData(id).then((data) => {
       Object.assign(formData, data);
+      if (formData.sort === undefined || formData.sort === null) {
+        formData.sort = 1;
+      }
     });
   } else {
     dialogState.title = "新增系统配置";
     formData.id = undefined;
+    formData.configName = "";
+    formData.configKey = "";
+    formData.configValue = "";
+    formData.sort = 1;
+    formData.remark = "";
   }
 }
 
