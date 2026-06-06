@@ -15,7 +15,7 @@
         <div class="auth-panel__brand">
           <div class="auth-panel__meta">
             <div class="auth-panel__title-row">
-              <span class="auth-panel__title">{{ appConfig.title }}</span>
+              <span class="auth-panel__title">{{ siteConfig.loginTitle }}</span>
             </div>
           </div>
         </div>
@@ -25,10 +25,30 @@
         </transition>
 
         <footer class="auth-panel__footer">
-          <el-text size="small">
-            Copyright © 2021 - 2025 youlai.tech
-            <a href="http://beian.miit.gov.cn/" target="_blank">皖ICP备00064962号</a>
+          <el-text size="small" class="auth-panel__remark">
+            {{ siteConfig.footerRemark }}
           </el-text>
+          <el-text size="small" class="auth-panel__copyright">
+            {{ siteConfig.copyright }}
+          </el-text>
+          <div class="auth-panel__filings">
+            <a
+              :href="siteConfig.publicSecurityLink"
+              target="_blank"
+              class="auth-panel__public-security"
+            >
+              <img
+                v-if="siteConfig.publicSecurityIconEnabled && siteConfig.publicSecurityIcon"
+                :src="siteConfig.publicSecurityIcon"
+                alt="公网安备案图标"
+                class="auth-panel__public-security-icon"
+              />
+              <span>{{ siteConfig.publicSecurityIcp }}</span>
+            </a>
+            <a :href="siteConfig.icpLink" target="_blank" class="auth-panel__icp">
+              {{ siteConfig.icp }}
+            </a>
+          </div>
         </footer>
       </section>
     </div>
@@ -36,11 +56,14 @@
 </template>
 
 <script setup lang="ts">
-import { appConfig } from "@/settings";
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
 import { useWeatherBackground } from "@/composables/useWeatherBackground";
+import { useSiteConfigStore } from "@/store";
 
 type LayoutMap = "login" | "resetPwd";
+
+const siteConfigStore = useSiteConfigStore();
+const { siteConfig } = storeToRefs(siteConfigStore);
 
 const component = ref<LayoutMap>("login");
 
@@ -393,33 +416,65 @@ const authViewStyle = computed(() => ({
 }
 
 .auth-panel__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
   padding-top: 0.875rem;
   margin-top: 0.125rem;
   font-size: 0.875rem;
   text-align: center;
   border-top: 1px solid rgba(48, 169, 222, 0.1);
+}
 
-  a {
-    margin-left: 0.25rem;
-    color: #30a9de;
-    text-decoration: none;
-    transition: color 0.2s ease;
+.auth-panel__remark {
+  line-height: 1.5;
+  color: #718096;
+}
 
-    &:hover {
-      color: #2f4154;
-    }
+.auth-panel__copyright {
+  line-height: 1.6;
+}
+
+.auth-panel__filings {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-panel__public-security,
+.auth-panel__icp {
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+  color: #30a9de;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #2f4154;
   }
+}
+
+.auth-panel__public-security-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
 }
 
 .dark .auth-panel__footer {
   border-color: rgba(48, 169, 222, 0.15);
+}
 
-  a {
-    color: #30a9de;
+.dark .auth-panel__public-security,
+.dark .auth-panel__icp {
+  color: #30a9de;
 
-    &:hover {
-      color: #a7a9ad;
-    }
+  &:hover {
+    color: #a7a9ad;
   }
 }
 

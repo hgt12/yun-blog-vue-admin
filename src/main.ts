@@ -20,7 +20,7 @@ import "animate.css";
 import { setupDirective } from "@/directives";
 import { setupI18n } from "@/lang";
 import { setupRouter } from "@/router";
-import { setupStore } from "@/store";
+import { setupStore, useSiteConfigStore } from "@/store";
 
 // ===== 全局组件 =====
 import * as ElementPlusIcons from "@element-plus/icons-vue";
@@ -56,8 +56,12 @@ app.use(InstallCodeMirror);
 // 4️⃣ 路由守卫
 setupPermissionGuard();
 
-// 5️⃣ WebSocket 初始化
+// 5️⃣ 站点配置初始化
+const siteConfigStore = useSiteConfigStore();
+await siteConfigStore.loadSiteConfig();
+
+// 6️⃣ WebSocket 初始化
 setupWebSocket();
 
-// 6️⃣ 挂载应用
+// 7️⃣ 挂载应用
 app.mount("#app");

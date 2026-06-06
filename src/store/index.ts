@@ -14,4 +14,5 @@ export * from "./modules/settings";
 export * from "./modules/tags-view";
 export * from "./modules/user";
 export * from "./modules/dict";
+export * from "./modules/site-config";
 export { store };

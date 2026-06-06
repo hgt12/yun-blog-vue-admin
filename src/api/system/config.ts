@@ -12,6 +12,13 @@ const ConfigAPI = {
       params: queryParams,
     });
   },
+  /** 获取后台站点配置 */
+  getSiteConfig() {
+    return request<any, Array<{ configKey: string; configValue: string }>>({
+      url: `${CONFIG_BASE_URL}/getConfig`,
+      method: "get",
+    });
+  },
   /** 获取配置表单数据 */
   getFormData(id: string) {
     return request<any, ConfigForm>({

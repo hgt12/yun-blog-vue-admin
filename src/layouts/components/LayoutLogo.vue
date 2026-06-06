@@ -3,7 +3,7 @@
     <transition enter-active-class="animate__animated animate__fadeInLeft">
       <router-link :key="+collapse" class="wh-full flex-center" to="/">
         <span v-if="!collapse" class="title">
-          {{ appConfig.title }}
+          {{ siteConfig.navbarTitle }}
         </span>
       </router-link>
     </transition>
@@ -11,7 +11,9 @@
 </template>
 
 <script lang="ts" setup>
-import { appConfig } from "@/settings";
+import { useSiteConfigStore } from "@/store";
+
+const { siteConfig } = storeToRefs(useSiteConfigStore());
 
 defineProps({
   collapse: {
