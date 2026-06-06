@@ -2,6 +2,7 @@ import ConfigAPI from "@/api/system/config";
 
 export interface SiteConfigState {
   siteName: string;
+  siteIcon: string;
   navbarTitle: string;
   loginTitle: string;
   footerRemark: string;
@@ -17,6 +18,7 @@ export interface SiteConfigState {
 //默认配置值
 const DEFAULT_SITE_CONFIG: SiteConfigState = {
   siteName: "云梦泽的个人博客后台系统",
+  siteIcon: "/img/comment_default_avatar.png",
   navbarTitle: "云梦泽个人博客后台管理系统",
   loginTitle: "云梦泽个人博客后台管理系统",
   footerRemark: "----备注----",
@@ -32,6 +34,7 @@ const DEFAULT_SITE_CONFIG: SiteConfigState = {
 //配置键
 const SITE_CONFIG_KEYS = {
   siteName: "admin.site.siteName",
+  siteIcon: "admin.site.siteIcon",
   navbarTitle: "admin.home.navbarTitle",
   loginTitle: "admin.login.loginTitle",
   footerRemark: "admin.footer.remarkText",
@@ -73,6 +76,7 @@ function normalizeSiteConfig(
       : DEFAULT_SITE_CONFIG.publicSecurityIconEnabled,
     icp: configMap[SITE_CONFIG_KEYS.icp] || DEFAULT_SITE_CONFIG.icp,
     icpLink: configMap[SITE_CONFIG_KEYS.icpLink] || DEFAULT_SITE_CONFIG.icpLink,
+    siteIcon: configMap[SITE_CONFIG_KEYS.siteIcon] || DEFAULT_SITE_CONFIG.siteIcon,
   };
 }
 
@@ -87,7 +91,7 @@ export const useSiteConfigStore = defineStore("site-config", () => {
       (document.querySelector('link[rel="icon"]') as HTMLLinkElement | null) ??
       document.createElement("link");
     faviconHref.rel = "icon";
-    faviconHref.href = "/favicon.ico";
+    faviconHref.href = siteConfig.value.siteIcon || "/favicon.ico";
     if (!faviconHref.parentNode) {
       document.head.appendChild(faviconHref);
     }
