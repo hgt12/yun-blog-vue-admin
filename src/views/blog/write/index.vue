@@ -3,12 +3,13 @@
   <div class="app-container">
     <el-card shadow="hover">
       <template #header>
-        <div class="flex-x-between">
+        <div class="write-page-header">
           <span class="text-lg font-medium">{{ isEdit ? "编辑文章" : "写博客" }}</span>
-          <div>
-            <el-button @click="handleCancel">取消</el-button>
+          <div class="write-page-actions">
+            <el-button class="action-btn" @click="handleCancel">取消</el-button>
             <el-button
               v-hasPerm="['blog:post:save']"
+              class="action-btn"
               type="primary"
               :loading="submitting"
               @click="handleSubmit(ArticleStatus.DRAFT)"
@@ -17,6 +18,7 @@
             </el-button>
             <el-button
               v-hasPerm="['blog:post:publish']"
+              class="action-btn"
               type="success"
               :loading="submitting"
               @click="handleSubmit(ArticleStatus.PUBLISHED)"
@@ -37,23 +39,24 @@
           />
         </el-form-item>
 
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row :gutter="20" class="form-row-responsive">
+          <el-col :xs="24" :sm="12">
             <el-form-item label="文章分类" prop="categoryId">
               <el-select-v2
                 v-model="formData.categoryId"
+                class="full-width-select"
                 :options="categoryOptions"
                 placeholder="请选择分类"
                 filterable
                 clearable
-                style="width: 100%"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12">
             <el-form-item label="文章标签" prop="tags">
               <el-select-v2
                 v-model="formData.tags"
+                class="full-width-select"
                 :options="tagOptions"
                 placeholder="请选择标签"
                 filterable
@@ -62,7 +65,6 @@
                 collapse-tags
                 collapse-tags-tooltip
                 :max-collapse-tags="3"
-                style="width: 100%"
               />
             </el-form-item>
           </el-col>
@@ -79,8 +81,8 @@
           />
         </el-form-item>
 
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row :gutter="20" class="form-row-responsive">
+          <el-col :xs="24" :sm="12">
             <el-form-item label="是否置顶" prop="isTop">
               <el-switch
                 v-model="formData.isTop"
@@ -91,7 +93,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12">
             <el-form-item label="允许评论" prop="isComment">
               <el-switch
                 v-model="formData.isComment"
@@ -109,6 +111,7 @@
             <SingleImageUpload
               v-model="formData.thumbnail"
               :max-file-size="2"
+              class="thumbnail-uploader"
               :style="{ width: '200px', height: '150px' }"
             />
             <div class="el-upload__tip">
@@ -333,6 +336,30 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+.write-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.write-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  margin-left: 0;
+}
+
+.full-width-select {
+  width: 100%;
+}
+
 .content-editor-wrapper {
   position: relative;
   display: flex;
@@ -405,6 +432,10 @@ onMounted(async () => {
   :deep(.md-editor-input-wrapper) {
     height: calc(500px - 40px) !important;
   }
+}
+
+.thumbnail-uploader {
+  flex-shrink: 0;
 }
 
 .resize-handle {
@@ -586,6 +617,59 @@ onMounted(async () => {
   :deep(.el-form-item__content) {
     display: flex;
     align-items: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .write-page-header {
+    align-items: flex-start;
+  }
+
+  .write-page-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .action-btn {
+    flex: 1 1 100%;
+  }
+
+  .content-editor-wrapper {
+    flex-direction: column;
+  }
+
+  .editor-container,
+  .preview-container {
+    width: 100% !important;
+  }
+
+  .resize-handle {
+    display: none;
+  }
+
+  .preview-container {
+    min-height: 280px;
+  }
+
+  .thumbnail-upload-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .el-upload__tip {
+    margin-left: 0;
+  }
+
+  .thumbnail-form-item {
+    :deep(.el-form-item__label) {
+      align-items: flex-start;
+      height: auto;
+      padding-top: 8px;
+    }
+
+    :deep(.el-form-item__content) {
+      align-items: flex-start;
+    }
   }
 }
 </style>
