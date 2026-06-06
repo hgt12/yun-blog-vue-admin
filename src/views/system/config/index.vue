@@ -105,7 +105,7 @@
             <div class="remark-text">{{ row.remark }}</div>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" align="center" label="操作" width="220">
+        <el-table-column fixed="right" align="center" label="操作" width="150">
           <template #default="scope">
             <el-button
               v-hasPerm="['sys:config:update']"
