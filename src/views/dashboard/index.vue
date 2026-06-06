@@ -1,22 +1,29 @@
-﻿<!--主页仪表盘-->
+<!--主页仪表盘-->
 <template>
   <div class="relative p-6">
     <el-card shadow="never" class="mt-2">
       <div class="flex flex-wrap">
         <!-- 左侧问候语区域 -->
-        <div class="flex-1 flex items-start">
-          <div style="width: 80px; height: 80px; overflow: hidden; border-radius: 50%">
+        <div
+          class="flex-1 flex flex-col sm:flex-row sm:items-start items-center text-center sm:text-left gap-4 sm:gap-0"
+        >
+          <div
+            class="shrink-0 overflow-hidden rounded-full w-16 h-16 sm:w-20 sm:h-20"
+            style="border-radius: 50%"
+          >
             <img
-              :src="userStore.userInfo.avatar + '?imageView2/1/w/80/h/80'"
-              class="w80px h80px rounded-full"
+              :src="userStore.userInfo.avatar"
+              class="w-full h-full rounded-full"
               style="width: 100%; height: 100%; object-fit: cover; object-position: center"
             />
           </div>
-          <div class="ml-5">
-            <p class="text-base font-semibold text-[--el-text-color-primary] leading-tight">
+          <div class="sm:ml-5 min-w-0">
+            <p
+              class="text-base font-semibold text-[--el-text-color-primary] leading-tight break-words"
+            >
               {{ greetings }}
             </p>
-            <p class="text-sm text-gray">{{ weatherDescription }}</p>
+            <p class="text-sm text-gray break-words">{{ weatherDescription }}</p>
           </div>
         </div>
       </div>

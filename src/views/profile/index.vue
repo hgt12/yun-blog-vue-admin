@@ -1,8 +1,8 @@
 <template>
   <div class="profile-container">
-    <el-row :gutter="20">
+    <el-row :gutter="20" class="profile-row">
       <!-- 左侧个人信息卡片 -->
-      <el-col :span="8">
+      <el-col :xs="24" :sm="8" class="profile-col">
         <el-card class="user-card">
           <div class="user-info">
             <div class="avatar-wrapper">
@@ -23,20 +23,22 @@
                 @change="handleFileChange"
               />
             </div>
-            <div class="user-name">
-              <span class="nickname">{{ userProfile.nickname }}</span>
-              <el-icon class="edit-icon" @click="handleOpenDialog(DialogType.ACCOUNT)">
-                <Edit />
-              </el-icon>
+            <div class="user-meta">
+              <div class="user-name">
+                <span class="nickname">{{ userProfile.nickname }}</span>
+                <el-icon class="edit-icon" @click="handleOpenDialog(DialogType.ACCOUNT)">
+                  <Edit />
+                </el-icon>
+              </div>
+              <div class="user-role">{{ userProfile.roleNames }}</div>
             </div>
-            <div class="user-role">{{ userProfile.roleNames }}</div>
           </div>
-          <el-divider />
+          <el-divider class="profile-divider" />
         </el-card>
       </el-col>
 
       <!-- 右侧信息卡片 -->
-      <el-col :span="16">
+      <el-col :xs="24" :sm="16" class="profile-col">
         <el-card class="info-card">
           <template #header>
             <div class="card-header">
@@ -91,7 +93,7 @@
                 {{ mobileSecurityDesc }}
               </div>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="security-actions">
               <el-button
                 v-if="userProfile.mobile"
                 type="primary"
@@ -121,7 +123,7 @@
                 {{ emailSecurityDesc }}
               </div>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="security-actions">
               <el-button
                 v-if="userProfile.email"
                 type="primary"
@@ -148,7 +150,12 @@
     </el-row>
 
     <!-- 弹窗 -->
-    <el-dialog v-model="dialogState.visible" :title="dialogState.title" :width="500">
+    <el-dialog
+      v-model="dialogState.visible"
+      :title="dialogState.title"
+      :width="500"
+      class="profile-dialog"
+    >
       <!-- 账号资料 -->
       <el-form
         v-if="dialogState.type === DialogType.ACCOUNT"
@@ -157,10 +164,10 @@
         :label-width="100"
       >
         <el-form-item label="昵称">
-          <el-input v-model="userProfileForm.nickname" style="width: 300px" />
+          <el-input v-model="userProfileForm.nickname" class="profile-input" />
         </el-form-item>
         <el-form-item label="性别">
-          <DictSelect v-model="userProfileForm.sex" code="sex" />
+          <DictSelect v-model="userProfileForm.sex" code="sex" class="profile-input" />
         </el-form-item>
       </el-form>
 
@@ -173,13 +180,28 @@
         :label-width="100"
       >
         <el-form-item label="原密码" prop="oldPassword">
-          <el-input v-model="passwordChangeForm.oldPassword" type="password" show-password />
+          <el-input
+            v-model="passwordChangeForm.oldPassword"
+            type="password"
+            show-password
+            class="profile-input"
+          />
         </el-form-item>
         <el-form-item label="新密码" prop="newPassword">
-          <el-input v-model="passwordChangeForm.newPassword" type="password" show-password />
+          <el-input
+            v-model="passwordChangeForm.newPassword"
+            type="password"
+            show-password
+            class="profile-input"
+          />
         </el-form-item>
         <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input v-model="passwordChangeForm.confirmPassword" type="password" show-password />
+          <el-input
+            v-model="passwordChangeForm.confirmPassword"
+            type="password"
+            show-password
+            class="profile-input"
+          />
         </el-form-item>
       </el-form>
 
@@ -192,10 +214,10 @@
         :label-width="100"
       >
         <el-form-item label="手机号码" prop="mobile">
-          <el-input v-model="mobileUpdateForm.mobile" style="width: 250px" />
+          <el-input v-model="mobileUpdateForm.mobile" class="profile-input" />
         </el-form-item>
         <el-form-item label="验证码" prop="code">
-          <el-input v-model="mobileUpdateForm.code" style="width: 250px">
+          <el-input v-model="mobileUpdateForm.code" class="profile-input">
             <template #append>
               <el-button :disabled="mobileCountdown > 0" @click="handleSendMobileCode">
                 {{ mobileCountdown > 0 ? `${mobileCountdown}s后重新发送` : "发送验证码" }}
@@ -208,7 +230,7 @@
             v-model="mobileUpdateForm.password"
             type="password"
             show-password
-            style="width: 250px"
+            class="profile-input"
           />
         </el-form-item>
       </el-form>
@@ -222,10 +244,10 @@
         :label-width="100"
       >
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="emailUpdateForm.email" style="width: 250px" />
+          <el-input v-model="emailUpdateForm.email" class="profile-input" />
         </el-form-item>
         <el-form-item label="验证码" prop="code">
-          <el-input v-model="emailUpdateForm.code" style="width: 250px">
+          <el-input v-model="emailUpdateForm.code" class="profile-input">
             <template #append>
               <el-button :disabled="emailCountdown > 0" @click="handleSendEmailCode">
                 {{ emailCountdown > 0 ? `${emailCountdown}s后重新发送` : "发送验证码" }}
@@ -238,7 +260,7 @@
             v-model="emailUpdateForm.password"
             type="password"
             show-password
-            style="width: 250px"
+            class="profile-input"
           />
         </el-form-item>
       </el-form>
@@ -636,15 +658,26 @@ onBeforeUnmount(() => {
   background: var(--el-fill-color-blank);
 }
 
+.profile-row {
+  margin-bottom: 0;
+}
+
+.profile-col {
+  margin-bottom: 20px;
+}
+
 .user-card {
   .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
     padding: 26px 0;
     text-align: center;
 
     .avatar-wrapper {
       position: relative;
       display: inline-block;
-      margin-bottom: 16px;
 
       .avatar-edit-btn {
         position: absolute;
@@ -660,17 +693,28 @@ onBeforeUnmount(() => {
       }
     }
 
+    .user-meta {
+      width: 100%;
+      min-width: 0;
+    }
+
     .user-name {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 8px;
 
       .nickname {
         font-size: 18px;
         font-weight: 600;
         color: var(--el-text-color-primary);
+        word-break: normal;
+        overflow-wrap: anywhere;
       }
 
       .edit-icon {
-        margin-left: 8px;
         color: var(--el-text-color-secondary);
         cursor: pointer;
         transition: all 0.3s ease;
@@ -684,28 +728,8 @@ onBeforeUnmount(() => {
     .user-role {
       font-size: 14px;
       color: var(--el-text-color-secondary);
-    }
-  }
-
-  .user-stats {
-    display: flex;
-    justify-content: space-around;
-    padding: 16px 0;
-
-    .stat-item {
-      text-align: center;
-
-      .stat-value {
-        font-size: 20px;
-        font-weight: 600;
-        color: var(--el-text-color-primary);
-      }
-
-      .stat-label {
-        margin-top: 4px;
-        font-size: 12px;
-        color: var(--el-text-color-secondary);
-      }
+      word-break: normal;
+      overflow-wrap: anywhere;
     }
   }
 }
@@ -723,11 +747,14 @@ onBeforeUnmount(() => {
 
 .security-item {
   display: flex;
+  gap: 12px;
   align-items: center;
   justify-content: space-between;
   padding: 16px 0;
 
   .security-info {
+    min-width: 0;
+
     .security-title {
       margin-bottom: 4px;
       font-size: 16px;
@@ -738,7 +765,18 @@ onBeforeUnmount(() => {
     .security-desc {
       font-size: 14px;
       color: var(--el-text-color-secondary);
+      word-break: normal;
+      overflow-wrap: anywhere;
     }
+  }
+
+  .security-actions {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
   }
 }
 
@@ -750,6 +788,8 @@ onBeforeUnmount(() => {
 
   .el-descriptions__content {
     color: var(--el-text-color-primary);
+    word-break: normal;
+    overflow-wrap: anywhere;
   }
 
   .gender-icon {
@@ -764,6 +804,14 @@ onBeforeUnmount(() => {
       color: #f56c6c;
     }
   }
+}
+
+.profile-input {
+  width: 100%;
+}
+
+.profile-divider {
+  margin: 16px 0 0;
 }
 
 .el-dialog {
@@ -789,8 +837,38 @@ onBeforeUnmount(() => {
     padding: 10px;
   }
 
-  .el-col {
-    width: 100%;
+  .profile-col {
+    margin-bottom: 12px;
+  }
+
+  .user-card {
+    .user-info {
+      padding: 18px 0;
+
+      .user-name {
+        flex-direction: column;
+        gap: 4px;
+      }
+    }
+  }
+
+  .security-item {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .security-actions {
+      justify-content: flex-start;
+      width: 100%;
+    }
+  }
+
+  .el-dialog {
+    width: calc(100vw - 24px) !important;
+    margin-top: 8vh !important;
+  }
+
+  .el-form-item {
+    margin-bottom: 16px;
   }
 }
 </style>
