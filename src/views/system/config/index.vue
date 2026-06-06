@@ -11,6 +11,18 @@
           />
         </el-form-item>
 
+        <el-form-item label="配置分类" prop="configType">
+          <el-select
+            v-model="queryParams.configType"
+            placeholder="全部"
+            clearable
+            style="width: 120px"
+          >
+            <el-option label="前台配置" value="0" />
+            <el-option label="后台配置" value="1" />
+          </el-select>
+        </el-form-item>
+
         <el-form-item class="search-buttons">
           <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
           <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
@@ -58,6 +70,13 @@
           align="center"
         />
         <el-table-column key="configKey" label="配置键" prop="configKey" min-width="110" />
+        <el-table-column label="配置分类" prop="configType" width="110" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.configType === '1' ? 'warning' : 'success'">
+              {{ row.configType === "1" ? "后台配置" : "前台配置" }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column key="configValue" label="配置值" prop="configValue" min-width="140">
           <template #default="{ row }">
             <template v-if="isImageUrl(row.configValue)">
@@ -143,6 +162,12 @@
         <el-form-item label="配置值" prop="configValue">
           <el-input v-model="formData.configValue" placeholder="请输入配置值" :maxlength="100" />
         </el-form-item>
+        <el-form-item label="配置分类" prop="configType">
+          <el-select v-model="formData.configType" placeholder="请选择配置分类" style="width: 100%">
+            <el-option label="前台配置" value="0" />
+            <el-option label="后台配置" value="1" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input-number
             v-model="formData.sort"
@@ -196,6 +221,7 @@ const dataFormRef = ref<FormInstance>();
 const queryParams = reactive<ConfigQueryParams>({
   pageNum: 1,
   pageSize: 10,
+  configType: undefined,
   keywords: "",
 });
 
@@ -217,6 +243,7 @@ const formData = reactive<ConfigForm>({
   configName: "",
   configKey: "",
   configValue: "",
+  configType: "0",
   sort: 1,
   remark: "",
 });
@@ -226,6 +253,7 @@ const rules: FormRules = {
   configName: [{ required: true, message: "请输入系统配置名称", trigger: "blur" }],
   configKey: [{ required: true, message: "请输入系统配置编码", trigger: "blur" }],
   configValue: [{ required: true, message: "请输入系统配置值", trigger: "blur" }],
+  configType: [{ required: true, message: "请选择配置分类", trigger: "change" }],
 };
 
 /**
@@ -277,6 +305,9 @@ function openDialog(id?: string): void {
     dialogState.title = "修改系统配置";
     ConfigAPI.getFormData(id).then((data) => {
       Object.assign(formData, data);
+      if (formData.configType === undefined || formData.configType === null) {
+        formData.configType = "0";
+      }
       if (formData.sort === undefined || formData.sort === null) {
         formData.sort = 1;
       }
@@ -287,6 +318,7 @@ function openDialog(id?: string): void {
     formData.configName = "";
     formData.configKey = "";
     formData.configValue = "";
+    formData.configType = "0";
     formData.sort = 1;
     formData.remark = "";
   }

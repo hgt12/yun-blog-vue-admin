@@ -6,6 +6,8 @@ import type { BaseQueryParams } from "./common";
 
 /** 配置分页查询参数 */
 export interface ConfigQueryParams extends BaseQueryParams {
+  /** 配置分类 */
+  configType?: string;
   /** 搜索关键字 */
   keywords?: string;
 }
@@ -20,6 +22,8 @@ export interface ConfigForm {
   configKey?: string;
   /** 配置值 */
   configValue?: string;
+  /** 配置分类（0-前台配置，1-后台配置） */
+  configType?: string;
   /** 排序 */
   sort?: number;
   /** 备注 */
@@ -36,4 +40,6 @@ export interface ConfigItem {
   configKey?: string;
   /** 配置值 */
   configValue?: string;
+  /** 配置分类（0-前台配置，1-后台配置） */
+  configType?: string;
 }
