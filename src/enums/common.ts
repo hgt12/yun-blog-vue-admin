@@ -56,6 +56,16 @@ export enum ArticleStatus {
 }
 
 /**
+ * 文章内容类型
+ */
+export enum ArticleContentType {
+  /** HTML 富文本 */
+  HTML = "0",
+  /** Markdown */
+  MARKDOWN = "1",
+}
+
+/**
  * 文章是否置顶
  */
 export enum ArticleTopStatus {

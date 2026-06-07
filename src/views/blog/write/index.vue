@@ -169,7 +169,12 @@ import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import WangEditor from "@/components/WangEditor/index.vue";
 import MarkdownEditor from "@/components/MarkdownEditor/index.vue";
 import { marked } from "marked";
-import { ArticleCommentStatus, ArticleStatus, ArticleTopStatus } from "@/enums/common";
+import {
+  ArticleCommentStatus,
+  ArticleContentType,
+  ArticleStatus,
+  ArticleTopStatus,
+} from "@/enums/common";
 import type { BlogPostForm } from "@/types/api";
 
 defineOptions({ name: "BlogWrite", inheritAttrs: false });
@@ -188,6 +193,7 @@ const defaultFormData = (): BlogPostForm => ({
   title: "",
   summary: "",
   content: "",
+  contentType: ArticleContentType.HTML,
   categoryId: "",
   tags: [],
   thumbnail: "",
@@ -215,7 +221,16 @@ const editorMode = ref<"rich" | "markdown">("rich"); // 编辑器模式：rich-�
 // 切换编辑器模式
 function switchEditorMode() {
   editorMode.value = editorMode.value === "rich" ? "markdown" : "rich";
+  formData.contentType =
+    editorMode.value === "markdown" ? ArticleContentType.MARKDOWN : ArticleContentType.HTML;
   ElMessage.success(`已切换到${editorMode.value === "rich" ? "富文本" : "Markdown"}模式`);
+}
+
+function syncEditorModeByContentType(contentType?: string) {
+  editorMode.value =
+    contentType === ArticleContentType.MARKDOWN || contentType === "1" ? "markdown" : "rich";
+  formData.contentType =
+    editorMode.value === "markdown" ? ArticleContentType.MARKDOWN : ArticleContentType.HTML;
 }
 
 // 刷新预览
@@ -300,12 +315,15 @@ async function handleSubmit(status: ArticleStatus) {
   try {
     const payload = {
       ...formData,
+      contentType:
+        editorMode.value === "markdown" ? ArticleContentType.MARKDOWN : ArticleContentType.HTML,
       status,
     };
     if (isEdit.value) {
       await BlogPostAPI.update(postId.value!, payload);
       const latestData = await BlogPostAPI.getFormData(postId.value!);
       Object.assign(formData, latestData);
+      syncEditorModeByContentType(formData.contentType);
       refreshPreview();
       ElMessage.success("修改成功");
     } else {
@@ -331,6 +349,7 @@ onMounted(async () => {
   if (isEdit.value) {
     const data = await BlogPostAPI.getFormData(postId.value!);
     Object.assign(formData, data);
+    syncEditorModeByContentType(formData.contentType);
   }
 });
 </script>

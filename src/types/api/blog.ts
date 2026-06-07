@@ -34,6 +34,7 @@ export interface BlogPostForm {
   summary?: string;
   thumbnail?: string;
   content: string;
+  contentType: string;
   categoryId: string;
   categoryName?: string;
   tags?: string[];
