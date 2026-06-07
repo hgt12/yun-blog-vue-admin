@@ -59,10 +59,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     //   },
     // },
     server: {
+      host: "0.0.0.0",
       port: 3001,
       open: true,
       // 内网穿透将前端暴露出去，如果不用可以删掉
-      // allowedHosts: ['.cpolar.top'],
+      // allowedHosts: ['frp-ski.com'],
       // hmr: {
       //   clientPort: 443,
       //   protocol: 'wss'
