@@ -881,7 +881,9 @@ function fetchPageData(formData: IObject = {}, isRestart = false) {
         pagination.total = (data as any)?.total ?? 0;
         pageData.value = (data as any)?.list ?? [];
       } else {
-        pageData.value = Array.isArray(data) ? data : (data?.list ?? (data as any)?.data ?? []);
+        pageData.value = Array.isArray(data)
+          ? data
+          : ((data as any)?.list ?? (data as any)?.data ?? []);
       }
     })
     .finally(() => {

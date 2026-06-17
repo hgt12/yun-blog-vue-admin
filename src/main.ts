@@ -36,32 +36,36 @@ import { setupPermissionGuard } from "@/router/guards/permission";
 // ===== 业务服务 =====
 import { setupWebSocket } from "@/composables";
 
-// 创建 Vue 应用实例
-const app = createApp(App);
+async function bootstrap() {
+  // 创建 Vue 应用实例
+  const app = createApp(App);
 
-// 1️⃣ 核心配置
-setupDirective(app);
-setupRouter(app);
-setupStore(app);
-setupI18n(app);
+  // 1️⃣ 核心配置
+  setupDirective(app);
+  setupRouter(app);
+  setupStore(app);
+  setupI18n(app);
 
-// 2️⃣ 全局组件（Element Plus 图标）
-Object.entries(ElementPlusIcons).forEach(([name, comp]) => app.component(name, comp));
+  // 2️⃣ 全局组件（Element Plus 图标）
+  Object.entries(ElementPlusIcons).forEach(([name, comp]) => app.component(name, comp));
 
-// 3️⃣ 第三方插件
-configureVxeTable();
-app.use(VXETable);
-app.use(InstallCodeMirror);
+  // 3️⃣ 第三方插件
+  configureVxeTable();
+  app.use(VXETable);
+  app.use(InstallCodeMirror);
 
-// 4️⃣ 路由守卫
-setupPermissionGuard();
+  // 4️⃣ 路由守卫
+  setupPermissionGuard();
 
-// 5️⃣ 站点配置初始化
-const siteConfigStore = useSiteConfigStore();
-await siteConfigStore.loadSiteConfig();
+  // 5️⃣ 站点配置初始化
+  const siteConfigStore = useSiteConfigStore();
+  await siteConfigStore.loadSiteConfig();
 
-// 6️⃣ WebSocket 初始化
-setupWebSocket();
+  // 6️⃣ WebSocket 初始化
+  setupWebSocket();
 
-// 7️⃣ 挂载应用
-app.mount("#app");
+  // 7️⃣ 挂载应用
+  app.mount("#app");
+}
+
+bootstrap();
