@@ -201,7 +201,7 @@
           </template>
         </el-table-column>
         <el-table-column label="评论时间" prop="createTime" width="170" align="center" />
-        <el-table-column fixed="right" label="操作" width="240" align="center">
+        <el-table-column fixed="right" label="操作" width="200" align="center">
           <template #default="{ row }">
             <el-button
               v-hasPerm="['blog:comment:view']"
