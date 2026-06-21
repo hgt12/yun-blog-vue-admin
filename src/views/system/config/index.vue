@@ -180,7 +180,7 @@
           <el-input
             v-model="formData.remark"
             :rows="4"
-            :maxlength="100"
+            :maxlength="300"
             show-word-limit
             type="textarea"
             placeholder="请输入描述"
