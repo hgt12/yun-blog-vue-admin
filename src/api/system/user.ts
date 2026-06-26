@@ -175,11 +175,11 @@ const UserAPI = {
   },
 
   /** 发送短信验证码（绑定或更换手机号）*/
-  sendMobileCode(mobile: string) {
+  sendMobileCode(mobile: string, captchaToken?: string) {
     return request({
       url: `${USER_BASE_URL}/mobile/code`,
       method: "post",
-      params: { mobile },
+      params: { mobile, ...(captchaToken ? { captchaToken } : {}) },
     });
   },
 
@@ -202,11 +202,11 @@ const UserAPI = {
   },
 
   /** 发送邮箱验证码（绑定或更换邮箱）*/
-  sendEmailCode(email: string) {
+  sendEmailCode(email: string, captchaToken?: string) {
     return request({
       url: `${USER_BASE_URL}/email/code`,
       method: "post",
-      params: { email },
+      params: { email, ...(captchaToken ? { captchaToken } : {}) },
     });
   },
 

@@ -54,11 +54,12 @@ const AuthAPI = {
   },
 
   /** 发送验证码（忘记密码） */
-  sendCode(data: SendCodeRequest) {
+  sendCode(data: SendCodeRequest, captchaToken?: string) {
     return request({
       url: `${AUTH_BASE_URL}/sendCode`,
       method: "post",
       data,
+      ...(captchaToken ? { params: { captchaToken } } : {}),
     });
   },
 

@@ -289,10 +289,12 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import FileAPI from "@/api/file";
 import { useUserStoreHook } from "@/store";
 import { redirectToLogin } from "@/utils/auth";
+import { useCaptcha } from "@/composables/useCaptcha";
 
 import { Camera, Edit, Female, Male } from "@element-plus/icons-vue";
 
 const userStore = useUserStoreHook();
+const { show: showCaptcha } = useCaptcha();
 
 const userProfile = ref<UserProfileDetail>({});
 
@@ -470,7 +472,7 @@ async function handleUnbindEmail() {
 /**
  * 发送手机验证码
  */
-function handleSendMobileCode() {
+async function handleSendMobileCode() {
   if (!mobileUpdateForm.mobile) {
     ElMessage.error("请输入手机号");
     return;
@@ -481,8 +483,15 @@ function handleSendMobileCode() {
     ElMessage.error("手机号格式不正确");
     return;
   }
+
+  // 先弹出图形验证码
+  const captchaToken = await showCaptcha();
+  if (!captchaToken) {
+    return;
+  }
+
   // 发送短信验证码
-  UserAPI.sendMobileCode(mobileUpdateForm.mobile).then(() => {
+  UserAPI.sendMobileCode(mobileUpdateForm.mobile, captchaToken).then(() => {
     ElMessage.success("验证码发送成功");
 
     // 倒计时 60s 重新发送
@@ -500,7 +509,7 @@ function handleSendMobileCode() {
 /**
  * 发送邮箱验证码
  */
-function handleSendEmailCode() {
+async function handleSendEmailCode() {
   if (!emailUpdateForm.email) {
     ElMessage.error("请输入邮箱");
     return;
@@ -512,8 +521,14 @@ function handleSendEmailCode() {
     return;
   }
 
+  // 先弹出图形验证码
+  const captchaToken = await showCaptcha();
+  if (!captchaToken) {
+    return;
+  }
+
   // 发送邮箱验证码
-  UserAPI.sendEmailCode(emailUpdateForm.email).then(() => {
+  UserAPI.sendEmailCode(emailUpdateForm.email, captchaToken).then(() => {
     ElMessage.success("验证码发送成功");
     // 倒计时 60s 重新发送
     emailCountdown.value = 60;

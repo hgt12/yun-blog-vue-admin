@@ -9,6 +9,8 @@
     >
       <router-view />
     </el-watermark>
+    <!-- 图形验证码弹窗（全局单例） -->
+    <CaptchaModal />
   </el-config-provider>
 </template>
 
@@ -16,6 +18,7 @@
 import { useAppStore, useSettingsStore } from "@/store";
 import { appConfig } from "@/settings";
 import { ThemeMode, ComponentSize } from "@/enums";
+import CaptchaModal from "@/components/CaptchaModal/CaptchaModal.vue";
 
 const appStore = useAppStore();
 const settingsStore = useSettingsStore();

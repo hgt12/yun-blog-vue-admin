@@ -133,8 +133,10 @@ import { ElMessage } from "element-plus";
 import type { FormInstance } from "element-plus";
 import { Lock, Message } from "@element-plus/icons-vue";
 import AuthAPI from "@/api/auth";
+import { useCaptcha } from "@/composables/useCaptcha";
 
 const { t } = useI18n();
+const { show: showCaptcha } = useCaptcha();
 const emit = defineEmits(["update:modelValue"]);
 const toLogin = () => emit("update:modelValue", "login");
 
@@ -194,9 +196,17 @@ function startCountdown() {
 
 async function handleSendCode() {
   await step1Ref.value?.validate();
+
+  // 先弹出图形验证码
+  const captchaToken = await showCaptcha();
+  if (!captchaToken) {
+    // 用户取消了验证码
+    return;
+  }
+
   loading.value = true;
   try {
-    await AuthAPI.sendCode({ account: form.email, type: "FORGOT_PASSWORD" });
+    await AuthAPI.sendCode({ account: form.email, type: "FORGOT_PASSWORD" }, captchaToken);
     ElMessage.success("验证码发送成功，请耐心等待");
     step.value = 2;
     startCountdown();
