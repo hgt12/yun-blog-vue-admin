@@ -153,7 +153,7 @@
     <el-dialog
       v-model="dialogState.visible"
       :title="dialogState.title"
-      :width="500"
+      :width="dialogWidth"
       class="profile-dialog"
     >
       <!-- 账号资料 -->
@@ -161,7 +161,7 @@
         v-if="dialogState.type === DialogType.ACCOUNT"
         ref="userProfileFormRef"
         :model="userProfileForm"
-        :label-width="100"
+        :label-width="formLabelWidth"
       >
         <el-form-item label="昵称">
           <el-input v-model="userProfileForm.nickname" class="profile-input" />
@@ -177,7 +177,7 @@
         ref="passwordChangeFormRef"
         :model="passwordChangeForm"
         :rules="passwordChangeRules"
-        :label-width="100"
+        :label-width="formLabelWidth"
       >
         <el-form-item label="原密码" prop="oldPassword">
           <el-input
@@ -211,7 +211,7 @@
         ref="mobileBindingFormRef"
         :model="mobileUpdateForm"
         :rules="mobileBindingRules"
-        :label-width="100"
+        :label-width="formLabelWidth"
       >
         <el-form-item label="手机号码" prop="mobile">
           <el-input v-model="mobileUpdateForm.mobile" class="profile-input" />
@@ -220,7 +220,7 @@
           <el-input v-model="mobileUpdateForm.code" class="profile-input">
             <template #append>
               <el-button :disabled="mobileCountdown > 0" @click="handleSendMobileCode">
-                {{ mobileCountdown > 0 ? `${mobileCountdown}s后重新发送` : "发送验证码" }}
+                {{ mobileCountdown > 0 ? `${mobileCountdown}s` : sendCodeLabel }}
               </el-button>
             </template>
           </el-input>
@@ -241,7 +241,7 @@
         ref="emailBindingFormRef"
         :model="emailUpdateForm"
         :rules="emailBindingRules"
-        :label-width="100"
+        :label-width="formLabelWidth"
       >
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="emailUpdateForm.email" class="profile-input" />
@@ -250,7 +250,7 @@
           <el-input v-model="emailUpdateForm.code" class="profile-input">
             <template #append>
               <el-button :disabled="emailCountdown > 0" @click="handleSendEmailCode">
-                {{ emailCountdown > 0 ? `${emailCountdown}s后重新发送` : "发送验证码" }}
+                {{ emailCountdown > 0 ? `${emailCountdown}s` : sendCodeLabel }}
               </el-button>
             </template>
           </el-input>
@@ -290,11 +290,18 @@ import FileAPI from "@/api/file";
 import { useUserStoreHook } from "@/store";
 import { redirectToLogin } from "@/utils/auth";
 import { useCaptcha } from "@/composables/useCaptcha";
+import { useWindowSize } from "@vueuse/core";
 
 import { Camera, Edit, Female, Male } from "@element-plus/icons-vue";
 
 const userStore = useUserStoreHook();
 const { show: showCaptcha } = useCaptcha();
+
+const { width: windowWidth } = useWindowSize();
+const isMobile = computed(() => windowWidth.value < 768);
+const dialogWidth = computed(() => (isMobile.value ? "90%" : "500px"));
+const formLabelWidth = computed(() => (isMobile.value ? "80" : "100"));
+const sendCodeLabel = computed(() => (isMobile.value ? "获取验证码" : "发送验证码"));
 
 const userProfile = ref<UserProfileDetail>({});
 
@@ -877,13 +884,22 @@ onBeforeUnmount(() => {
     }
   }
 
-  .el-dialog {
-    width: calc(100vw - 24px) !important;
-    margin-top: 8vh !important;
-  }
-
   .el-form-item {
     margin-bottom: 16px;
+  }
+}
+</style>
+
+<!-- 弹窗样式（非 scoped，因为 el-dialog 被 teleport 到 body） -->
+<style lang="scss">
+// 手机端弹窗不超出屏幕
+@media (max-width: 768px) {
+  .profile-dialog.el-dialog {
+    width: 90% !important;
+  }
+
+  .profile-dialog .el-form-item__label {
+    white-space: nowrap;
   }
 }
 </style>
