@@ -6,10 +6,14 @@ dist/
 dist-ssr/
 stats.html
 
-# Local env files
+# Local env files / secrets
+.env
 *.local
 .env.local
 .env.*.local
+
+# Local tool settings
+.claude/
 
 # Editor directories and files
 .idea/
